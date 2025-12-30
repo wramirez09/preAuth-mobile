@@ -1,4 +1,4 @@
-'use client';
+
 import { Text, View } from 'react-native';
 import React from 'react';
 import { createFormControl } from '@gluestack-ui/core/form-control/creator';
@@ -87,7 +87,7 @@ const formControlHelperStyle = tva({
 });
 
 const formControlHelperTextStyle = tva({
-  base: 'text-typography-500',
+  base: 'text-typography-500', // Default color, can be overridden by className
   variants: {
     isTruncated: {
       true: 'web:truncate',
@@ -429,15 +429,17 @@ type IFormControlHelperTextProps = React.ComponentProps<
 const FormControlHelperText = React.forwardRef<
   React.ComponentRef<typeof UIFormControl.Helper.Text>,
   IFormControlHelperTextProps
->(function FormControlHelperText({ className, size, ...props }, ref) {
+  >(function FormControlHelperText({ className = '', size, ...props }, ref) {
   const { size: parentSize } = useStyleContext(SCOPE);
+  const hasTextColor = /text-(?!typography-|opacity-|current|transparent|black|white|inherit|initial)/.test(className);
 
   return (
     <UIFormControl.Helper.Text
       className={formControlHelperTextStyle({
         parentVariants: { size: parentSize },
         size,
-        class: className,
+        // Only apply the base text color if no text color is specified in className
+        class: hasTextColor ? className : `text-typography-500 ${className}`.trim(),
       })}
       ref={ref}
       {...props}
