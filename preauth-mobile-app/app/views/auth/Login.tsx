@@ -1,4 +1,5 @@
-import SafeContainer from "@/app/components/SafeContainer";
+
+import SafeContainer from "@/components/SafeContainer";
 import { VStack } from "@/components/ui/vstack";
 import {
     FormControl,
@@ -10,11 +11,13 @@ import {
     FormControlHelperText,
     FormControlLabelText,
 } from '@/components/ui/form-control';
-import { Input, InputField } from "@/components/ui/input";
+import { Input, InputField, } from "@/components/ui/input";
 import React, { useEffect, useRef } from "react";
-import { Center } from '@/components/ui/center';
-import { TextInput } from 'react-native';
-import { Button } from "@react-navigation/elements";
+
+import { TextInput, Text } from 'react-native';
+import { Heading } from "@/components/ui/heading";
+import { ThemedText } from "@/components/themed-text";
+import { Button } from "@/components/ui/button";
 
 const Login = () => {
     const emailRef = useRef<TextInput>(null);
@@ -31,8 +34,10 @@ const Login = () => {
     return <SafeContainer>
 
         <VStack className="gap-4">
-            <FormControl className="mx-5 mb-5">
-                <FormControlLabel>
+            <Heading size="xl" className="text-center">Welcome back</Heading>
+            <ThemedText className="text-center mb-5">Sign in to your account to continue</ThemedText>
+            <FormControl className="mx-5 mb-5 ">
+                <FormControlLabel >
                     <FormControlLabelText>Email</FormControlLabelText>
 
                 </FormControlLabel>
@@ -49,8 +54,10 @@ const Login = () => {
 
                     />
                 </Input>
-                <FormControlHelper>
-                    <FormControlHelperText className="text-xs">Enter your email address</FormControlHelperText>
+                <FormControlHelper >
+                    <FormControlHelperText>
+                        <Text className="decoration-purple-800">Enter your email address</Text>
+                    </FormControlHelperText>
                 </FormControlHelper>
                 <FormControlError>
                     <FormControlErrorIcon />
@@ -60,12 +67,12 @@ const Login = () => {
 
             <FormControl className="mx-5 mb-5">
                 <FormControlLabel>
-                    <FormControlLabelText>Password</FormControlLabelText>
+                    <FormControlLabelText className="px-3">Password</FormControlLabelText>
 
                 </FormControlLabel>
                 <Input variant="outline" size="lg">
                     <InputField
-
+                        className="decoration-purple-800"
                         placeholder="secret password"
                         type="password"
                         autoComplete="password"
@@ -73,23 +80,29 @@ const Login = () => {
                         returnKeyType="next"
                         enablesReturnKeyAutomatically
 
+
                     />
                 </Input>
                 <FormControlHelper>
-                    <FormControlHelperText className="text-xs">Enter your password</FormControlHelperText>
+                    <FormControlHelperText className="text-purple-800 text-xs">Enter your password</FormControlHelperText>
                 </FormControlHelper>
-                <FormControlError>
+                <FormControlError className="mb-5">
                     <FormControlErrorIcon />
                     <FormControlErrorText className="text-sm">Password is required</FormControlErrorText>
                 </FormControlError>
+
+            </FormControl>
+            <FormControl className="mx-5">
+                <Button
+                    variant="solid"
+                    size="md"
+                    action="secondary"
+                    onPress={() => console.log('Login pressed')}
+                >
+                    <Text>Login</Text>
+                </Button>
             </FormControl>
 
-            <Button
-                className="mx-5"
-                onPress={() => console.log('Login pressed')}
-            >
-                Login
-            </Button>
         </VStack>
 
     </SafeContainer>;
