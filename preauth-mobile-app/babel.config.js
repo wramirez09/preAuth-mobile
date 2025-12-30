@@ -3,8 +3,7 @@ module.exports = function (api) {
 
   return {
     presets: [
-      ['babel-preset-expo'],
-      'nativewind/babel'
+      ['babel-preset-expo']
     ],
     plugins: [
       [
@@ -26,7 +25,7 @@ module.exports = function (api) {
           },
         }
       ],
-      'react-native-worklets/plugin'
+      'react-native-reanimated/plugin'
     ]
   };
 };
