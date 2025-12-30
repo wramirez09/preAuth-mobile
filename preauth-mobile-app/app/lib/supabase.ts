@@ -1,8 +1,10 @@
 import { AppState, Platform } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient, processLock } from '@supabase/supabase-js'
-const supabaseUrl = ""
-const supabaseAnonKey = ""
+import { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY } from '@env'
+
+const supabaseUrl = NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
@@ -19,14 +21,14 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 // to receive `onAuthStateChange` events with the `TOKEN_REFRESHED` or
 // `SIGNED_OUT` event if the user's session is terminated. This should
 // only be registered once.
-// if (Platform.OS !== "web") {
-//     AppState.addEventListener('change', (state) => {
-//         if (state === 'active') {
-//             supabase.auth.startAutoRefresh()
-//         } else {
-//             supabase.auth.stopAutoRefresh()
-//         }
-//     })
-// }
+if (Platform.OS !== "web") {
+    AppState.addEventListener('change', (state) => {
+        if (state === 'active') {
+            supabase.auth.startAutoRefresh()
+        } else {
+            supabase.auth.stopAutoRefresh()
+        }
+    })
+}
 
 export default supabase

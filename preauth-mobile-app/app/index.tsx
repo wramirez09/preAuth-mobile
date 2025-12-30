@@ -1,3 +1,6 @@
-import Home from './views/home';
+import { registerRootComponent } from 'expo';
+import App from './App';
 
-export default Home;
+
+
+registerRootComponent(App);
