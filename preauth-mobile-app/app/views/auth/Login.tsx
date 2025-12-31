@@ -2,110 +2,125 @@
 import SafeContainer from "@/components/SafeContainer";
 import { VStack } from "@/components/ui/vstack";
 import {
-    FormControl,
-    FormControlLabel,
-    FormControlError,
-    FormControlErrorText,
-    FormControlErrorIcon,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlLabelText,
-} from '@/components/ui/form-control';
-import { Input, InputField, } from "@/components/ui/input";
-import React, { useEffect, useRef } from "react";
+  FormControl,
+  FormControlLabel,
+  FormControlError,
+  FormControlErrorText,
+  FormControlErrorIcon,
+  FormControlHelper,
+  FormControlHelperText,
+  FormControlLabelText,
+} from "@/components/ui/form-control";
+import { Input, InputField } from "@/components/ui/input";
+import * as React from "react";
 
-import { TextInput, Text } from 'react-native';
+import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
 import { ThemedText } from "@/components/themed-text";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
+
+import { useAuth } from "./context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+
 
 const Login = () => {
-    const emailRef = useRef<TextInput>(null);
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const { signIn, user } = useAuth();
 
-    useEffect(() => {
-        // Small delay to ensure the component is fully mounted
-        const timer = setTimeout(() => {
-            if (emailRef.current) {
-                emailRef.current.focus();
-            }
-        }, 100);
-        return () => clearTimeout(timer);
-    }, []);
-    return <SafeContainer>
+  const userSignIn = React.useCallback(() => {
+    signIn(email, password);
+    if(user) {
+     console.log(user);
+     navigation.navigate('Chat'); 
+    }
+  }, [email, password, user]);
 
-        <VStack className="gap-4">
-            <Heading size="xl" className="text-center">Welcome back</Heading>
-            <ThemedText className="text-center mb-5">Sign in to your account to continue</ThemedText>
-            <FormControl className="mx-5 mb-5 ">
-                <FormControlLabel >
-                    <FormControlLabelText>Email</FormControlLabelText>
+  return (
+    <SafeContainer>
+      <VStack >
+        <Heading size="xl">
+          Welcome back
+        </Heading>
+        <ThemedText >
+          Sign in to your account to continue
+        </ThemedText>
+        <FormControl >
+          <FormControlLabel>
+            <FormControlLabelText>Email</FormControlLabelText>
+          </FormControlLabel>
+          <Input variant="outline" size="lg" >
+            <InputField
+              placeholder="Enter email"
+              type="text"
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              returnKeyType="next"
+              enablesReturnKeyAutomatically
+              onChangeText={(value) => setEmail(value)}
+            />
+          </Input>
+          <FormControlHelper>
+            <FormControlHelperText>
+              <Text >
+                Enter your email address
+              </Text>
+            </FormControlHelperText>
+          </FormControlHelper>
+          <FormControlError>
+            <FormControlErrorIcon />
+            <FormControlErrorText >
+              Email is required
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
 
-                </FormControlLabel>
-                <Input variant="outline" size="lg">
-                    <InputField
-
-                        placeholder="Enter email"
-                        type="text"
-                        autoCapitalize="none"
-                        autoComplete="email"
-                        keyboardType="email-address"
-                        returnKeyType="next"
-                        enablesReturnKeyAutomatically
-
-                    />
-                </Input>
-                <FormControlHelper >
-                    <FormControlHelperText>
-                        <Text className="decoration-purple-800">Enter your email address</Text>
-                    </FormControlHelperText>
-                </FormControlHelper>
-                <FormControlError>
-                    <FormControlErrorIcon />
-                    <FormControlErrorText className="text-sm">Email is required</FormControlErrorText>
-                </FormControlError>
-            </FormControl>
-
-            <FormControl className="mx-5 mb-5">
-                <FormControlLabel>
-                    <FormControlLabelText className="px-3">Password</FormControlLabelText>
-
-                </FormControlLabel>
-                <Input variant="outline" size="lg">
-                    <InputField
-                        className="decoration-purple-800"
-                        placeholder="secret password"
-                        type="password"
-                        autoComplete="password"
-                        keyboardType="default"
-                        returnKeyType="next"
-                        enablesReturnKeyAutomatically
-
-
-                    />
-                </Input>
-                <FormControlHelper>
-                    <FormControlHelperText className="text-purple-800 text-xs">Enter your password</FormControlHelperText>
-                </FormControlHelper>
-                <FormControlError className="mb-5">
-                    <FormControlErrorIcon />
-                    <FormControlErrorText className="text-sm">Password is required</FormControlErrorText>
-                </FormControlError>
-
-            </FormControl>
-            <FormControl className="mx-5">
-                <Button
-                    variant="solid"
-                    size="md"
-                    action="secondary"
-                    onPress={() => console.log('Login pressed')}
-                >
-                    <Text>Login</Text>
-                </Button>
-            </FormControl>
-
-        </VStack>
-
-    </SafeContainer>;
+        <FormControl >
+          <FormControlLabel>
+            <FormControlLabelText >
+              Password
+            </FormControlLabelText>
+          </FormControlLabel>
+          <Input variant="outline" size="lg" >
+            <InputField
+              placeholder="secret password"
+              type="password"
+              autoComplete="password"
+              keyboardType="default"
+              returnKeyType="next"
+              enablesReturnKeyAutomatically
+              onChangeText={(value) => setPassword(value)}
+            />
+          </Input>
+          <FormControlHelper>
+            <FormControlHelperText >
+              Enter your password
+            </FormControlHelperText>
+          </FormControlHelper>
+          <FormControlError >
+            <FormControlErrorIcon />
+            <FormControlErrorText >
+              Password is required
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+        <FormControl >
+          <Button
+            variant="solid"
+            size="md"
+            action="secondary"
+            onPress={() => userSignIn()}
+          >
+            <ButtonText>Login</ButtonText>
+          </Button>
+        </FormControl>
+      </VStack>
+    </SafeContainer>
+  );
 };
 
 export default Login;

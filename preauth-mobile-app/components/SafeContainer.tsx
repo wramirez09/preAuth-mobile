@@ -7,11 +7,19 @@ const SafeContainer: React.FC<React.PropsWithChildren> = ({ children }) => {
     const insets = useSafeAreaInsets();
 
     return (
-        <SafeAreaProvider>
-            <View style={{ paddingTop: insets.top, paddingBottom: insets.bottom, paddingLeft: insets.left, paddingRight: insets.right }}>
-                {children}
-            </View>
-        </SafeAreaProvider>
+      <SafeAreaProvider>
+        <View
+          style={{
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+            paddingLeft: insets.left,
+            paddingRight: insets.right,
+          }}
+          className="mx-5"
+        >
+          {children}
+        </View>
+      </SafeAreaProvider>
     );
 };
 

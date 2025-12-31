@@ -1,31 +1,26 @@
 module.exports = function (api) {
   api.cache(true);
-
   return {
-    presets: [
-      ['babel-preset-expo']
-    ],
+    presets: [['babel-preset-expo', { jsxImportSource: 'nativewind' }], 'nativewind/babel'],
     plugins: [
       [
-        "module:react-native-dotenv",
+        'module:react-native-dotenv',
         {
-          moduleName: "@env",
-          path: ".env",
-          safe: false,
-          allowUndefined: true
-        }
+          moduleName: '@env',
+          path: '.env',
+        },
       ],
       [
-        'module-resolver',
+        'babel-plugin-module-resolver', // Use the full name for clarity
         {
           root: ['./'],
           alias: {
             '@': './',
             'tailwind.config': './tailwind.config.js',
           },
-        }
+        },
       ],
-      'react-native-reanimated/plugin'
-    ]
+      'react-native-reanimated/plugin', // MUST be last
+    ],
   };
 };
