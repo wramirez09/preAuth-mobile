@@ -13,30 +13,34 @@ export default function Home() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   return (
     <SafeContainer>
-      <StatusBar animated={true} backgroundColor="#FFF" hidden={false} />
-      <Center>
-        <Heading>Welcome to NoteDoctor.ai</Heading>
+      <View className="flex-col items-center h-full justify-center">
+        <StatusBar animated={true} backgroundColor="#FFF" hidden={false} />
+        <Center>
+          <Heading size="xl" className="mb-5">
+            Welcome to NoteDoctor.ai
+          </Heading>
 
-        <HStack space="md" reversed={false}>
-          <Button
-            variant="link"
-            size="md"
-            action="primary"
-            onPress={() => navigation.navigate('SignUp')}
-          >
-            <ButtonText>Sign Up</ButtonText>
-          </Button>
-          <Button
-            variant="solid"
-            size="md"
-            action="secondary"
-            onPress={() => navigation.navigate('Login')}
-          >
-            <ButtonText>Sign In</ButtonText>
-          </Button>
-        </HStack>
-        <Text>HIPAA Compliant • Secure • Trusted by Healthcare Professionals</Text>
-      </Center>
+          <HStack space="md" reversed={false} className="mb-5">
+            <Button
+              variant="solid"
+              size="md"
+              action="primary"
+              onPress={() => navigation.navigate('SignUp')}
+            >
+              <ButtonText>Sign Up</ButtonText>
+            </Button>
+            <Button
+              variant="solid"
+              size="md"
+              action="secondary"
+              onPress={() => navigation.navigate('Login')}
+            >
+              <ButtonText>Sign In</ButtonText>
+            </Button>
+          </HStack>
+          <Text size="xs">HIPAA Compliant • Secure • Trusted by Healthcare Professionals</Text>
+        </Center>
+      </View>
     </SafeContainer>
   );
 }

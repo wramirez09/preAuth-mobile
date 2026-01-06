@@ -1,13 +1,13 @@
-import {API_BASE} from "@env";
+import { API_BASE } from "@env";
 import Constants from 'expo-constants';
-export function createApiUrl(relativePath: string): string{
+export function createApiUrl(relativePath: string): string {
   const origin = Constants.experienceUrl.replace('exp://', 'http://');
 
-  const path = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
+  const path = relativePath.startsWith('/') ? relativePath : `${relativePath}`;
 
-//   if (process.env.NODE_ENV === 'development') {
-//     return origin.concat(path);
-//   }
+  //   if (process.env.NODE_ENV === 'development') {
+  //     return origin.concat(path);
+  //   }
 
   if (!API_BASE) {
     throw new Error(
