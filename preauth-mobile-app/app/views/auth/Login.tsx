@@ -15,13 +15,13 @@ import { Input, InputField } from "@/components/ui/input";
 import * as React from "react";
 
 import { Text } from "@/components/ui/text";
-import { Heading } from "@/components/ui/heading";
-import { ThemedText } from "@/components/themed-text";
+import { Heading } from '@/components/ui/heading';
 import { Button, ButtonText } from "@/components/ui/button";
 
 import { useAuth } from "./context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { View } from 'react-native';
 
 
 
@@ -29,30 +29,49 @@ const Login = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const { signIn, user } = useAuth();
+  const { signIn, user, loading } = useAuth();
 
-  const userSignIn = React.useCallback(() => {
-    signIn(email, password);
-    if(user) {
-     console.log(user);
-     navigation.navigate('Chat'); 
+  const userSignIn = React.useCallback(async () => {
+    try {
+      const { session } = await signIn(email, password);
+
+      if (!session?.access_token) {
+        throw new Error('No session after login');
+      }
+
+      console.log('ACCESS TOKEN:', session.access_token);
+
+      navigation.navigate('Chat');
+    } catch (err) {
+      console.error('Login failed:', err);
     }
-  }, [email, password, user]);
+  }, [email, password]);
+
+if (loading) {
+  return (
+    <SafeContainer>
+      <Text className="text-center">Authenticating...</Text>
+    </SafeContainer>
+  );
+}
 
   return (
     <SafeContainer>
-      <VStack >
-        <Heading size="xl">
-          Welcome back
-        </Heading>
-        <ThemedText >
-          Sign in to your account to continue
-        </ThemedText>
-        <FormControl >
+      <VStack>
+        <View className="mb-5">
+          <Heading size="xl" className="text-center">
+            Welcome back
+          </Heading>
+          <Text size="sm" className="text-center">
+            Sign in to your account to continue
+          </Text>
+        </View>
+
+        <FormControl className="mb-5">
           <FormControlLabel>
             <FormControlLabelText>Email</FormControlLabelText>
           </FormControlLabel>
-          <Input variant="outline" size="lg" >
+          <Input variant="outline" size="lg">
             <InputField
               placeholder="Enter email"
               type="text"
@@ -65,27 +84,19 @@ const Login = () => {
             />
           </Input>
           <FormControlHelper>
-            <FormControlHelperText>
-              <Text >
-                Enter your email address
-              </Text>
-            </FormControlHelperText>
+            <FormControlHelperText>Enter your email address</FormControlHelperText>
           </FormControlHelper>
           <FormControlError>
             <FormControlErrorIcon />
-            <FormControlErrorText >
-              Email is required
-            </FormControlErrorText>
+            <FormControlErrorText>Email is required</FormControlErrorText>
           </FormControlError>
         </FormControl>
 
-        <FormControl >
+        <FormControl className="mb-10">
           <FormControlLabel>
-            <FormControlLabelText >
-              Password
-            </FormControlLabelText>
+            <FormControlLabelText>Password</FormControlLabelText>
           </FormControlLabel>
-          <Input variant="outline" size="lg" >
+          <Input variant="outline" size="lg">
             <InputField
               placeholder="secret password"
               type="password"
@@ -97,24 +108,16 @@ const Login = () => {
             />
           </Input>
           <FormControlHelper>
-            <FormControlHelperText >
-              Enter your password
-            </FormControlHelperText>
+            <FormControlHelperText>Enter your password</FormControlHelperText>
           </FormControlHelper>
-          <FormControlError >
+          <FormControlError>
             <FormControlErrorIcon />
-            <FormControlErrorText >
-              Password is required
-            </FormControlErrorText>
+            <FormControlErrorText>Password is required</FormControlErrorText>
           </FormControlError>
         </FormControl>
-        <FormControl >
-          <Button
-            variant="solid"
-            size="md"
-            action="secondary"
-            onPress={() => userSignIn()}
-          >
+
+        <FormControl>
+          <Button variant="solid" size="md" action="primary" onPress={() => userSignIn()}>
             <ButtonText>Login</ButtonText>
           </Button>
         </FormControl>
