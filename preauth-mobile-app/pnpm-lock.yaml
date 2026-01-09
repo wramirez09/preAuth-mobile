@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@expo/html-elements':
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.12.5
+        version: 0.12.5
       '@expo/vector-icons':
         specifier: ^15.0.3
         version: 15.0.3(expo-font@14.0.10(expo@54.0.30)(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -913,8 +913,8 @@ packages:
     resolution: {integrity: sha512-eYlxcrGdR2/j2M6pEDXo9zU9KXXF1vhP+V+Tl+lyY+bU8lnzrN6c637mz6Ye3em2ANy8hhUR03Raf8VsT9Ogng==}
     hasBin: true
 
-  '@expo/html-elements@0.10.1':
-    resolution: {integrity: sha512-3PTmtkV15D7+lykXVtvkH1jQ5Y6JE+e3zCaoMMux7z2cSLGQUNwDEUwG37gew3OEB1/E4/SEWgjvg8m7E6/e2Q==}
+  '@expo/html-elements@0.12.5':
+    resolution: {integrity: sha512-28KWO88YKykKU7ke5sEQs5TivFRMs1Aktz13xxgqAf5rTgb+lka0VKVt3W2fG7ksbUQ407rtUqz7SEAq298NvQ==}
 
   '@expo/html-elements@0.13.8':
     resolution: {integrity: sha512-dY8cbf9dkigI7YqIcz5k1Y2GpVG++WKPLp51q5xAGHYNyW7RyuGUPKjgiwK4Th0GBcQFBVCZuu/XZerPqMFA7g==}
@@ -7207,7 +7207,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@expo/html-elements@0.10.1': {}
+  '@expo/html-elements@0.12.5': {}
 
   '@expo/html-elements@0.13.8(react-native-web@0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
