@@ -1,4 +1,4 @@
-import { API_BASE } from "@env";
+import { env } from '@/env';
 import Constants from 'expo-constants';
 export function createApiUrl(relativePath: string): string {
   const origin = Constants.experienceUrl.replace('exp://', 'http://');
@@ -9,11 +9,11 @@ export function createApiUrl(relativePath: string): string {
   //     return origin.concat(path);
   //   }
 
-  if (!API_BASE) {
+  if (!env.API_URL) {
     throw new Error(
       'EXPO_PUBLIC_API_BASE_URL environment variable is not defined',
     );
   }
 
-  return API_BASE.concat(path);
+  return env.API_URL.concat(path);
 }

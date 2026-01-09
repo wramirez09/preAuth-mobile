@@ -8,7 +8,9 @@ import Login from './views/auth/Login';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { AuthProvider } from './views/auth/authProvider';
 import Chat from './views/chat';
-
+import React from 'react';
+import { config } from '@gluestack-ui/config';
+import { StyledProvider } from '@gluestack-style/react';
 const RootStack = createNativeStackNavigator({
   initialRouteName: 'Home',
   screens: {
@@ -23,12 +25,13 @@ const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
   return (
-    <>
+    <StyledProvider config={config}>
       <GluestackUIProvider mode="light">
         <AuthProvider>
           <Navigation />
         </AuthProvider>
       </GluestackUIProvider>
-    </>
+    </StyledProvider>
+
   );
 }
