@@ -1,13 +1,21 @@
 
 import * as React from 'react';
 import { Platform, View } from 'react-native';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { Actions, GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createApiUrl } from '@/app/utils';
-import { Button, ButtonText } from '@gluestack-ui/themed';
+import {
+  Button, ButtonText, Actionsheet,
+  ActionsheetContent,
+  ActionsheetItem,
+  ActionsheetItemText,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+  ActionsheetBackdrop,
+  Text,
+} from '@gluestack-ui/themed';
+import { Icon, EditIcon } from '@/components/ui/icon';
 import QueryActionSheet from './QueryActionSheet';
-import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet';
-
 type Props = {
   accessToken: string;
 };
@@ -30,7 +38,7 @@ export default function ChatInner({ accessToken }: Props) {
   const [messages, setMessages] = React.useState<IMessage[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const insets = useSafeAreaInsets();
-  const { showActionSheetWithOptions } = useActionSheet();
+  const [showActionsheet, setShowActionsheet] = React.useState(false);
 
   const apiUrl = React.useMemo(
     () => createApiUrl('api/chat/agents'),
@@ -94,9 +102,25 @@ export default function ChatInner({ accessToken }: Props) {
     [apiUrl, accessToken, messages, isLoading]
   );
 
+
+  const CustomActions = (props: any) => (
+    <Actions
+      {...props}
+      icon={() => (
+        <Icon as={EditIcon} size="md" />
+      )}
+      onPressActionButton={() => {
+        setShowActionsheet(true)
+        console.log('should show action sheet!', showActionsheet);
+
+      }}
+    />
+  );
+
   return (
-    <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
-      <ActionSheetProvider>
+    <>
+      <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
+
         <GiftedChat
           messages={messages}
           onSend={onSend}
@@ -112,13 +136,11 @@ export default function ChatInner({ accessToken }: Props) {
           isAvatarOnTop
           renderAvatar={null}
           isUserAvatarVisible={false}
-          renderChatFooter={() => <View className='mb-2'><Button><ButtonText>Open Query Form</ButtonText></Button></View>}
+          renderActions={(props) => <CustomActions {...props} />}
 
         />
-      </ActionSheetProvider>
-    </View >
-
-
-
+        <QueryActionSheet showActionsheet={showActionsheet} handleClose={() => setShowActionsheet(false)} />
+      </View >
+    </>
   );
 }

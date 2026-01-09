@@ -1,54 +1,57 @@
-import {
-    FormControl,
-    FormControlLabel,
-    FormControlError,
-    FormControlErrorText,
-    FormControlErrorIcon,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlLabelText,
-    Input, InputField,
-    Text,
-    Heading,
-    Button, ButtonText
-} from '@gluestack-ui/themed';
+// import {
+//     FormControl,
+//     FormControlLabel,
+//     FormControlError,
+//     FormControlErrorText,
+//     FormControlErrorIcon,
+//     FormControlHelper,
+//     FormControlHelperText,
+//     FormControlLabelText,
+//     Input, InputField,
+//     Text,
+//     Heading,
+//     Button, ButtonText
+// } from '@gluestack-ui/themed';
 import React from 'react';
-import { View } from "react-native"
+
 import {
-    ActionSheetProvider,
-    ActionSheetProviderRef,
-} from '@expo/react-native-action-sheet'
+    Actionsheet,
+    ActionsheetContent,
+    ActionsheetItem,
+    ActionsheetItemText,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetBackdrop,
+} from '@/components/ui/actionsheet';
 
-const QueryActionSheet: React.FC = () => {
 
-    return <ActionSheetProvider>
-        <View>
-            <FormControl className="mb-5">
-                <FormControlLabel>
-                    <FormControlLabelText>Email</FormControlLabelText>
-                </FormControlLabel>
-                <Input variant="outline" size="lg" className="shadow-md">
-                    <InputField
-                        placeholder="Enter email"
-                        type="text"
-                        autoCapitalize="none"
-                        autoComplete="email"
-                        keyboardType="email-address"
-                        returnKeyType="next"
-                        enablesReturnKeyAutomatically
+const QueryActionSheet: React.FC<{ setShowActionsheet?: React.Dispatch<boolean>, showActionsheet: boolean, handleClose?: () => void }> = ({ setShowActionsheet, showActionsheet, handleClose }) => {
 
-                    />
-                </Input>
-                <FormControlHelper>
-                    <FormControlHelperText>Enter your email address</FormControlHelperText>
-                </FormControlHelper>
-                <FormControlError>
-                    <FormControlErrorIcon />
-                    <FormControlErrorText>Email is required</FormControlErrorText>
-                </FormControlError>
-            </FormControl>
-        </View>
-    </ActionSheetProvider>
+    return <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+        <ActionsheetBackdrop />
+        <ActionsheetContent>
+            <ActionsheetDragIndicatorWrapper>
+                <ActionsheetDragIndicator />
+            </ActionsheetDragIndicatorWrapper>
+            <ActionsheetItem onPress={handleClose}>
+                <ActionsheetItemText>Edit Message</ActionsheetItemText>
+            </ActionsheetItem>
+            <ActionsheetItem onPress={handleClose}>
+                <ActionsheetItemText>Mark Unread</ActionsheetItemText>
+            </ActionsheetItem>
+            <ActionsheetItem onPress={handleClose}>
+                <ActionsheetItemText>Remind Me</ActionsheetItemText>
+            </ActionsheetItem>
+            <ActionsheetItem onPress={handleClose}>
+                <ActionsheetItemText>Add to Saved Items</ActionsheetItemText>
+            </ActionsheetItem>
+            <ActionsheetItem isDisabled onPress={handleClose}>
+                <ActionsheetItemText>Delete</ActionsheetItemText>
+            </ActionsheetItem>
+        </ActionsheetContent>
+    </Actionsheet>
+
+
 }
 
 export default QueryActionSheet
