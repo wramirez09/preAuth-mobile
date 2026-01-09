@@ -1,13 +1,11 @@
 import React from 'react';
 import { Center } from '@/components/ui/center';
-import { Text } from '@/components/ui/text';
+import { Text, Heading, Button, ButtonText } from '@gluestack-ui/themed';
 import { StatusBar, View } from 'react-native';
-import { Heading } from '@/components/ui/heading';
 import { HStack } from '@/components/ui/hstack';
 import { useNavigation } from '@react-navigation/native';
 import SafeContainer from '@/components/SafeContainer';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Button, ButtonText } from '@/components/ui/button';
 
 export default function Home() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -38,7 +36,7 @@ export default function Home() {
               <ButtonText>Sign In</ButtonText>
             </Button>
           </HStack>
-          <Text size="xs">HIPAA Compliant • Secure • Trusted by Healthcare Professionals</Text>
+          <Text size="xs" className='text-center'>HIPAA Compliant • Secure • Trusted by Healthcare Professionals</Text>
         </Center>
       </View>
     </SafeContainer>

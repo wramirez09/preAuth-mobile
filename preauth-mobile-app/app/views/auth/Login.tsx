@@ -1,4 +1,4 @@
-
+import * as React from "react";
 import SafeContainer from "@/components/SafeContainer";
 import { VStack } from "@/components/ui/vstack";
 import {
@@ -10,14 +10,11 @@ import {
   FormControlHelper,
   FormControlHelperText,
   FormControlLabelText,
-} from "@/components/ui/form-control";
-import { Input, InputField } from "@/components/ui/input";
-import * as React from "react";
-
-import { Text } from "@/components/ui/text";
-import { Heading } from '@/components/ui/heading';
-import { Button, ButtonText } from "@/components/ui/button";
-
+  Input, InputField,
+  Text,
+  Heading,
+  Button, ButtonText
+} from '@gluestack-ui/themed';
 import { useAuth } from "./context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -39,21 +36,19 @@ const Login = () => {
         throw new Error('No session after login');
       }
 
-      console.log('ACCESS TOKEN:', session.access_token);
-
       navigation.navigate('Chat');
     } catch (err) {
       console.error('Login failed:', err);
     }
   }, [email, password]);
 
-if (loading) {
-  return (
-    <SafeContainer>
-      <Text className="text-center">Authenticating...</Text>
-    </SafeContainer>
-  );
-}
+  if (loading) {
+    return (
+      <SafeContainer>
+        <Text className="text-center">Authenticating...</Text>
+      </SafeContainer>
+    );
+  }
 
   return (
     <SafeContainer>
@@ -71,7 +66,7 @@ if (loading) {
           <FormControlLabel>
             <FormControlLabelText>Email</FormControlLabelText>
           </FormControlLabel>
-          <Input variant="outline" size="lg">
+          <Input variant="outline" size="lg" className="shadow-md">
             <InputField
               placeholder="Enter email"
               type="text"
@@ -96,7 +91,7 @@ if (loading) {
           <FormControlLabel>
             <FormControlLabelText>Password</FormControlLabelText>
           </FormControlLabel>
-          <Input variant="outline" size="lg">
+          <Input variant="outline" size="lg" className="shadow-md">
             <InputField
               placeholder="secret password"
               type="password"
@@ -117,7 +112,7 @@ if (loading) {
         </FormControl>
 
         <FormControl>
-          <Button variant="solid" size="md" action="primary" onPress={() => userSignIn()}>
+          <Button size="md" onPress={() => userSignIn()}>
             <ButtonText>Login</ButtonText>
           </Button>
         </FormControl>
