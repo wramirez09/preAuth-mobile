@@ -2,9 +2,10 @@ import SafeContainer from '@/components/SafeContainer';
 import { Text } from 'react-native';
 import { useAuth } from '@/app/views/auth/context';
 import ChatInner from './ChatInner';
+import { ApiProvider } from '../context/api/apiProvider';
 
 
-export default function Chat() {
+export const Chat: React.FC = () => {
   const { session } = useAuth();
 
   if (!session?.access_token) {
@@ -16,5 +17,8 @@ export default function Chat() {
   }
 
   // ✅ ChatInner is ONLY mounted when authenticated
-  return <ChatInner accessToken={session.access_token} />;
+  return <ApiProvider><ChatInner accessToken={session.access_token} /></ApiProvider>;
 }
+
+
+export default Chat

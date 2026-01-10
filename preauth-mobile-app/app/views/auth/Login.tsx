@@ -13,7 +13,8 @@ import {
   Input, InputField,
   Text,
   Heading,
-  Button, ButtonText
+  Button, ButtonText,
+  Center
 } from '@gluestack-ui/themed';
 import { useAuth } from "./context";
 import { useNavigation } from "@react-navigation/native";
@@ -22,7 +23,7 @@ import { View } from 'react-native';
 
 
 
-const Login = () => {
+const Login: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -36,7 +37,7 @@ const Login = () => {
         throw new Error('No session after login');
       }
 
-      navigation.navigate('Chat');
+      navigation.navigate('Pick');
     } catch (err) {
       console.error('Login failed:', err);
     }
@@ -52,71 +53,73 @@ const Login = () => {
 
   return (
     <SafeContainer>
-      <VStack>
-        <View className="mb-5">
-          <Heading size="xl" className="text-center">
-            Welcome back
-          </Heading>
-          <Text size="sm" className="text-center">
-            Sign in to your account to continue
-          </Text>
-        </View>
+      <Center className="w-full h-full">
+        <VStack className="w-full">
+          <View className="mb-5">
+            <Heading size="xl" className="text-center">
+              Welcome back
+            </Heading>
+            <Text size="sm" className="text-center">
+              Sign in to your account to continue
+            </Text>
+          </View>
 
-        <FormControl className="mb-5">
-          <FormControlLabel>
-            <FormControlLabelText>Email</FormControlLabelText>
-          </FormControlLabel>
-          <Input variant="outline" size="lg" className="shadow-md">
-            <InputField
-              placeholder="Enter email"
-              type="text"
-              autoCapitalize="none"
-              autoComplete="email"
-              keyboardType="email-address"
-              returnKeyType="next"
-              enablesReturnKeyAutomatically
-              onChangeText={(value) => setEmail(value)}
-            />
-          </Input>
-          <FormControlHelper>
-            <FormControlHelperText>Enter your email address</FormControlHelperText>
-          </FormControlHelper>
-          <FormControlError>
-            <FormControlErrorIcon />
-            <FormControlErrorText>Email is required</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
+          <FormControl className="mb-5">
+            <FormControlLabel>
+              <FormControlLabelText>Email</FormControlLabelText>
+            </FormControlLabel>
+            <Input variant="outline" size="lg" className="shadow-md">
+              <InputField
+                placeholder="Enter email"
+                type="text"
+                autoCapitalize="none"
+                autoComplete="email"
+                keyboardType="email-address"
+                returnKeyType="next"
+                enablesReturnKeyAutomatically
+                onChangeText={(value) => setEmail(value)}
+              />
+            </Input>
+            <FormControlHelper>
+              <FormControlHelperText>Enter your email address</FormControlHelperText>
+            </FormControlHelper>
+            <FormControlError>
+              <FormControlErrorIcon />
+              <FormControlErrorText>Email is required</FormControlErrorText>
+            </FormControlError>
+          </FormControl>
 
-        <FormControl className="mb-10">
-          <FormControlLabel>
-            <FormControlLabelText>Password</FormControlLabelText>
-          </FormControlLabel>
-          <Input variant="outline" size="lg" className="shadow-md">
-            <InputField
-              placeholder="secret password"
-              type="password"
-              autoComplete="password"
-              keyboardType="default"
-              returnKeyType="next"
-              enablesReturnKeyAutomatically
-              onChangeText={(value) => setPassword(value)}
-            />
-          </Input>
-          <FormControlHelper>
-            <FormControlHelperText>Enter your password</FormControlHelperText>
-          </FormControlHelper>
-          <FormControlError>
-            <FormControlErrorIcon />
-            <FormControlErrorText>Password is required</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
+          <FormControl className="mb-10">
+            <FormControlLabel>
+              <FormControlLabelText>Password</FormControlLabelText>
+            </FormControlLabel>
+            <Input variant="outline" size="lg" className="shadow-md">
+              <InputField
+                placeholder="secret password"
+                type="password"
+                autoComplete="password"
+                keyboardType="default"
+                returnKeyType="next"
+                enablesReturnKeyAutomatically
+                onChangeText={(value) => setPassword(value)}
+              />
+            </Input>
+            <FormControlHelper>
+              <FormControlHelperText>Enter your password</FormControlHelperText>
+            </FormControlHelper>
+            <FormControlError>
+              <FormControlErrorIcon />
+              <FormControlErrorText>Password is required</FormControlErrorText>
+            </FormControlError>
+          </FormControl>
 
-        <FormControl>
-          <Button size="md" onPress={() => userSignIn()}>
-            <ButtonText>Login</ButtonText>
-          </Button>
-        </FormControl>
-      </VStack>
+          <FormControl>
+            <Button size="md" onPress={() => userSignIn()}>
+              <ButtonText>Login</ButtonText>
+            </Button>
+          </FormControl>
+        </VStack>
+      </Center>
     </SafeContainer>
   );
 };

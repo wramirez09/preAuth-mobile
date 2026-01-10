@@ -22,7 +22,7 @@ import { View } from 'react-native';
 
 
 
-const SignUp = () => {
+const SignUp: React.FC = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
