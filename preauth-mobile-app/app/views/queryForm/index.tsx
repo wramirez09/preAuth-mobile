@@ -1,7 +1,9 @@
+import { formLabels } from "@/app/data/labels";
+import { ncdOptions } from "@/app/data/ncdOptions";
+import { insuranceProvidersOptions, stateOptions } from "@/app/data/selectOptions";
 import AccordionCore from "@/components/accordionCore";
 import SafeContainer from "@/components/SafeContainer"
 import SelectCore from "@/components/SelectCore";
-import { ThemedText } from "@/components/themed-text";
 import {
     FormControl,
     FormControlLabel,
@@ -99,13 +101,11 @@ const formData: AccordionItemData[] = [{
     </FormControl>,
 }]
 
-
-
-const FormCore: React.FC = () => {
+const QueryForm: React.FC = () => {
     const data = React.useMemo(() => formData, []);
 
     return <SafeContainer>
-        <ScrollView keyboardShouldPersistTaps="always">
+        <ScrollView keyboardShouldPersistTaps="always" className="p-5">
             <Heading className="mb-1">Form</Heading>
             <Text className="mb-5">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</Text>
 
@@ -114,12 +114,12 @@ const FormCore: React.FC = () => {
                 className="mb-5"
             >
                 <FormControlLabel>
-                    <FormControlLabelText>Guidelines</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.guidelinesSelect.label}</FormControlLabelText>
                 </FormControlLabel>
-                <SelectCore options={[{ label: "medicare", value: "medicare" }]} placeholder="medicare" />
+                <SelectCore options={insuranceProvidersOptions} placeholder="medicare" />
                 <FormControlHelper>
                     <FormControlHelperText>
-                        Select guidelines
+                        {formLabels.guidelinesSelect.helperText}
                     </FormControlHelperText>
                 </FormControlHelper>
             </FormControl>
@@ -128,12 +128,14 @@ const FormCore: React.FC = () => {
                 className="mb-5"
             >
                 <FormControlLabel>
-                    <FormControlLabelText>State</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.stateSelect.label}</FormControlLabelText>
                 </FormControlLabel>
-                <SelectCore options={[{ label: "medicare", value: "medicare" }]} placeholder="medicare" />
+
+                <SelectCore options={stateOptions} placeholder={formLabels.stateSelect.placeholder} />
+
                 <FormControlHelper>
                     <FormControlHelperText>
-                        Select state
+                        {formLabels.stateSelect.helperText}
                     </FormControlHelperText>
                 </FormControlHelper>
             </FormControl>
@@ -142,12 +144,12 @@ const FormCore: React.FC = () => {
                 className="mb-5"
             >
                 <FormControlLabel>
-                    <FormControlLabelText>Treatment</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.treatmentSelect.label}</FormControlLabelText>
                 </FormControlLabel>
-                <SelectCore options={[{ label: "medicare", value: "medicare" }]} placeholder="medicare" />
+                <SelectCore options={ncdOptions} placeholder={formLabels.treatmentSelect.placeholder} />
                 <FormControlHelper>
                     <FormControlHelperText>
-                        Select Treatment
+                        {formLabels.treatmentSelect.helperText}
                     </FormControlHelperText>
                 </FormControlHelper>
             </FormControl>
@@ -159,14 +161,6 @@ const FormCore: React.FC = () => {
 
         </ScrollView>
     </SafeContainer>
-
-
 }
-const QueryForm: React.FC = () => {
-
-    return <FormCore />
-}
-
-
 
 export default QueryForm

@@ -13,6 +13,8 @@ import { config } from '@gluestack-ui/config';
 import { StyledProvider } from '@gluestack-style/react';
 import Pick from './views/Pick';
 import QueryForm from './views/queryForm';
+import { GuideStack } from './views/guide';
+
 const RootStack = createNativeStackNavigator({
   initialRouteName: 'Home',
   screens: {
@@ -21,7 +23,13 @@ const RootStack = createNativeStackNavigator({
     Login: Login,
     Chat: Chat,
     Pick: Pick,
-    PreAuthForm: QueryForm
+    PreAuthForm: QueryForm,
+    Guide: {
+      screen: GuideStack,
+      options: {
+        headerShown: false
+      }
+    }
   },
 });
 
