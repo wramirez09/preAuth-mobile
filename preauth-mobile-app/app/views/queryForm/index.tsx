@@ -113,14 +113,10 @@ const QueryForm: React.FC = () => {
 
                             <SelectCore
                                 options={insuranceProvidersOptions}
-                                placeholder="Select guidelines"
+                                placeholder={formLabels.guidelinesSelect.helperText}
                             />
 
-                            <FormControlHelper>
-                                <FormControlHelperText className="text-xs text-slate-500 mt-1">
-                                    {formLabels.guidelinesSelect.helperText}
-                                </FormControlHelperText>
-                            </FormControlHelper>
+
                         </FormControl>
 
                         {/* State */}
@@ -136,14 +132,9 @@ const QueryForm: React.FC = () => {
 
                             <SelectCore
                                 options={stateOptions}
-                                placeholder={formLabels.stateSelect.placeholder}
+                                placeholder={formLabels.stateSelect.helperText}
                             />
 
-                            <FormControlHelper>
-                                <FormControlHelperText className="text-xs text-slate-500 mt-1">
-                                    {formLabels.stateSelect.helperText}
-                                </FormControlHelperText>
-                            </FormControlHelper>
                         </FormControl>
 
                         {/* Treatment */}
@@ -159,14 +150,8 @@ const QueryForm: React.FC = () => {
 
                             <SelectCore
                                 options={ncdOptions}
-                                placeholder={formLabels.treatmentSelect.placeholder}
+                                placeholder={formLabels.treatmentSelect.helperText}
                             />
-
-                            <FormControlHelper>
-                                <FormControlHelperText className="text-xs text-slate-500 mt-1">
-                                    {formLabels.treatmentSelect.helperText}
-                                </FormControlHelperText>
-                            </FormControlHelper>
                         </FormControl>
 
                         {/* Accordion */}

@@ -1,5 +1,5 @@
 import SelectDropdown from 'react-native-select-dropdown';
-import { ChevronDown } from 'lucide-react-native';
+import { ChevronDown, Search } from 'lucide-react-native';
 import { View } from 'react-native';
 import { Text } from '@gluestack-ui/themed';
 
@@ -21,7 +21,7 @@ const SelectCore: React.FC<Props> = ({
     value,
     onChange,
 }) => {
-    const data = options.map((o) => ({
+    const data = options.map(o => ({
         label: o.label,
         value: o.value,
     }));
@@ -30,67 +30,94 @@ const SelectCore: React.FC<Props> = ({
         <SelectDropdown
             data={data}
             search
-            searchPlaceHolder={placeholder}
+            searchPlaceHolder={`Search ${placeholder}`}
+            showsVerticalScrollIndicator
+
+            /* =========================
+               DROPDOWN CONTAINER
+            ========================= */
             dropdownStyle={{
                 backgroundColor: '#FFFFFF',
                 borderRadius: 12,
                 marginTop: 6,
-                elevation: 4,
+                paddingVertical: 6,
+                shadowColor: '#000',
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 6,
             }}
+
+            /* =========================
+               SEARCH INPUT
+            ========================= */
+            searchInputStyle={{
+                height: 40,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: '#E2E8F0',
+                backgroundColor: '#F8FAFC',
+                paddingHorizontal: 12,
+                marginHorizontal: 12,
+                marginBottom: 8,
+                width: "93%"
+            }}
+
+            searchInputTxtStyle={{
+                fontSize: 14,
+                color: '#0F172A',
+            }}
+
+            renderSearchInputLeftIcon={() => <Search size={12} color="#9ca3af" />}
+
+            /* =========================
+               ROW STYLES (IMPORTANT)
+            ========================= */
+
             onSelect={(item) => onChange?.(item)}
+
+            /* =========================
+               BUTTON (CLOSED STATE)
+            ========================= */
             renderButton={(selectedItem, isOpened) => {
                 const isPlaceholder = !selectedItem?.label;
 
                 return (
-                    <View
-                        className="
-              flex-row
-              items-center
-              justify-between
-              px-4
-              py-3
-              rounded-xl
-              border
-              border-gray-200
-              bg-white
-            "
-                    >
+                    <View className="flex-row items-center justify-between px-4 py-3 rounded-xl border border-slate-200 bg-slate-50">
                         <Text
                             fontSize="$sm"
-                            fontWeight={isPlaceholder ? '$regular' : '$medium'}
-                            color={isPlaceholder ? '$gray400' : '$gray900'}
+                            className={`${isPlaceholder ? 'text-sm text-gray-500' : 'text-md text-gray-900'}`}
                         >
                             {isPlaceholder ? placeholder : selectedItem.label}
                         </Text>
 
                         <ChevronDown
                             size={18}
-                            color="#9CA3AF"
+                            color="#64748B"
                             style={{
                                 transform: [{ rotate: isOpened ? '180deg' : '0deg' }],
                             }}
                         />
-                    </View>
+                    </View >
                 );
             }}
+
+            /* =========================
+               ROW RENDER (OPTIONAL)
+            ========================= */
             renderItem={(item, index, isSelected) => (
                 <View
-                    className={`
-            px-4
-            py-3
-            ${isSelected ? 'bg-gray-100' : 'bg-white'}
-          `}
+                    className={`px-4 py-3 ${isSelected ? 'bg-blue-50' : 'bg-white'
+                        }`}
                 >
                     <Text
                         fontSize="$sm"
                         fontWeight={isSelected ? '$medium' : '$regular'}
-                        color="$gray900"
+                        color={isSelected ? '$blue600' : '$gray900'}
                     >
                         {item.label}
                     </Text>
                 </View>
             )}
-            showsVerticalScrollIndicator={false}
         />
     );
 };
