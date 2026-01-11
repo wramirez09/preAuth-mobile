@@ -10,7 +10,7 @@ const SafeContainer: React.FC<React.PropsWithChildren<{ className?: string }>> =
     <SafeAreaProvider>
       <View
         style={{
-          paddingTop: insets.top,
+          paddingTop: 25,
           paddingBottom: insets.bottom,
           paddingLeft: insets.left,
           paddingRight: insets.right,
