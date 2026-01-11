@@ -3,7 +3,7 @@
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from 'react-native';
 
-const SafeContainer: React.FC<React.PropsWithChildren> = ({ children }) => {
+const SafeContainer: React.FC<React.PropsWithChildren<{ className?: string }>> = ({ children, className }) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -15,7 +15,7 @@ const SafeContainer: React.FC<React.PropsWithChildren> = ({ children }) => {
           paddingLeft: insets.left,
           paddingRight: insets.right,
         }}
-        className="mx-5"
+        className={`${className} mx-5`}
       >
         {children}
       </View>

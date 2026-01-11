@@ -1,56 +1,98 @@
-import SelectDropdown from 'react-native-select-dropdown'
-import { Icon, AddIcon } from '@/components/ui/icon';
-import { View } from "react-native";
-import {
-
-    Text
-} from '@gluestack-ui/themed';
+import SelectDropdown from 'react-native-select-dropdown';
+import { ChevronDown } from 'lucide-react-native';
+import { View } from 'react-native';
+import { Text } from '@gluestack-ui/themed';
 
 type SelectOptions = {
-    label: string,
-    value: any
-}
+    label: string;
+    value: any;
+};
 
-const SelectCore: React.FC<{ placeholder: string, options: SelectOptions[] }> = ({ placeholder, options }) => {
-    const data = options.map((option) => {
-        return {
-            title: option.label,
-            icon: ""
-        }
+type Props = {
+    placeholder: string;
+    options: SelectOptions[];
+    value?: SelectOptions | null;
+    onChange?: (value: SelectOptions) => void;
+};
 
-    })
+const SelectCore: React.FC<Props> = ({
+    placeholder,
+    options,
+    value,
+    onChange,
+}) => {
+    const data = options.map((o) => ({
+        label: o.label,
+        value: o.value,
+    }));
+
     return (
         <SelectDropdown
-
             data={data}
             search
             searchPlaceHolder={placeholder}
-            onSelect={(selectedItem, index) => {
-                console.log(selectedItem.value, index);
+            dropdownStyle={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: 12,
+                marginTop: 6,
+                elevation: 4,
             }}
-            dropdownStyle={{ backgroundColor: "#FFF" }}
+            onSelect={(item) => onChange?.(item)}
             renderButton={(selectedItem, isOpened) => {
-                return (
-                    <View className='flex-row items-center justify-between border border-slate-300 p-3 rounded-md bg-slate-100'>
+                const isPlaceholder = !selectedItem?.label;
 
-                        <Text>
-                            {selectedItem ? selectedItem.title : placeholder}
-                        </Text>
-                        {isOpened ? <Icon as={AddIcon} size="md" /> : <Icon as={AddIcon} size="md" />}
-                    </View>
-                );
-            }}
-            renderItem={(item, index, isSelected) => {
                 return (
-                    <View className='p-3 my-2 divide-y divide-slate-300'>
-                        <Text>{item.title}</Text>
+                    <View
+                        className="
+              flex-row
+              items-center
+              justify-between
+              px-4
+              py-3
+              rounded-xl
+              border
+              border-gray-200
+              bg-white
+            "
+                    >
+                        <Text
+                            fontSize="$sm"
+                            fontWeight={isPlaceholder ? '$regular' : '$medium'}
+                            color={isPlaceholder ? '$gray400' : '$gray900'}
+                        >
+                            {isPlaceholder ? placeholder : selectedItem.label}
+                        </Text>
+
+                        <ChevronDown
+                            size={18}
+                            color="#9CA3AF"
+                            style={{
+                                transform: [{ rotate: isOpened ? '180deg' : '0deg' }],
+                            }}
+                        />
                     </View>
                 );
             }}
+            renderItem={(item, index, isSelected) => (
+                <View
+                    className={`
+            px-4
+            py-3
+            ${isSelected ? 'bg-gray-100' : 'bg-white'}
+          `}
+                >
+                    <Text
+                        fontSize="$sm"
+                        fontWeight={isSelected ? '$medium' : '$regular'}
+                        color="$gray900"
+                    >
+                        {item.label}
+                    </Text>
+                </View>
+            )}
             showsVerticalScrollIndicator={false}
         />
     );
-}
+};
 
-
-export default SelectCore
+export default SelectCore;
