@@ -19,6 +19,9 @@ import {
     ActionsheetBackdrop,
 } from '@/components/ui/actionsheet';
 import SelectCore from '@/components/SelectCore';
+import { formLabels } from '@/app/data/labels';
+import { insuranceProvidersOptions, stateOptions } from '@/app/data/selectOptions';
+import { ncdOptions } from '@/app/data/ncdOptions';
 
 const QueryActionSheet: React.FC<{ setShowActionsheet?: React.Dispatch<boolean>, showActionsheet: boolean, handleClose?: () => void }> = ({ setShowActionsheet, showActionsheet, handleClose }) => {
 
@@ -29,71 +32,68 @@ const QueryActionSheet: React.FC<{ setShowActionsheet?: React.Dispatch<boolean>,
 
             <FormControl className="mb-5 w-full">
                 <FormControlLabel>
-                    <FormControlLabelText>Guidelines</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.guidelinesSelect.label}</FormControlLabelText>
                 </FormControlLabel>
-                <SelectCore placeholder={'select guideline'} options={[{ label: "test", value: "test" }]} />
+                <SelectCore placeholder={formLabels.guidelinesSelect.placeholder} options={insuranceProvidersOptions} />
                 <FormControlHelper>
-                    <FormControlHelperText>Select a Guideline</FormControlHelperText>
+                    <FormControlHelperText>{formLabels.guidelinesSelect.helperText}</FormControlHelperText>
                 </FormControlHelper>
             </FormControl>
             <FormControl className="mb-5 w-full">
                 <FormControlLabel>
-                    <FormControlLabelText>State</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.stateSelect.label}</FormControlLabelText>
                 </FormControlLabel>
-                <SelectCore placeholder={'select guidelines'} options={[{ label: "IL", value: "il" }]} />
+                <SelectCore placeholder={formLabels.stateSelect.placeholder} options={stateOptions} />
                 <FormControlHelper>
-                    <FormControlHelperText>Select a state</FormControlHelperText>
+                    <FormControlHelperText>{formLabels.stateSelect.helperText}</FormControlHelperText>
                 </FormControlHelper>
             </FormControl>
             <FormControl className="mb-5 w-full">
                 <FormControlLabel>
-                    <FormControlLabelText>Treatment</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.treatmentSelect.label}</FormControlLabelText>
                 </FormControlLabel>
-                <SelectCore placeholder={'select a treatment'} options={[{ label: "IL", value: "il" }]} />
+                <SelectCore placeholder={formLabels.treatmentSelect.placeholder} options={ncdOptions} />
                 <FormControlHelper>
-                    <FormControlHelperText>Select a state</FormControlHelperText>
+                    <FormControlHelperText>{formLabels.treatmentSelect.placeholder}</FormControlHelperText>
                 </FormControlHelper>
             </FormControl>
             <FormControl className='mb-5 w-full'>
                 <FormControlLabel>
-                    <FormControlLabelText>Diagnosis</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.diagnosisTextArea.label}</FormControlLabelText>
                 </FormControlLabel>
                 <Textarea
                     size="sm"
                     isReadOnly={false}
                     isInvalid={false}
                     isDisabled={false}
-                    className=""
                 >
-                    <TextareaInput placeholder="Your text goes here..." />
+                    <TextareaInput placeholder={formLabels.diagnosisTextArea.placeholder} />
                 </Textarea>
             </FormControl>
             <FormControl className='mb-5 w-full'>
                 <FormControlLabel>
-                    <FormControlLabelText>Medical History</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.treatmentSelect.label}</FormControlLabelText>
                 </FormControlLabel>
                 <Textarea
                     size="sm"
                     isReadOnly={false}
                     isInvalid={false}
                     isDisabled={false}
-                    className=""
                 >
-                    <TextareaInput placeholder="Your text goes here..." />
+                    <TextareaInput placeholder={formLabels.treatmentSelect.placeholder} />
                 </Textarea>
             </FormControl>
             <FormControl className='mb-3 w-full'>
                 <FormControlLabel>
-                    <FormControlLabelText>Addtional CPT code(s)</FormControlLabelText>
+                    <FormControlLabelText>{formLabels.cptCodesTextArea.label}</FormControlLabelText>
                 </FormControlLabel>
                 <Textarea
                     size="sm"
                     isReadOnly={false}
                     isInvalid={false}
                     isDisabled={false}
-                    className=""
                 >
-                    <TextareaInput placeholder="Your text goes here..." />
+                    <TextareaInput placeholder={formLabels.cptCodesTextArea.placeholder} />
                 </Textarea>
             </FormControl>
             <View className='flex flex-row gap-2'>

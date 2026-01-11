@@ -53,7 +53,7 @@ const Login: React.FC = () => {
 
   return (
     <SafeContainer>
-      <Center className="w-full h-full">
+      <Center className="w-full h-[90%] px-2">
         <VStack className="w-full">
           <View className="mb-5">
             <Heading size="xl" className="text-center">

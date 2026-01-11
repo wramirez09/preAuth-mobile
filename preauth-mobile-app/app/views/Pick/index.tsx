@@ -1,35 +1,29 @@
+import CardCore from "@/components/cardCore";
 import SafeContainer from "@/components/SafeContainer"
-import { Button, ButtonText, Center, FormControl, FormControlHelper, FormControlHelperText, FormControlLabelText, Heading, Text } from '@gluestack-ui/themed'
+import { ThemedText } from "@/components/themed-text";
+import { Text, Center, Heading } from '@gluestack-ui/themed'
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Compass, FileText, MessageSquare } from "lucide-react-native";
 
 
 const Pick: React.FC = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     return <SafeContainer>
         <Center className="h-full">
-            <Heading className="text-start">Pick</Heading>
-            <Text className="mb-10 w-full">Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. </Text>
-            <FormControl className="w-full mb-5">
-                <Button ><ButtonText>Guide Me</ButtonText></Button>
-                <FormControlHelper>
-                    <FormControlHelperText>Will guide you one step at a time </FormControlHelperText>
-                </FormControlHelper>
-            </FormControl>
 
-            <FormControl className="w-full mb-5">
-                <Button><ButtonText onPress={() => navigation.navigate('PreAuthForm')}>Full Form</ButtonText></Button>
-                <FormControlHelper>
-                    <FormControlHelperText>Fill out a form and create a pre authorization query</FormControlHelperText>
-                </FormControlHelper>
-            </FormControl>
-            <FormControl className="w-full mb-5">
-                <Button onPress={() => navigation.navigate('Chat')}><ButtonText>Go to Chat</ButtonText></Button>
-                <FormControlHelper>
-                    <FormControlHelperText>Chat with our LM, the pre-auth form can be toggled from here as well</FormControlHelperText>
-                </FormControlHelper>
-            </FormControl>
+            <Heading className="text-3xl mb-2">Choose Your Path</Heading>
+            <ThemedText className="text-sm mb-9">Select the option that best fits your needs. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</ThemedText>
+
+            <CardCore title="Guide Me" subTitle="Will guide you one step at a time through the process with personalized assistance." pathName='Guide'><Compass color="white" /></CardCore>
+
+            <CardCore title="Full Form" subTitle="Create a pre-authorization query with all details in a comprehensive form." pathName='PreAuthForm'><FileText color="white" /></CardCore>
+
+            <CardCore title="Go to Chat" subTitle="Chat with our LM assistant, toggled from here as well for instant support." pathName='Chat'><MessageSquare color="white" /></CardCore>
+
+            <Text className="text-xs text-center my-5">Need help? Contact our support team anytime</Text>
         </Center>
+
     </SafeContainer >
 }
 
