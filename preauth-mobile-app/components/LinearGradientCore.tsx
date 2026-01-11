@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 // @ts-ignore
 import { LinearGradient } from 'expo-linear-gradient';
 import { cssInterop } from 'nativewind';
 import { tva } from '@gluestack-ui/utils/nativewind-utils';
+import { ColorValue } from 'react-native';
+import styles from 'react-native-gifted-chat/src/styles';
 
 cssInterop(LinearGradient, {
     className: 'style',
@@ -50,19 +52,21 @@ const gradientMap = {
 type LinearGradientCoreProps = {
     variant?: keyof typeof gradientMap;
     className?: string;
+    colors?: [ColorValue, ColorValue, ...ColorValue[]],
+    styes?: CSSProperties
     children?: React.ReactNode;
 };
 
 export const LinearGradientCore = React.forwardRef<
     LinearGradient,
     LinearGradientCoreProps
->(({ variant = 'guide', className, children, ...props }, ref) => {
+>(({ variant = 'guide', className, colors, children, ...props }, ref) => {
     const gradient = gradientMap[variant];
 
     return (
         <LinearGradient
             ref={ref}
-            colors={['#2563EB', '#4F46E5']}
+            colors={colors ?? ['#2563EB', '#4F46E5']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             {...props}

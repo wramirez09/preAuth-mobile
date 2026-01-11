@@ -1,8 +1,10 @@
-import { AccordionItemData } from '@/app/views/queryForm';
 import {
     ChevronUpIcon,
     ChevronDownIcon,
-    View,
+    HStack,
+    VStack,
+    Text,
+    Box,
 } from '@gluestack-ui/themed';
 import {
     Accordion,
@@ -14,6 +16,7 @@ import {
     AccordionIcon,
 } from '@/components/ui/accordion';
 import React from 'react';
+import { AccordionItemData } from '@/app/views/queryForm';
 
 type AccordionType = 'single' | 'multiple';
 
@@ -22,46 +25,57 @@ type Props = {
     data: AccordionItemData[];
 };
 
-const AccordionCore: React.FC<Props> = ({
-    type,
-    data,
-}) => {
+const AccordionCore: React.FC<Props> = ({ type, data }) => {
     return (
-        <Accordion type={type} variant='filled' className='shadow-none'>
+        <VStack space="sm">
             {data.map((item, index) => (
-                <AccordionItem
-                    key={index}
-                    value={`item-${index}`}
-                    className='bg-zinc-100 rounded-xs border border-zinc-200'
+                <Accordion
+                    key={`accordion-${index}`}
+                    type={type}
+                    className='rounded-xl'
+                    className="shadow-none"
+
                 >
-                    <AccordionHeader className='bg-zinc-100 rounded-xs'>
-                        <AccordionTrigger className=''>
-                            {({ isExpanded }) => (
-                                <>
-                                    <AccordionTitleText>
-                                        {item.label}
-                                    </AccordionTitleText>
-                                    <AccordionIcon
-                                        as={
-                                            isExpanded
-                                                ? ChevronUpIcon
-                                                : ChevronDownIcon
-                                        }
-                                        className="ml-3"
-                                    />
-                                </>
-                            )}
-                        </AccordionTrigger>
-                    </AccordionHeader>
+                    <AccordionItem
+                        value={`item-${index}`}
+                        className="rounded-xl border border-zinc-200"
+                    >
+                        {/* HEADER */}
+                        <AccordionHeader>
+                            <AccordionTrigger className="px-4 py-4">
+                                {({ isExpanded }) => (
+                                    <HStack
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        className='w-full pr-5'
+                                    >
+                                        {/* LEFT ICON + LABEL */}
+                                        <HStack space="sm" alignItems="center">
+                                            <Box>{item.icon}</Box>
 
-                    <AccordionContent>
+                                            <AccordionTitleText className="text-slate-900 font-semibold">
+                                                {item.label}
+                                            </AccordionTitleText>
+                                        </HStack>
 
-                        {item.component}
+                                        {/* CHEVRON */}
+                                        <AccordionIcon
+                                            as={isExpanded ? ChevronUpIcon : ChevronDownIcon}
+                                            className="text-slate-400"
+                                        />
+                                    </HStack>
+                                )}
+                            </AccordionTrigger>
+                        </AccordionHeader>
 
-                    </AccordionContent>
-                </AccordionItem>
+                        {/* CONTENT */}
+                        <AccordionContent className="px-4 pb-4 pt-2 bg-white">
+                            {item.component}
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
             ))}
-        </Accordion>
+        </VStack>
     );
 };
 
