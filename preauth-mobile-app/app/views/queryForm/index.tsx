@@ -8,8 +8,6 @@ import SelectCore from "@/components/SelectCore";
 import {
     FormControl,
     FormControlLabel,
-    FormControlHelper,
-    FormControlHelperText,
     FormControlLabelText,
     Textarea,
     Heading,
@@ -32,7 +30,8 @@ export type AccordionItemData = {
     component: ReactNode;
 };
 
-const formData: AccordionItemData[] = [
+const SNAP_POINTS = ['85%', '100%'];
+export const formData: AccordionItemData[] = [
     {
         label: 'Diagnosis',
         icon: <Activity size={18} color="#2563eb" />,
@@ -79,6 +78,90 @@ const formData: AccordionItemData[] = [
     },
 ];
 
+export const FormCore: React.FC<{ data: AccordionItemData[] }> = ({ data }) => {
+
+    return <ScrollView
+        keyboardShouldPersistTaps="handled"
+        className="flex-1 bg-white p-3 rounded-2xl"
+        contentContainerStyle={{ paddingBottom: 32 }}
+
+    >
+
+        {/* Card */}
+        <View className="p-0 m-">
+            {/* Guidelines */}
+            <FormControl size="md" className="mb-5">
+                <FormControlLabel className="mb-2">
+                    <HStack alignItems="center" space="xs">
+                        <FileText size={16} color="#2563EB" />
+                        <FormControlLabelText className="text-sm font-semibold text-slate-900">
+                            {formLabels.guidelinesSelect.label}
+                        </FormControlLabelText>
+                    </HStack>
+                </FormControlLabel>
+
+                <SelectCore
+                    options={insuranceProvidersOptions}
+                    placeholder={formLabels.guidelinesSelect.helperText}
+                />
+
+
+            </FormControl>
+
+            {/* State */}
+            <FormControl size="md" className="mb-5">
+                <FormControlLabel className="mb-2">
+                    <HStack alignItems="center" space="xs">
+                        <MapPin size={16} color="#2563EB" />
+                        <FormControlLabelText className="text-sm font-semibold text-slate-900">
+                            {formLabels.stateSelect.label}
+                        </FormControlLabelText>
+                    </HStack>
+                </FormControlLabel>
+
+                <SelectCore
+                    options={stateOptions}
+                    placeholder={formLabels.stateSelect.helperText}
+                />
+
+            </FormControl>
+
+            {/* Treatment */}
+            <FormControl size="md" className="mb-6">
+                <FormControlLabel className="mb-2">
+                    <HStack alignItems="center" space="xs">
+                        <Stethoscope size={16} color="#2563EB" />
+                        <FormControlLabelText className="text-sm font-semibold text-slate-900">
+                            {formLabels.treatmentSelect.label}
+                        </FormControlLabelText>
+                    </HStack>
+                </FormControlLabel>
+
+                <SelectCore
+                    options={ncdOptions}
+                    placeholder={formLabels.treatmentSelect.helperText}
+                />
+            </FormControl>
+
+            {/* Accordion */}
+            <AccordionCore type="multiple" data={data} />
+        </View>
+
+        {/* Submit */}
+        <Button className="mt-6 bg-blue-600 shadow-md active:bg-blue-700">
+            <ButtonText className="text-white font-semibold">
+                Submit Request
+            </ButtonText>
+        </Button>
+
+        {/* Footer */}
+        <Text className="text-center text-xs text-slate-500 mt-4">
+            All fields are required to process your request
+        </Text>
+
+    </ScrollView>
+}
+
 const QueryForm: React.FC = () => {
     const data = React.useMemo(() => formData, []);
 
@@ -92,85 +175,7 @@ const QueryForm: React.FC = () => {
                     Please complete the following information to submit your
                     pre-authorization request.
                 </Text>
-                <ScrollView
-                    keyboardShouldPersistTaps="always"
-                    className="flex-1 bg-white p-3 rounded-2xl"
-                    contentContainerStyle={{ paddingBottom: 32 }}
-                >
-
-                    {/* Card */}
-                    <View className="p-0 m-">
-                        {/* Guidelines */}
-                        <FormControl size="md" className="mb-5">
-                            <FormControlLabel className="mb-2">
-                                <HStack alignItems="center" space="xs">
-                                    <FileText size={16} color="#2563EB" />
-                                    <FormControlLabelText className="text-sm font-semibold text-slate-900">
-                                        {formLabels.guidelinesSelect.label}
-                                    </FormControlLabelText>
-                                </HStack>
-                            </FormControlLabel>
-
-                            <SelectCore
-                                options={insuranceProvidersOptions}
-                                placeholder={formLabels.guidelinesSelect.helperText}
-                            />
-
-
-                        </FormControl>
-
-                        {/* State */}
-                        <FormControl size="md" className="mb-5">
-                            <FormControlLabel className="mb-2">
-                                <HStack alignItems="center" space="xs">
-                                    <MapPin size={16} color="#2563EB" />
-                                    <FormControlLabelText className="text-sm font-semibold text-slate-900">
-                                        {formLabels.stateSelect.label}
-                                    </FormControlLabelText>
-                                </HStack>
-                            </FormControlLabel>
-
-                            <SelectCore
-                                options={stateOptions}
-                                placeholder={formLabels.stateSelect.helperText}
-                            />
-
-                        </FormControl>
-
-                        {/* Treatment */}
-                        <FormControl size="md" className="mb-6">
-                            <FormControlLabel className="mb-2">
-                                <HStack alignItems="center" space="xs">
-                                    <Stethoscope size={16} color="#2563EB" />
-                                    <FormControlLabelText className="text-sm font-semibold text-slate-900">
-                                        {formLabels.treatmentSelect.label}
-                                    </FormControlLabelText>
-                                </HStack>
-                            </FormControlLabel>
-
-                            <SelectCore
-                                options={ncdOptions}
-                                placeholder={formLabels.treatmentSelect.helperText}
-                            />
-                        </FormControl>
-
-                        {/* Accordion */}
-                        <AccordionCore type="multiple" data={data} />
-                    </View>
-
-                    {/* Submit */}
-                    <Button className="mt-6 bg-blue-600 shadow-md active:bg-blue-700">
-                        <ButtonText className="text-white font-semibold">
-                            Submit Request
-                        </ButtonText>
-                    </Button>
-
-                    {/* Footer */}
-                    <Text className="text-center text-xs text-slate-500 mt-4">
-                        All fields are required to process your request
-                    </Text>
-
-                </ScrollView>
+                <FormCore data={data} />
 
             </SafeContainer>
         </LinearGradientCore>

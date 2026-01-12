@@ -7,6 +7,7 @@ import { Icon, AddIcon } from '@/components/ui/icon';
 import QueryActionSheet from './QueryActionSheet';
 import { Box } from '@/components/ui/box';
 import { useApi } from '../context/api/context';
+import { Input } from '@/components/ui/input';
 
 type Props = {
   accessToken: string;
@@ -47,11 +48,9 @@ export default function ChatInner({ accessToken }: Props) {
   return (
     <>
       <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
-
         <GiftedChat
           messages={messages}
           onSend={handleSendMessage}
-
           user={{ _id: 1 }}
           isTyping={isLoading}
           keyboardAvoidingViewProps={{
@@ -64,6 +63,7 @@ export default function ChatInner({ accessToken }: Props) {
           renderAvatar={null}
           isUserAvatarVisible={false}
           renderActions={(props) => <CustomActions {...props} />}
+
 
         />
         <QueryActionSheet showActionsheet={showActionsheet} handleClose={() => setShowActionsheet(false)} />

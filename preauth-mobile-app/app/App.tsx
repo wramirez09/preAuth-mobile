@@ -14,6 +14,7 @@ import { StyledProvider } from '@gluestack-style/react';
 import Pick from './views/Pick';
 import QueryForm from './views/queryForm';
 import { GuideStack } from './views/guide';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const RootStack = createNativeStackNavigator({
   initialRouteName: 'Home',
@@ -37,13 +38,15 @@ const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
   return (
-    <StyledProvider config={config}>
-      <GluestackUIProvider mode="light">
-        <AuthProvider>
-          <Navigation />
-        </AuthProvider>
-      </GluestackUIProvider>
-    </StyledProvider>
+    <SafeAreaProvider>
+      <StyledProvider config={config}>
+        <GluestackUIProvider mode="light">
+          <AuthProvider>
+            <Navigation />
+          </AuthProvider>
+        </GluestackUIProvider>
+      </StyledProvider>
+    </SafeAreaProvider>
 
   );
 }
