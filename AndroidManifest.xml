@@ -1,0 +1,4 @@
+<activity
+  android:windowSoftInputMode="adjustResize"
+  android:name=".MainActivity"
+/>
