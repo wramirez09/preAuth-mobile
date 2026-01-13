@@ -32,51 +32,40 @@ export type AccordionItemData = {
 
 const SNAP_POINTS = ['85%', '100%'];
 export const formData: AccordionItemData[] = [
-    {
-        label: 'Diagnosis',
-        icon: <Activity size={18} color="#2563eb" />,
-        component: (
-            <FormControl size="md" className="mb-2">
-                <Textarea className="w-full bg-zinc-100">
-                    <TextareaInput placeholder="Your text goes here..." />
-                </Textarea>
-            </FormControl>
-        ),
-    },
-    {
-        label: 'Medical History',
-        icon: <ClipboardList size={18} color="#2563eb" />,
-        component: (
-            <FormControl size="md" className="mb-2">
-                <Textarea className="w-full bg-zinc-100">
-                    <TextareaInput placeholder="Your text goes here..." />
-                </Textarea>
-            </FormControl>
-        ),
-    },
-    {
-        label: 'CPT Code(s)',
-        icon: <FileBarChart size={18} color="#2563eb" />,
-        component: (
-            <FormControl size="md" className="mb-2">
-                <Textarea className="w-full bg-zinc-100">
-                    <TextareaInput placeholder="Your text goes here..." />
-                </Textarea>
-            </FormControl>
-        ),
-    },
-    {
-        label: 'Additional Chat Prompt Context',
-        icon: <MessageSquare size={18} color="#2563eb" />,
-        component: (
-            <FormControl size="md" className="mb-2">
-                <Textarea className="w-full bg-zinc-100">
-                    <TextareaInput placeholder="Your text goes here..." />
-                </Textarea>
-            </FormControl>
-        ),
-    },
-];
+  {
+    label: 'Diagnosis',
+    icon: <Activity size={18} color="#2563eb" />,
+    component: (
+      <FormControl size="md" className="mb-2">
+        <Textarea className="w-full bg-zinc-100">
+          <TextareaInput placeholder="Your text goes here..." />
+        </Textarea>
+      </FormControl>
+    ),
+  },
+  {
+    label: 'Medical History',
+    icon: <ClipboardList size={18} color="#2563eb" />,
+    component: (
+      <FormControl size="md" className="mb-2">
+        <Textarea className="w-full bg-zinc-100">
+          <TextareaInput placeholder="Your text goes here..." />
+        </Textarea>
+      </FormControl>
+    ),
+  },
+  {
+    label: 'CPT or HCPCS',
+    icon: <FileBarChart size={18} color="#2563eb" />,
+    component: (
+      <FormControl size="md" className="mb-2">
+        <Textarea className="w-full bg-zinc-100">
+          <TextareaInput placeholder="Your text goes here..." />
+        </Textarea>
+      </FormControl>
+    ),
+  },
+]
 
 export const FormCore: React.FC<{ data: AccordionItemData[] }> = ({ data }) => {
 

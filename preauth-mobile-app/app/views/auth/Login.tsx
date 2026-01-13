@@ -46,9 +46,11 @@ const Login: React.FC = () => {
   if (loading) {
     return (
       <SafeContainer>
-        <Text className="text-center">Authenticating...</Text>
+        <Center className="h-full">
+          <Text className="text-center">Authenticating...</Text>
+        </Center>
       </SafeContainer>
-    );
+    )
   }
 
   return (
