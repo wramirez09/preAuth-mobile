@@ -174,10 +174,10 @@ module.exports = {
         heading: undefined,
         body: undefined,
         mono: undefined,
-        jakarta: ['var(--font-plus-jakarta-sans)'],
-        roboto: ['var(--font-roboto)'],
-        code: ['var(--font-source-code-pro)'],
-        inter: ['var(--font-inter)'],
+        jakarta: ['ui-sans-serif', ' sans-serif', 'var(--font-plus-jakarta-sans)'],
+        roboto: ['ui-sans-serif', ' sans-serif', 'var(--font-roboto)'],
+        code: ['ui-sans-serif', ' sans-serif', 'var(--font-source-code-pro)'],
+        inter: ['ui-sans-serif', ' sans-serif', 'var(--font-inter)'],
         'space-mono': ['var(--font-space-mono)'],
       },
       fontWeight: {
@@ -199,4 +199,4 @@ module.exports = {
       },
     },
   },
-};
+}

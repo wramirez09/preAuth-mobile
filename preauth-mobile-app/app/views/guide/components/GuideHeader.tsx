@@ -22,19 +22,20 @@ const GuideHeader: React.FC<Partial<GuideHeaderProps>> = ({
   onBack,
 }) => {
   const calculateProgress = () => {
-    console.log(stepIndex, totalSteps)
     const index = stepIndex! + 1
     if (!stepIndex || !totalSteps) return 0
     return (index / totalSteps) * 100
   }
-  console.log(calculateProgress())
+  console.log(totalSteps?.toString()?.split('.'))
   return (
-    <View>
+    <View className="mb-6">
       <View className="flex-row items-center justify-between">
         <Text className="tex-gray-600 text-sm">
           Step {stepIndex!} of {totalSteps}
         </Text>
-        <Text className="tex-gray-600 text-sm">{calculateProgress()}%</Text>
+        <Text className="tex-gray-600 text-sm">
+          {calculateProgress().toString().split('.')[0]}%
+        </Text>
       </View>
       <Progress
         value={calculateProgress()}
@@ -44,8 +45,8 @@ const GuideHeader: React.FC<Partial<GuideHeaderProps>> = ({
       >
         <ProgressFilledTrack className="bg-blue-600" />
       </Progress>
-      <Heading className="text-2xl mb-2">{title}</Heading>
-      <Text>{subTitle}</Text>
+      <Heading className="text-3xl mb-2">{title}</Heading>
+      <Text className="text-lg">{subTitle}</Text>
     </View>
   )
 }

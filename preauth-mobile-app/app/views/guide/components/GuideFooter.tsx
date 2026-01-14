@@ -23,21 +23,43 @@ const GuideFooter = () => {
 
   const back = React.useCallback(() => {
     setCurrentStepIndex(currentStepIndex - 1)
-    if (currentStepIndex == 0) return navigation.navigate('GuideWelcome')
-    navigation.navigate(GUIDE_STEPS[currentStepIndex - 1].id)
+
+    if (currentStepIndex <= 0) {
+      console.log(currentStepIndex)
+      navigation.navigate('Pick')
+    } else navigation.navigate(GUIDE_STEPS[currentStepIndex - 1].id)
+  }, [currentStepIndex])
+
+  const handleStartOver = React.useCallback(() => {
+    navigation.navigate('GuideWelcome')
   }, [currentStepIndex])
 
   return (
     <View>
       <Button className="bg-blue-600 rounded-lg mb-4" onPress={() => next()}>
-        <ButtonText className="text-white font-semibold">{`${isLastStep ? 'submit' : 'Next Step'}`}</ButtonText>
+        <ButtonText className="text-white font-semibold text-sm">{`${isLastStep ? 'submit' : 'Next Step'}`}</ButtonText>
 
         <ArrowRight color="white" size={18} style={{ marginLeft: 8 }} />
       </Button>
-      <Button className="bg-blue-600 rounded-lg mb-4" onPress={() => back()}>
-        <ButtonText className="text-white font-semibold">Previous Step</ButtonText>
-        <ArrowLeft color="white" size={18} style={{ marginLeft: 8 }} />
-      </Button>
+      {currentStepIndex > 0 ? (
+        <Button
+          className="bg-white rounded-lg mb-4 border-gray-300"
+          onPress={() => back()}
+          variant="outline"
+        >
+          <ArrowLeft color="black" size={18} style={{ marginLeft: 8 }} />
+          <ButtonText className="text-black font-semibold text-sm">Previous Step</ButtonText>
+        </Button>
+      ) : (
+        <Button
+          className="bg-white rounded-lg mb-4 border-gray-300"
+          onPress={() => handleStartOver()}
+          variant="outline"
+        >
+          <ArrowLeft color="black" size={18} style={{ marginLeft: 8 }} />
+          <ButtonText className="text-black font-semibold text-sm">Back to Menu</ButtonText>
+        </Button>
+      )}
     </View>
   )
 }

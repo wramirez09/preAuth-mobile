@@ -26,7 +26,7 @@ import { GuideProvider } from './views/context/Guide/guideProvider'
 function HeaderRight() {
   const { user } = useAuth()
   const { isDrawerOpen, setIsDrawerOpen } = useDrawer()
-  if (!user) return null
+  // if (!user) return null
   return (
     <Button variant="link" onPress={() => setIsDrawerOpen(!isDrawerOpen)} ml="$2">
       <Menu />

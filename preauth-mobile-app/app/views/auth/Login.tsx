@@ -1,6 +1,6 @@
-import * as React from "react";
-import SafeContainer from "@/components/SafeContainer";
-import { VStack } from "@/components/ui/vstack";
+import * as React from 'react'
+import SafeContainer from '@/components/SafeContainer'
+import { VStack } from '@/components/ui/vstack'
 import {
   FormControl,
   FormControlLabel,
@@ -10,38 +10,38 @@ import {
   FormControlHelper,
   FormControlHelperText,
   FormControlLabelText,
-  Input, InputField,
+  Input,
+  InputField,
   Text,
   Heading,
-  Button, ButtonText,
-  Center
-} from '@gluestack-ui/themed';
-import { useAuth } from "./context";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View } from 'react-native';
-
-
+  Button,
+  ButtonText,
+  Center,
+} from '@gluestack-ui/themed'
+import { useAuth } from './context'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { View } from 'react-native'
 
 const Login: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const { signIn, user, loading } = useAuth();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const { signIn, user, loading } = useAuth()
 
   const userSignIn = React.useCallback(async () => {
     try {
-      const { session } = await signIn(email, password);
+      const { session } = await signIn(email, password)
 
       if (!session?.access_token) {
-        throw new Error('No session after login');
+        throw new Error('No session after login')
       }
 
-      navigation.navigate('Pick');
+      navigation.navigate('Pick')
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error('Login failed:', err)
     }
-  }, [email, password]);
+  }, [email, password])
 
   if (loading) {
     return (
@@ -123,7 +123,7 @@ const Login: React.FC = () => {
         </VStack>
       </Center>
     </SafeContainer>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

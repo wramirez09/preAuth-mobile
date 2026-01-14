@@ -6,6 +6,7 @@ import State from './steps/State'
 import History from './steps/History'
 import Diagnosis from './steps/Diagnosis'
 import Review from './steps/Review'
+import Codes from './steps/Codes'
 
 export const GuideStack = createNativeStackNavigator({
   initialRouteName: 'GuideWelcome',
@@ -57,6 +58,13 @@ export const GuideStack = createNativeStackNavigator({
       screen: History,
       options: {
         title: 'History',
+        headerShown: false,
+      },
+    },
+    Codes: {
+      screen: Codes,
+      options: {
+        title: 'Codes',
         headerShown: false,
       },
     },

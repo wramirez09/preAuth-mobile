@@ -1,43 +1,38 @@
-import { formLabels } from "@/app/data/labels";
-import { ncdOptions } from "@/app/data/ncdOptions";
-import { insuranceProvidersOptions, stateOptions } from "@/app/data/selectOptions";
-import AccordionCore from "@/components/accordionCore";
-import LinearGradientCore from "@/components/LinearGradientCore";
-import SafeContainer from "@/components/SafeContainer"
-import SelectCore from "@/components/SelectCore";
-import {
-    FormControl,
-    FormControlLabel,
-    FormControlLabelText,
-    Textarea,
-    Heading,
-    TextareaInput,
-    ButtonText,
-    Button,
-    Text,
-    View,
-    HStack
+import AccordionCore from '@/components/accordionCore'
+import { GuidelinesSelect } from '@/components/Form/GuidelinesSelect'
+import { StateSelect } from '@/components/Form/StateSelect'
+import { TreatmentSelect } from '@/components/Form/TreatmentSelect'
+import LinearGradientCore from '@/components/LinearGradientCore'
+import SafeContainer from '@/components/SafeContainer'
 
-} from '@gluestack-ui/themed';
-import { Activity, ClipboardList, FileBarChart, FileText, MapPin, MessageSquare, Stethoscope } from "lucide-react-native";
-import * as React from "react";
-import { ReactNode } from "react";
-import { ScrollView } from "react-native";
+import {
+  FormControl,
+  Textarea,
+  Heading,
+  TextareaInput,
+  ButtonText,
+  Button,
+  Text,
+  View,
+} from '@gluestack-ui/themed'
+import { Activity, ClipboardList, FileBarChart } from 'lucide-react-native'
+import * as React from 'react'
+import { ReactNode } from 'react'
+import { ScrollView } from 'react-native'
 
 export type AccordionItemData = {
-    label: string;
-    icon: ReactNode,
-    component: ReactNode;
-};
+  label: string
+  icon: ReactNode
+  component: ReactNode
+}
 
-const SNAP_POINTS = ['85%', '100%'];
-export const formData: AccordionItemData[] = [
+export const accordionFormData: AccordionItemData[] = [
   {
     label: 'Diagnosis',
     icon: <Activity size={18} color="#2563eb" />,
     component: (
       <FormControl size="md" className="mb-2">
-        <Textarea className="w-full bg-zinc-100">
+        <Textarea className="w-full bg-gray-100">
           <TextareaInput placeholder="Your text goes here..." />
         </Textarea>
       </FormControl>
@@ -48,7 +43,7 @@ export const formData: AccordionItemData[] = [
     icon: <ClipboardList size={18} color="#2563eb" />,
     component: (
       <FormControl size="md" className="mb-2">
-        <Textarea className="w-full bg-zinc-100">
+        <Textarea className="w-full bg-gray-100">
           <TextareaInput placeholder="Your text goes here..." />
         </Textarea>
       </FormControl>
@@ -59,7 +54,7 @@ export const formData: AccordionItemData[] = [
     icon: <FileBarChart size={18} color="#2563eb" />,
     component: (
       <FormControl size="md" className="mb-2">
-        <Textarea className="w-full bg-zinc-100">
+        <Textarea className="w-full bg-gray-100">
           <TextareaInput placeholder="Your text goes here..." />
         </Textarea>
       </FormControl>
@@ -68,108 +63,59 @@ export const formData: AccordionItemData[] = [
 ]
 
 export const FormCore: React.FC<{ data: AccordionItemData[] }> = ({ data }) => {
-
-    return <ScrollView
-        keyboardShouldPersistTaps="handled"
-        className="flex-1 bg-white p-3 rounded-2xl"
-        contentContainerStyle={{ paddingBottom: 32 }}
-
+  return (
+    <ScrollView
+      keyboardShouldPersistTaps="handled"
+      className="flex-1 bg-white p-3 rounded-2xl"
+      contentContainerStyle={{ paddingBottom: 32 }}
     >
+      {/* Card */}
+      <View className="p-0 m-">
+        {/* Guidelines */}
+        <GuidelinesSelect />
 
-        {/* Card */}
-        <View className="p-0 m-">
-            {/* Guidelines */}
-            <FormControl size="md" className="mb-5">
-                <FormControlLabel className="mb-2">
-                    <HStack alignItems="center" space="xs">
-                        <FileText size={16} color="#2563EB" />
-                        <FormControlLabelText className="text-sm font-semibold text-slate-900">
-                            {formLabels.guidelinesSelect.label}
-                        </FormControlLabelText>
-                    </HStack>
-                </FormControlLabel>
+        {/* State */}
+        <StateSelect />
 
-                <SelectCore
-                    options={insuranceProvidersOptions}
-                    placeholder={formLabels.guidelinesSelect.helperText}
-                />
+        {/* Treatment */}
+        <TreatmentSelect />
 
+        {/* Accordion */}
+        <AccordionCore type="multiple" data={data} />
+      </View>
 
-            </FormControl>
+      {/* Submit */}
+      <Button className="mt-6 bg-blue-600 shadow-md active:bg-blue-700">
+        <ButtonText className="text-white font-semibold">Submit Request</ButtonText>
+      </Button>
 
-            {/* State */}
-            <FormControl size="md" className="mb-5">
-                <FormControlLabel className="mb-2">
-                    <HStack alignItems="center" space="xs">
-                        <MapPin size={16} color="#2563EB" />
-                        <FormControlLabelText className="text-sm font-semibold text-slate-900">
-                            {formLabels.stateSelect.label}
-                        </FormControlLabelText>
-                    </HStack>
-                </FormControlLabel>
-
-                <SelectCore
-                    options={stateOptions}
-                    placeholder={formLabels.stateSelect.helperText}
-                />
-
-            </FormControl>
-
-            {/* Treatment */}
-            <FormControl size="md" className="mb-6">
-                <FormControlLabel className="mb-2">
-                    <HStack alignItems="center" space="xs">
-                        <Stethoscope size={16} color="#2563EB" />
-                        <FormControlLabelText className="text-sm font-semibold text-slate-900">
-                            {formLabels.treatmentSelect.label}
-                        </FormControlLabelText>
-                    </HStack>
-                </FormControlLabel>
-
-                <SelectCore
-                    options={ncdOptions}
-                    placeholder={formLabels.treatmentSelect.helperText}
-                />
-            </FormControl>
-
-            {/* Accordion */}
-            <AccordionCore type="multiple" data={data} />
-        </View>
-
-        {/* Submit */}
-        <Button className="mt-6 bg-blue-600 shadow-md active:bg-blue-700">
-            <ButtonText className="text-white font-semibold">
-                Submit Request
-            </ButtonText>
-        </Button>
-
-        {/* Footer */}
-        <Text className="text-center text-xs text-slate-500 mt-4">
-            All fields are required to process your request
-        </Text>
-
+      {/* Footer */}
+      <Text className="text-center text-xs text-slate-500 mt-4">
+        All fields are required to process your request
+      </Text>
     </ScrollView>
+  )
 }
 
 const QueryForm: React.FC = () => {
-    const data = React.useMemo(() => formData, []);
+  const data = React.useMemo(() => accordionFormData, [])
 
-    return (
-        <LinearGradientCore className="h-full w-full rounded-none" colors={["#eff6ff", "#FFF", "#eef2ff"]}>
-            <SafeContainer className="h-full">
-                <Heading className="text-2xl font-bold text-slate-900 mb-3">
-                    Pre-Authorization Request
-                </Heading>
-                <Text className="text-slate-600 mb-6 text-sm pr-10">
-                    Please complete the following information to submit your
-                    pre-authorization request.
-                </Text>
-                <FormCore data={data} />
-
-            </SafeContainer>
-        </LinearGradientCore>
-    );
-};
-
+  return (
+    <LinearGradientCore
+      className="h-full w-full rounded-none"
+      colors={['#eff6ff', '#FFF', '#eef2ff']}
+    >
+      <SafeContainer className="h-full">
+        <Heading className="text-2xl font-bold text-slate-900 mb-3">
+          Pre-Authorization Request
+        </Heading>
+        <Text className="text-slate-600 mb-6 text-sm pr-10">
+          Please complete the following information to submit your pre-authorization request.
+        </Text>
+        <FormCore data={data} />
+      </SafeContainer>
+    </LinearGradientCore>
+  )
+}
 
 export default QueryForm
