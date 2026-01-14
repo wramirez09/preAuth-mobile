@@ -50,8 +50,8 @@ const DrawerCore: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
             <VStack className="flex-1 justify-between">
               {/* Top content */}
               <VStack>
-                <DrawerHeader className="pt-6 pb-4 flex-col justify-center items-center gap-2">
-                  <Avatar size="xl">
+                <DrawerHeader className="pt-6 pb-4 flex-col justify-center items-center gap-2 mt-20">
+                  <Avatar size="md">
                     <AvatarFallbackText>User Image</AvatarFallbackText>
                     <AvatarImage
                       source={{
@@ -71,7 +71,7 @@ const DrawerCore: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
                 <Divider className="my-4" />
 
                 <DrawerBody contentContainerClassName="gap-2 px-2">
-                  <Pressable className="gap-3 flex-row items-center p-2 rounded-md">
+                  {/* <Pressable className="gap-3 flex-row items-center p-2 rounded-md">
                     <Icon as={User} size="lg" className="text-typography-600" />
                     <Text>My Profile</Text>
                   </Pressable>
@@ -79,7 +79,7 @@ const DrawerCore: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
                   <Pressable className="gap-3 flex-row items-center p-2 rounded-md">
                     <Icon as={Home} size="lg" className="text-typography-600" />
                     <Text>Saved Address</Text>
-                  </Pressable>
+                  </Pressable> */}
 
                   <Pressable className="gap-3 flex-row items-center p-2 rounded-md">
                     <Icon as={Wallet} size="lg" className="text-typography-600" />

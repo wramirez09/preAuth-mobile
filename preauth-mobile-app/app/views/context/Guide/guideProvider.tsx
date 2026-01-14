@@ -7,7 +7,9 @@ export type GuideStepId =
   | 'Diagnosis'
   | 'History'
   | 'State'
+  | 'Codes'
   | 'Review'
+  
 
 export const GUIDE_STEPS: {
   id: GuideStepId
@@ -22,7 +24,7 @@ export const GUIDE_STEPS: {
   {
     id: 'State',
     title: 'Choose State',
-    subTitle: "Choose the specific treatment or procedure you're requesting pre-authorization",
+    subTitle: 'Choose a state where you are requesting pre-authorization',
   },
   {
     id: 'Treatment',
@@ -32,13 +34,17 @@ export const GUIDE_STEPS: {
   {
     id: 'Diagnosis',
     title: 'Provide Diagnosis',
-    subTitle: "Choose the specific treatment or procedure you're requesting pre-authorization",
+    subTitle: "Add diagnosis information you're requesting pre-authorization",
   },
-
+  {
+    id: 'Codes',
+    title: 'Add CPT or HCPCS',
+    subTitle: "Add specific CPT or HCPCS codes you're requesting pre-authorization for.",
+  },
   {
     id: 'Review',
     title: 'Review',
-    subTitle: "Choose the specific treatment or procedure you're requesting pre-authorization",
+    subTitle: 'Review your pre-authorization request',
   },
 ]
 

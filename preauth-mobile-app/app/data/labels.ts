@@ -5,13 +5,13 @@ export const formLabels = {
     label: 'Guidelines',
     placeholder: 'medicare',
     errorMessage: '',
-    helperText: 'Select guidelines',
+    helperText: 'Select Guidelines',
   },
   stateSelect: {
     label: 'State',
     placeholder: 'IL',
     errorMessage: '',
-    helperText: 'Select a state',
+    helperText: 'Select a State',
   },
   treatmentSelect: {
     label: 'Prior Authorization Request',
