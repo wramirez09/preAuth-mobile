@@ -2,7 +2,7 @@ import SafeContainer from '@/components/SafeContainer';
 import { Text } from 'react-native';
 import { useAuth } from '@/app/views/auth/context';
 import ChatInner from './ChatInner';
-import { ApiProvider } from '../context/api/apiProvider';
+import { ApiProvider } from '../context/Api/apiProvider'
 
 
 export const Chat: React.FC = () => {

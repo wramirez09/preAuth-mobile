@@ -25,7 +25,6 @@ const GuideFooter = () => {
     setCurrentStepIndex(currentStepIndex - 1)
 
     if (currentStepIndex <= 0) {
-      console.log(currentStepIndex)
       navigation.navigate('Pick')
     } else navigation.navigate(GUIDE_STEPS[currentStepIndex - 1].id)
   }, [currentStepIndex])

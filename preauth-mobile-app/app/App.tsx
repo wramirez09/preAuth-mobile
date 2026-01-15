@@ -21,6 +21,7 @@ import { useDrawer } from './views/context/Drawer/context'
 import DrawerProvider from './views/context/Drawer/drawerProvider'
 import DrawerCore from '@/components/Drawer'
 import { GuideProvider } from './views/context/Guide/guideProvider'
+import FormDataProvider from './views/context/FormData/formDataProvider'
 
 // Custom header component with hamburger button
 function HeaderRight() {
@@ -87,7 +88,9 @@ export default function App() {
           <AuthProvider>
             <DrawerProvider>
               <GuideProvider>
-                <Navigation />
+                <FormDataProvider>
+                  <Navigation />
+                </FormDataProvider>
                 <DrawerComponent />
               </GuideProvider>
             </DrawerProvider>

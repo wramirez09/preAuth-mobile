@@ -16,10 +16,8 @@ type GuideHeaderProps = {
 const GuideHeader: React.FC<Partial<GuideHeaderProps>> = ({
   title,
   subTitle,
-  progress,
   stepIndex,
   totalSteps,
-  onBack,
 }) => {
   const calculateProgress = () => {
     const index = stepIndex! + 1

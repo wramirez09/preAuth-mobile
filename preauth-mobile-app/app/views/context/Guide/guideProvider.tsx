@@ -1,4 +1,4 @@
-import { FormdData, GuideContext } from './context'
+import { GuideContext } from './context'
 import React from 'react'
 export type GuideStepId =
   | 'welcome'
@@ -9,7 +9,6 @@ export type GuideStepId =
   | 'State'
   | 'Codes'
   | 'Review'
-  
 
 export const GUIDE_STEPS: {
   id: GuideStepId
@@ -43,15 +42,15 @@ export const GUIDE_STEPS: {
   },
   {
     id: 'Review',
-    title: 'Review',
-    subTitle: 'Review your pre-authorization request',
+    title: 'Review Your Information',
+    subTitle:
+      'Please review all the information below before submitting your pre-authorization request.',
   },
 ]
 
-export const GuideProvider = ({ children }: { children: React.ReactNode }) => {
+export const GuideProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
   const [isGuideOpen, setIsGuideOpen] = React.useState(false)
   const [currentStepIndex, setCurrentStepIndex] = React.useState(0)
-  const [formData, setFormData] = React.useState<FormdData | undefined>(undefined)
 
   const values = React.useMemo(() => {
     return {
@@ -59,10 +58,8 @@ export const GuideProvider = ({ children }: { children: React.ReactNode }) => {
       setIsGuideOpen,
       currentStepIndex,
       setCurrentStepIndex,
-      formData,
-      setFormData,
     }
-  }, [isGuideOpen, currentStepIndex, formData, setIsGuideOpen, setCurrentStepIndex, setFormData])
+  }, [isGuideOpen, currentStepIndex, setIsGuideOpen, setCurrentStepIndex])
 
   return <GuideContext.Provider value={{ ...values }}>{children}</GuideContext.Provider>
 }

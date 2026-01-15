@@ -1,7 +1,8 @@
 import React from "react";
 import { IMessage, GiftedChat } from "react-native-gifted-chat";
-import { ApiContext } from "./context"
+
 import { createApiUrl } from "@/app/utils";
+import { ApiContext } from './context'
 
 
 function normalizeServerMessagesToGifted(

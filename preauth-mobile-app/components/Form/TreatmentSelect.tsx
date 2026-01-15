@@ -3,11 +3,24 @@ import { ncdOptions } from '@/app/data/ncdOptions'
 import { FormControl, FormControlLabel, FormControlLabelText, HStack } from '@gluestack-ui/themed'
 import { Stethoscope } from 'lucide-react-native'
 import SelectCore from '../SelectCore'
+import { useFormData } from '@/app/views/context/FormData/context'
+import { SelectOption } from '@/app/data/selectOptions'
+import * as React from 'react'
 
 export const TreatmentSelect: React.FC<{ showIcon?: boolean; showLabel?: boolean }> = ({
   showIcon = true,
   showLabel = true,
 }) => {
+  const { setFormData } = useFormData()
+  const handleOnSelect = React.useCallback((value: SelectOption) => {
+    if (value)
+      setFormData((prev) => {
+        return {
+          ...prev,
+          treatment: value.value,
+        }
+      })
+  }, [])
   return (
     <FormControl size="md" className="mb-6">
       <FormControlLabel className="mb-2">
@@ -21,7 +34,11 @@ export const TreatmentSelect: React.FC<{ showIcon?: boolean; showLabel?: boolean
         </HStack>
       </FormControlLabel>
 
-      <SelectCore options={ncdOptions} placeholder={formLabels.treatmentSelect.helperText} />
+      <SelectCore
+        options={ncdOptions}
+        placeholder={formLabels.treatmentSelect.helperText}
+        onChange={handleOnSelect}
+      />
     </FormControl>
   )
 }
