@@ -11,16 +11,18 @@ export const TreatmentSelect: React.FC<{ showIcon?: boolean; showLabel?: boolean
   showIcon = true,
   showLabel = true,
 }) => {
-  const { setFormData } = useFormData()
-  const handleOnSelect = React.useCallback((value: SelectOption) => {
-    if (value)
-      setFormData((prev) => {
-        return {
-          ...prev,
-          treatment: value.value,
-        }
-      })
-  }, [])
+  const { formData, setFormData } = useFormData()
+  const handleOnSelect = React.useCallback(
+    (value: SelectOption) => {
+      if (value) {
+        setFormData({
+          ...formData,
+          treatment: value.value as string,
+        })
+      }
+    },
+    [formData, setFormData]
+  )
   return (
     <FormControl size="md" className="mb-6">
       <FormControlLabel className="mb-2">

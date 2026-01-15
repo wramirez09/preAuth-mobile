@@ -18,22 +18,27 @@ export const GUIDE_STEPS: {
   {
     id: 'Guidelines',
     title: 'Select Guidelines',
-    subTitle: "Choose the specific Guidelines you're requesting pre-authorization for",
+    subTitle: "Choose the specific Guidelines you're requesting pre-authorization for.",
   },
   {
     id: 'State',
     title: 'Choose State',
-    subTitle: 'Choose a state where you are requesting pre-authorization',
+    subTitle: 'Choose a state where you are requesting pre-authorization for.',
   },
   {
     id: 'Treatment',
     title: 'Select Treatment',
-    subTitle: "Choose the specific treatment or procedure you're requesting pre-authorization",
+    subTitle: "Choose the specific treatment or procedure you're requesting pre-authorization for.",
   },
   {
     id: 'Diagnosis',
     title: 'Provide Diagnosis',
-    subTitle: "Add diagnosis information you're requesting pre-authorization",
+    subTitle: "Add diagnosis information you're requesting pre-authorization for.",
+  },
+  {
+    id: 'History',
+    title: 'Provide Diagnosis',
+    subTitle: "Add medical history information you're requesting pre-authorization for,",
   },
   {
     id: 'Codes',
@@ -44,7 +49,7 @@ export const GUIDE_STEPS: {
     id: 'Review',
     title: 'Review Your Information',
     subTitle:
-      'Please review all the information below before submitting your pre-authorization request.',
+      'Please review all the information below before submitting your pre-authorization request for.',
   },
 ]
 
