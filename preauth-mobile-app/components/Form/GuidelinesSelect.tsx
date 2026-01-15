@@ -10,16 +10,18 @@ export const GuidelinesSelect: React.FC<{ showIcon?: boolean; showLable?: boolea
   showIcon = true,
   showLable = true,
 }) => {
-  const { setFormData } = useFormData()
-  const handleOnSelect = React.useCallback((value: SelectOption) => {
-    if (value)
-      setFormData((prev) => {
-        return {
-          ...prev,
-          guidelines: value.value,
-        }
-      })
-  }, [])
+  const { formData, setFormData } = useFormData()
+  const handleOnSelect = React.useCallback(
+    (value: SelectOption) => {
+      if (value) {
+        setFormData({
+          ...formData,
+          guidelines: value.value as string,
+        })
+      }
+    },
+    [formData, setFormData]
+  )
   return (
     <FormControl size="md" className="mb-5">
       <FormControlLabel className="mb-2">

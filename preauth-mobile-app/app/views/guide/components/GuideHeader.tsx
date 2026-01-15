@@ -24,7 +24,7 @@ const GuideHeader: React.FC<Partial<GuideHeaderProps>> = ({
     if (!stepIndex || !totalSteps) return 0
     return (index / totalSteps) * 100
   }
-  console.log(totalSteps?.toString()?.split('.'))
+
   return (
     <View className="mb-6">
       <View className="flex-row items-center justify-between">

@@ -9,17 +9,24 @@ export type FormData = {
   codes?: string
 }
 
+type UpdateFormData = (newData: Partial<FormData>) => void
+
 export type FormDataContext = {
-  formData: FormData | undefined
-  setFormData: React.Dispatch<React.SetStateAction<FormData | undefined>>
+  formData: FormData
+  setFormData: UpdateFormData
 }
 
-export const FormDataContext = React.createContext<FormDataContext>({} as any)
+const defaultContext: FormDataContext = {
+  formData: {},
+  setFormData: () => {},
+}
+
+export const FormDataContext = React.createContext<FormDataContext>(defaultContext)
 
 export const useFormData = () => {
   const context = React.useContext(FormDataContext)
   if (context === undefined) {
-    throw new Error('useGuide must be used within an GuideProvider')
+    throw new Error('useFormData must be used within a FormDataProvider')
   }
   return context
 }

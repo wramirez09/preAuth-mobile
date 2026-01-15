@@ -10,16 +10,18 @@ export const StateSelect: React.FC<{ showIcon?: boolean; showLabel?: boolean }> 
   showIcon = true,
   showLabel = true,
 }) => {
-  const { setFormData } = useFormData()
-  const handleOnSelect = React.useCallback((value: SelectOption) => {
-    if (value)
-      setFormData((prev) => {
-        return {
-          ...prev,
-          state: value.value,
-        }
-      })
-  }, [])
+  const { formData, setFormData } = useFormData()
+  const handleOnSelect = React.useCallback(
+    (value: SelectOption) => {
+      if (value) {
+        setFormData({
+          ...formData,
+          state: value.label,
+        })
+      }
+    },
+    [formData, setFormData]
+  )
   return (
     <FormControl size="md" className="mb-5">
       <FormControlLabel className="mb-2">

@@ -2,16 +2,13 @@ import { Text, TextareaInput, Textarea, FormControl } from '@gluestack-ui/themed
 import GuideContainer from '../GuideContainer'
 import { CardWrapper, SubCard } from '../components/CarWrapper'
 import { Activity } from 'lucide-react-native'
+import DiagnosisTextArea from '@/components/Form/DiagnosisTextArea'
 
 const Diagnosis: React.FC = () => {
   return (
     <GuideContainer>
       <CardWrapper title="Diagnosis" Icon={Activity}>
-        <FormControl size="md" className="mb-2 border-gray-400">
-          <Textarea className="w-full bg-gray-100">
-            <TextareaInput placeholder="medical diagnosis..." />
-          </Textarea>
-        </FormControl>
+        <DiagnosisTextArea />
       </CardWrapper>
 
       <SubCard>
