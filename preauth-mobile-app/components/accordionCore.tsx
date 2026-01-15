@@ -61,7 +61,7 @@ const AccordionCore: React.FC<Props> = ({ type, data }) => {
 
               {/* CONTENT */}
               <AccordionContent className="px-4 pb-4 pt-2 bg-white">
-                {item.component}
+                {item.component()}
               </AccordionContent>
             </AccordionItem>
           </Accordion>

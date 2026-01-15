@@ -19,46 +19,38 @@ import { Activity, ClipboardList, FileBarChart } from 'lucide-react-native'
 import * as React from 'react'
 import { ReactNode } from 'react'
 import { ScrollView } from 'react-native'
+import { useFormData } from '../context/FormData/context'
+import DiagnosisTextArea from '@/components/Form/DiagnosisTextArea'
+import HistoryTextArea from '@/components/Form/HistoryTextArea'
+import CodesTextArea from '@/components/Form/CodesTextArea'
 
 export type AccordionItemData = {
   label: string
   icon: ReactNode
-  component: ReactNode
+  component: () => React.JSX.Element
 }
 
 export const accordionFormData: AccordionItemData[] = [
   {
     label: 'Diagnosis',
     icon: <Activity size={18} color="#2563eb" />,
-    component: (
-      <FormControl size="md" className="mb-2">
-        <Textarea className="w-full bg-gray-100">
-          <TextareaInput placeholder="Your text goes here..." />
-        </Textarea>
-      </FormControl>
-    ),
+    component: () => {
+      return <DiagnosisTextArea />
+    },
   },
   {
     label: 'Medical History',
     icon: <ClipboardList size={18} color="#2563eb" />,
-    component: (
-      <FormControl size="md" className="mb-2">
-        <Textarea className="w-full bg-gray-100">
-          <TextareaInput placeholder="Your text goes here..." />
-        </Textarea>
-      </FormControl>
-    ),
+    component: () => {
+      return <HistoryTextArea />
+    },
   },
   {
     label: 'CPT or HCPCS',
     icon: <FileBarChart size={18} color="#2563eb" />,
-    component: (
-      <FormControl size="md" className="mb-2">
-        <Textarea className="w-full bg-gray-100">
-          <TextareaInput placeholder="Your text goes here..." />
-        </Textarea>
-      </FormControl>
-    ),
+    component: () => {
+      return <CodesTextArea />
+    },
   },
 ]
 

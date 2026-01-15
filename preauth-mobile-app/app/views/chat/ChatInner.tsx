@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon, AddIcon } from '@/components/ui/icon';
 import QueryActionSheet from './QueryActionSheet';
 import { Box } from '@/components/ui/box';
-import { useApi } from '../context/api/context';
+import { useApi } from '../context/Api/context'
 import { Input } from '@/components/ui/input';
 
 type Props = {
