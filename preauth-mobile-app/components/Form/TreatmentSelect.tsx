@@ -40,6 +40,9 @@ export const TreatmentSelect: React.FC<{ showIcon?: boolean; showLabel?: boolean
         options={ncdOptions}
         placeholder={formLabels.treatmentSelect.helperText}
         onChange={handleOnSelect}
+        value={
+          formData.treatment ? { label: formData.treatment, value: formData.treatment } : undefined
+        }
       />
     </FormControl>
   )

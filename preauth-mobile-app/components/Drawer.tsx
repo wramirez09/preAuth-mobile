@@ -31,6 +31,7 @@ const DrawerCore: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
       await signOut()
       setIsDrawerOpen(false)
       refNavigate('Login')
+      
     } catch (error) {
       console.error('Error signing out:', error)
     }
