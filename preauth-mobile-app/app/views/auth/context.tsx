@@ -18,12 +18,13 @@ interface SignInResponse {
 }
 
 export type AuthContextType = {
-  session: Session | null;
-  user: User | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<SignInResponse> | any;
-  signOut: () => Promise<void>;
-};
+  session: Session | null
+  user: User | null
+  loading: boolean
+  signIn: (email: string, password: string) => Promise<SignInResponse> | any
+  signOut: () => Promise<void>
+  isAuthenticated: boolean
+}
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

@@ -39,6 +39,11 @@ export const GuidelinesSelect: React.FC<{ showIcon?: boolean; showLable?: boolea
         onChange={handleOnSelect}
         options={insuranceProvidersOptions}
         placeholder={formLabels.guidelinesSelect.helperText}
+        value={
+          formData.guidelines
+            ? { label: formData.guidelines, value: formData.guidelines }
+            : undefined
+        }
       />
     </FormControl>
   )

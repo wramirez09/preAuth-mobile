@@ -1,39 +1,46 @@
-import { AuthContext } from './context';
-import * as React from 'react';
-import { Session, User } from '@supabase/supabase-js';
-import supabase from '@/app/lib/supabase';
-import { useNavigation } from '@react-navigation/native'
+import { AuthContext } from './context'
+import * as React from 'react'
+import { Session, User } from '@supabase/supabase-js'
+import supabase from '@/app/lib/supabase'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = React.useState<Session | null>(null)
   const [user, setUser] = React.useState<User | null>(null)
   const [loading, setLoading] = React.useState(true)
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false)
 
   React.useEffect(() => {
-    // Initial session
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setUser(data.session?.user ?? null)
-      setLoading(false)
-    })
+    // Initial session check
+    const initializeAuth = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+        setSession(session)
+        setUser(session?.user ?? null)
+        setIsAuthenticated(!!session)
+      } catch (error) {
+        console.error('Error getting session:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    initializeAuth()
 
     // Auth state listener
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT' && session === null) {
-        console.error('Token refresh failed — clearing session')
-        setSession(null)
-        setUser(null)
-        setLoading(false)
-        return
-      }
-
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
+      setIsAuthenticated(!!session)
       setLoading(false)
     })
 
+    // Cleanup subscription on unmount
     return () => {
-      listener.subscription.unsubscribe()
+      subscription.unsubscribe()
     }
   }, [])
 
@@ -65,15 +72,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
-    setLoading(true)
-    await supabase.auth.signOut()
-    setSession(null)
-    setUser(null)
-    setLoading(false)
+    try {
+      setLoading(true)
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+      setSession(null)
+      setUser(null)
+      setIsAuthenticated(false)
+    } catch (error) {
+      console.error('Error signing out:', error)
+      throw error
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ session, user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ session, user, loading, signIn, signOut, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   )

@@ -29,6 +29,7 @@ const SelectCore: React.FC<Props> = ({
     return (
       <SelectDropdown
         data={data}
+        defaultValue={value}
         search
         searchPlaceHolder={`Search ${placeholder}`}
         showsVerticalScrollIndicator

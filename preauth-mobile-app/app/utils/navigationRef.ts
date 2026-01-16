@@ -1,10 +1,27 @@
+// Update your navigationRef.ts file
 import { createNavigationContainerRef } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { NavigatorScreenParams } from '@react-navigation/native'
 
-export const navigationRef = createNavigationContainerRef<NativeStackNavigationProp<any>>()
+export type RootStackParamList = {
+  Home: undefined
+  Login: undefined
+  SignUp: undefined
+  Chat: undefined
+  Pick: undefined
+  PreAuthForm: undefined
+  Guide: undefined
+  // Add other screens here as needed
+}
 
-export function refNavigate(name: any, params?: any) {
+export const navigationRef = createNavigationContainerRef<RootStackParamList>()
+
+export function refNavigate<RouteName extends keyof RootStackParamList>(
+  name: RouteName,
+  params?: RootStackParamList[RouteName]
+) {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name, params)
+    navigationRef.navigate(name as any, params)
+  } else {
+    console.warn('Navigation container is not ready')
   }
 }

@@ -16,12 +16,18 @@ export const StateSelect: React.FC<{ showIcon?: boolean; showLabel?: boolean }> 
       if (value) {
         setFormData({
           ...formData,
-          state: value.label,
+          state: value.value, // Store the value, not the label
         })
       }
     },
     [formData, setFormData]
   )
+
+  // Find the selected state from the options
+  const selectedState = React.useMemo(() => {
+    if (!formData.state) return undefined
+    return stateOptions.find((option) => String(option.value) === String(formData.state))
+  }, [formData.state])
   return (
     <FormControl size="md" className="mb-5">
       <FormControlLabel className="mb-2">
@@ -39,6 +45,7 @@ export const StateSelect: React.FC<{ showIcon?: boolean; showLabel?: boolean }> 
         options={stateOptions}
         placeholder={formLabels.stateSelect.helperText}
         onChange={handleOnSelect}
+        value={selectedState}
       />
     </FormControl>
   )
