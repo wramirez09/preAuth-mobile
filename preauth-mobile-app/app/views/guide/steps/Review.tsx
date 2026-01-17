@@ -8,20 +8,57 @@ import { CheckCircle2, Edit2, FileCheck } from 'lucide-react-native'
 import * as React from 'react'
 import { useFormData } from '../../context/FormData/context'
 import { Card } from '@/components/ui/card'
+import { useGuide } from '../../context/Guide/context'
+import { refNavigate } from '@/app/utils/navigationRef'
+import { states } from '@/app/data/selectOptions'
+import { formatFormDataForChat } from '@/app/utils/formatFormDataForChat'
+import { Button } from '@/components/ui/button'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useNavigation } from '@react-navigation/native'
+
+type RootStackParamList = {
+  Chat: { initialMessage: string }
+  // Add other screens as needed
+}
+
+const getState = (stateId: number): string => {
+  return states.find((state) => state.state_id === stateId)?.description || ''
+}
 
 const Review: React.FC = () => {
   const formData = useFormData()
-  console.log({ formData: formData.formData })
+  const { setCurrentStepIndex } = useGuide()
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+
   const cards = React.useMemo(() => {
     return [
-      { label: 'Guidelines', value: formData.formData?.guidelines, step: 1 },
-      { label: 'Treatment', value: formData.formData?.treatment, step: 2 },
-      { label: 'State', value: formData.formData?.state, step: 3 },
-      { label: 'Diagnosis', value: formData.formData?.diagnosis, step: 4 },
-      { label: 'Medical History', value: formData.formData?.medicalHistory, step: 5 },
-      { label: 'CPT/HCPCS Code', value: formData.formData?.codes, step: 6 },
+      { label: 'Guidelines', value: formData.formData?.guidelines, step: 0, path: 'Guidelines' },
+
+      { label: 'State', value: formData.formData?.state, step: 1, path: 'Treatment' },
+
+      { label: 'Treatment', value: formData.formData?.treatment, step: 2, path: 'Treatment' },
+
+      { label: 'Diagnosis', value: formData.formData?.diagnosis, step: 3, path: 'Diagnosis' },
+
+      {
+        label: 'Medical History',
+        value: formData.formData?.medicalHistory,
+        step: 4,
+        path: 'History',
+      },
+
+      { label: 'CPT/HCPCS Code', value: formData.formData?.codes, step: 5, path: 'Codes' },
+
+      { label: 'Review', value: formData.formData?.codes, step: 6, path: 'Review' },
     ]
   }, [formData])
+
+  const handleNavigate = (path: string, step: number) => {
+    refNavigate(path as any)
+    setCurrentStepIndex(step - 1)
+  }
+
+  
   return (
     <ScrollView className="h-full">
       <GuideContainer showHeader={false}>
@@ -33,6 +70,7 @@ const Review: React.FC = () => {
           Please review all the information below before submitting your pre-authorization request.
         </Text>
         {cards.map((card, index) => {
+          if (card.step === 7) return null
           return (
             <Card className="p-5 bg-white shadow-sm mb-3" key={index}>
               <View className="flex-row items-start">
@@ -42,15 +80,16 @@ const Review: React.FC = () => {
                 {/* Middle content */}
                 <View className="flex-1 ml-4">
                   <Text className="font-medium text-gray-900 mb-1">{card.label}</Text>
-                  <Text className="text-sm text-gray-600">{card.value}</Text>
+                  <Text className="text-sm text-gray-600">
+                    {card.label === 'State' && typeof card.value === 'number'
+                      ? getState(card.value)
+                      : card.value}
+                  </Text>
                 </View>
 
                 {/* Right edit icon */}
                 <Pressable
-                  onPress={() => {
-                    // jump to step
-                    // goToStep(card.step)
-                  }}
+                  onPress={() => handleNavigate(card.path, card.step)}
                   hitSlop={10}
                   className="ml-3"
                 >
@@ -60,6 +99,7 @@ const Review: React.FC = () => {
             </Card>
           )
         })}
+
       </GuideContainer>
     </ScrollView>
   )
