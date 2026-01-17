@@ -10,12 +10,14 @@ const GuideContainer: React.FC<
   React.PropsWithChildren<{ children: React.ReactNode; showHeader?: boolean }>
 > = ({ children, showHeader = true }) => {
   const { currentStepIndex } = useGuide()
-  const step = GUIDE_STEPS[currentStepIndex]
-  const progress = (currentStepIndex + 1) / GUIDE_STEPS.length
+  // For the welcome screen (step 0), we don't show the header
+  const isWelcomeScreen = currentStepIndex === -1
+  const step = isWelcomeScreen ? null : GUIDE_STEPS[currentStepIndex]
+  const progress = isWelcomeScreen ? 0 : (currentStepIndex + 1) / GUIDE_STEPS.length
 
   return (
     <SafeContainer className="h-full">
-      {showHeader && (
+      {showHeader && step && (
         <GuideHeader
           title={step.title}
           subTitle={step.subTitle}

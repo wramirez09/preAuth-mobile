@@ -61,6 +61,17 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
     })
   }, [])
 
+  // Reset form data to empty object and clear from storage
+  const resetFormData = React.useCallback(async () => {
+    try {
+      await AsyncStorage.removeItem(FORM_DATA_STORAGE_KEY)
+      setFormData({})
+      console.log('Form data has been reset')
+    } catch (error) {
+      console.error('Failed to reset form data', error)
+    }
+  }, [])
+
   // Don't render children until we've loaded the form data
   if (!isInitialized) {
     return null
@@ -71,6 +82,7 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
       value={{
         formData,
         setFormData: updateFormData,
+        resetFormData,
       }}
     >
       {children}

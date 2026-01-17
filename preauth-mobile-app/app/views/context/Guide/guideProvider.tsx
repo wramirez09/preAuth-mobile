@@ -37,7 +37,7 @@ export const GUIDE_STEPS: {
   },
   {
     id: 'History',
-    title: 'Provide Diagnosis',
+    title: 'Meical History',
     subTitle: "Add medical history information you're requesting pre-authorization for,",
   },
   {

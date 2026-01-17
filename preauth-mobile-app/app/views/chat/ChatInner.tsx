@@ -8,16 +8,43 @@ import QueryActionSheet from './QueryActionSheet';
 import { Box } from '@/components/ui/box';
 import { useApi } from '../context/Api/context'
 import { Input } from '@/components/ui/input';
+import { useRoute, RouteProp } from '@react-navigation/native'
+
+type RootStackParamList = {
+  Chat: { initialMessage?: string }
+  // Add other screen params as needed
+}
+
+type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>
 
 type Props = {
   accessToken: string;
 };
 
 export default function ChatInner({ accessToken }: Props) {
-
+  const route = useRoute<ChatScreenRouteProp>()
   const insets = useSafeAreaInsets();
   const [showActionsheet, setShowActionsheet] = React.useState(false);
   const { onSend, messages, isLoading } = useApi()
+  const [hasSentInitialMessage, setHasSentInitialMessage] = React.useState(false)
+
+  // Check for initial message from route params and send it if it exists
+  React.useEffect(() => {
+    const initialMessage = route.params?.initialMessage
+    if (initialMessage && !hasSentInitialMessage && messages.length === 0) {
+      const initialMessageObj = {
+        _id: Math.random().toString(36).substring(7),
+        text: initialMessage,
+        createdAt: new Date(),
+        user: {
+          _id: 1, // User's ID
+          name: 'User',
+        },
+      }
+      handleSendMessage([initialMessageObj])
+      setHasSentInitialMessage(true)
+    }
+  }, [route.params?.initialMessage, messages.length, hasSentInitialMessage])
 
   const keyboardVerticalOffset =
     insets.bottom +

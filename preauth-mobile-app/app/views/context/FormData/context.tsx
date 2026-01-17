@@ -14,11 +14,13 @@ type UpdateFormData = (newData: Partial<FormData>) => void
 export type FormDataContext = {
   formData: FormData
   setFormData: UpdateFormData
+  resetFormData: () => Promise<void>
 }
 
 const defaultContext: FormDataContext = {
   formData: {},
   setFormData: () => {},
+  resetFormData: async () => {},
 }
 
 export const FormDataContext = React.createContext<FormDataContext>(defaultContext)
