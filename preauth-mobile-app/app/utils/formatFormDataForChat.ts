@@ -8,12 +8,12 @@ export const formatFormDataForChat = (formData: any) => {
 
   const messageParts = [
     "Here's my pre-authorization request:",
-    `- Guidelines: ${guidelines || 'Not specified'}`,
-    `- Treatment: ${treatment || 'Not specified'}`,
-    `- State: ${typeof state === 'number' ? getStateName(state) : 'Not specified'}`,
-    `- Diagnosis: ${diagnosis || 'Not specified'}`,
-    `- Medical History: ${medicalHistory || 'Not specified'}`,
-    `- CPT/HCPCS Codes: ${codes || 'Not specified'}`,
+    `\u2022 Guidelines: ${guidelines || 'Not specified'}`,
+    `\u2022 Treatment: ${treatment || 'Not specified'}`,
+    `\u2022 State: ${typeof state === 'number' ? getStateName(state) : 'Not specified'}`,
+    `\u2022 Diagnosis: ${diagnosis || 'Not specified'}`,
+    `\u2022 Medical History: ${medicalHistory || 'Not specified'}`,
+    `\u2022 CPT/HCPCS Codes: ${codes || 'Not specified'}`,
   ]
   return messageParts.join('\n')
 }
