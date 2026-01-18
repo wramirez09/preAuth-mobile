@@ -20,10 +20,11 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { ScrollView } from 'react-native'
 import { useFormData } from '../context/FormData/context'
-import { useNavigation, NavigationProp } from '@react-navigation/native'
 import DiagnosisTextArea from '@/components/Form/DiagnosisTextArea'
 import HistoryTextArea from '@/components/Form/HistoryTextArea'
 import CodesTextArea from '@/components/Form/CodesTextArea'
+import { refNavigate } from '@/app/utils/navigationRef'
+import { formatFormDataForChat } from '@/app/utils/formatFormDataForChat'
 
 export type AccordionItemData = {
   label: string
@@ -55,30 +56,22 @@ export const accordionFormData: AccordionItemData[] = [
   },
 ]
 
-type RootStackParamList = {
-  Chat: { initialMessage: string }
-  // Add other screen params as needed
-}
-
-type ChatScreenNavigationProp = NavigationProp<RootStackParamList, 'Chat'>
-
-export const FormCore: React.FC<{ data: AccordionItemData[] }> = ({ data }) => {
-  const navigation = useNavigation<ChatScreenNavigationProp>()
+export const FormCore: React.FC<{ data: AccordionItemData[]; handleCloseDrawer?: () => void }> = ({
+  data,
+  handleCloseDrawer,
+}) => {
+  const navigation = refNavigate
   const { formData, resetFormData } = useFormData()
 
   const handleSubmit = () => {
-    // Format the form data for the chat
-    const message =
-      `New pre-authorization request:\n\n` +
-      `- Guidelines: ${formData.guidelines || 'Not specified'}\n` +
-      `- State: ${formData.state || 'Not specified'}\n` +
-      `- Treatment: ${formData.treatment || 'Not specified'}\n` +
-      `- Diagnosis: ${formData.diagnosis || 'Not specified'}\n` +
-      `- Medical History: ${formData.medicalHistory || 'Not specified'}\n` +
-      `- CPT/HCPCS Codes: ${formData.codes || 'Not specified'}`
+    const formattedFormData = formatFormDataForChat(formData)
 
-    // Navigate to chat with the formatted message
-    navigation.navigate('Chat', { initialMessage: message })
+    handleCloseDrawer?.()
+    navigation('Chat', {
+      initialMessage: {
+        message: formattedFormData,
+      },
+    })
   }
 
   return (

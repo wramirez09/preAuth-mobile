@@ -13,7 +13,7 @@ import { refNavigate } from '@/app/utils/navigationRef'
 import { states } from '@/app/data/selectOptions'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useNavigation } from '@react-navigation/native'
-import { GUIDE_STEPS } from '../../context/Guide/guideProvider'
+import { GUIDE_STEPS, GuideStepId } from '../../context/Guide/guideProvider'
 
 type RootStackParamList = {
   Chat: { initialMessage: string }
@@ -25,7 +25,7 @@ const getState = (stateId: number): string => {
 }
 
 const Review: React.FC = () => {
-  const formData = useFormData()
+  const { formData } = useFormData()
   const { setCurrentStepIndex } = useGuide()
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
@@ -34,6 +34,26 @@ const Review: React.FC = () => {
     requestAnimationFrame(() => {
       refNavigate(path as any)
     })
+  }
+
+  // create a function to get the form data based the id of GUIDE_STEP
+  const getFormData = (id: GuideStepId) => {
+    switch (id) {
+      case 'Guidelines':
+        return formData.guidelines
+      case 'State':
+        return getState(formData?.state)
+      case 'Treatment':
+        return formData.treatment
+      case 'Diagnosis':
+        return formData.diagnosis
+      case 'History':
+        return formData.medicalHistory
+      case 'Codes':
+        return formData.codes
+      default:
+        return ''
+    }
   }
 
   return (
@@ -50,16 +70,15 @@ const Review: React.FC = () => {
           if (card.step === 7) return null
           return (
             <Card className="p-5 bg-white shadow-sm mb-3" key={index}>
-              <View className="flex-row items-start">
-                {/* Left status icon */}
-                <CheckCircle2 size={20} color="#16a34a" />
-
-                {/* Middle content */}
-                <View className="flex-1 ml-4">
-                  <Text className="font-medium text-gray-900 mb-1">{card.title}</Text>
+              <View className="flex-row items-start justify-between">
+                <View className="flex-row gap-4">
+                  <CheckCircle2 size={20} color="#16a34a" />
+                  <View>
+                    <Text className="font-medium text-gray-900 mb-1">{card.title}</Text>
+                    <Text className="text-xs text-gray-700 mb-1">{getFormData(card.id)}</Text>
+                  </View>
                 </View>
 
-                {/* Right edit icon */}
                 <Pressable
                   onPress={() => handleNavigate(card.id, card.step)}
                   hitSlop={10}
