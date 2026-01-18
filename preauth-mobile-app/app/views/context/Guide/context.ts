@@ -6,6 +6,8 @@ export type GuideContext = {
   setIsGuideOpen: React.Dispatch<React.SetStateAction<boolean>>
   currentStepIndex: number
   setCurrentStepIndex: React.Dispatch<React.SetStateAction<number>>
+  isTransitioning: boolean
+  setIsTransitioning: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const GuideContext = React.createContext<GuideContext>({} as any)

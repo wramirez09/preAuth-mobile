@@ -14,7 +14,7 @@ export const formLabels = {
     helperText: 'Select a State',
   },
   treatmentSelect: {
-    label: 'Prior Authorization Request',
+    label: 'Treatment',
     placeholder: 'MRI',
     errorMessage: '',
     helperText: ' Select Treatment',

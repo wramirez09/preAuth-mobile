@@ -38,7 +38,10 @@ const DrawerCore: React.FC<Props> = ({ isOpen }) => {
     refNavigate('Login')
   }
 
-  const closeDrawer = () => setIsDrawerOpen(false)
+  const closeDrawer = (path: any) => {
+    refNavigate(path)
+    setIsDrawerOpen(false)
+  }
 
   return (
     <Drawer isOpen={isOpen} onClose={closeDrawer} anchor="right">
@@ -76,13 +79,21 @@ const DrawerCore: React.FC<Props> = ({ isOpen }) => {
 
               {/* ───────── Actions ───────── */}
               <DrawerBody contentContainerClassName="px-4 py-4 gap-3">
-                <DrawerItem icon={Compass} label="Guide Me" onPress={() => closeDrawer()} />
-                <DrawerItem icon={FileText} label="Full Form" onPress={() => closeDrawer()} />
-                <DrawerItem icon={MessageCircle} label="Go to Chat" onPress={() => closeDrawer()} />
+                <DrawerItem icon={Compass} label="Guide Me" onPress={() => closeDrawer('Guide')} />
+                <DrawerItem
+                  icon={FileText}
+                  label="Full Form"
+                  onPress={() => closeDrawer('PreAuthForm')}
+                />
+                <DrawerItem
+                  icon={MessageCircle}
+                  label="Go to Chat"
+                  onPress={() => closeDrawer('Chat')}
+                />
 
                 <Divider className="my-2" />
 
-                <DrawerItem icon={Wallet} label="Update Billing" onPress={() => closeDrawer()} />
+                <DrawerItem icon={Wallet} label="Update Billing" onPress={() => {}} />
               </DrawerBody>
             </VStack>
 
