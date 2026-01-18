@@ -26,6 +26,7 @@
     "@supabase/supabase-js": "^2.89.0",
     "@tabler/icons": "^3.36.0",
     "@tabler/icons-react": "^3.36.0",
+    "@tailwindcss/typography": "^0.5.19",
     "add": "^2.0.6",
     "ai": "^3.1.12",
     "dotenv": "^17.2.3",

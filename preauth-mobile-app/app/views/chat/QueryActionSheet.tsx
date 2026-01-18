@@ -49,7 +49,7 @@ const QueryActionSheet: React.FC<{
 
             {/* ScrollView owns height */}
             <FormDataProvider>
-              <FormCore data={accordionFormData} />
+              <FormCore data={accordionFormData} handleCloseDrawer={handleClose} />
             </FormDataProvider>
           </KeyboardAvoidingView>
         </ActionsheetContent>

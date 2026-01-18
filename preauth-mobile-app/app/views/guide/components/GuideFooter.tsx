@@ -1,4 +1,4 @@
-import { Heading, Text, Button, ButtonText, View } from '@gluestack-ui/themed'
+import { Button, ButtonText, View } from '@gluestack-ui/themed'
 import { ArrowRight, ArrowLeft, RotateCcw } from 'lucide-react-native'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -8,7 +8,6 @@ import { GUIDE_STEPS } from '../../context/Guide/guideProvider'
 import * as React from 'react'
 import { useFormData } from '../../context/FormData/context'
 import { formatFormDataForChat } from '@/app/utils/formatFormDataForChat'
-import { states } from '@/app/data/selectOptions'
 
 const GuideFooter = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
@@ -41,6 +40,7 @@ const GuideFooter = () => {
   }, [currentStepIndex, navigation, setCurrentStepIndex])
 
   const handleStartOver = React.useCallback(() => {
+    setCurrentStepIndex(1)
     navigation.navigate('GuideWelcome')
   }, [currentStepIndex])
 
@@ -49,9 +49,15 @@ const GuideFooter = () => {
   }, [formData])
 
   const handleSubmitToChat = () => {
-    const message = formatFormDataForChat({ ...formData, states })
-    // Navigate to chat screen with the message
-    navigation.navigate('Chat', { initialMessage: message })
+    setCurrentStepIndex(1)
+    // Format the form data for the chat
+    const formattedMessage = formatFormDataForChat({ ...formData })
+    // Navigate to chat with the formatted message
+    navigation.navigate('Chat', {
+      initialMessage: {
+        message: formattedMessage,
+      },
+    })
   }
 
   return (
