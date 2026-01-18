@@ -65,7 +65,14 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
   const resetFormData = React.useCallback(async () => {
     try {
       await AsyncStorage.removeItem(FORM_DATA_STORAGE_KEY)
-      setFormData({})
+      setFormData({
+        guidelines: undefined,
+        treatment: undefined,
+        state: undefined,
+        diagnosis: undefined,
+        medicalHistory: undefined,
+        codes: undefined,
+      })
       console.log('Form data has been reset')
     } catch (error) {
       console.error('Failed to reset form data', error)

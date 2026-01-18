@@ -20,6 +20,7 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { ScrollView } from 'react-native'
 import { useFormData } from '../context/FormData/context'
+import { useNavigation, NavigationProp } from '@react-navigation/native'
 import DiagnosisTextArea from '@/components/Form/DiagnosisTextArea'
 import HistoryTextArea from '@/components/Form/HistoryTextArea'
 import CodesTextArea from '@/components/Form/CodesTextArea'
@@ -54,7 +55,32 @@ export const accordionFormData: AccordionItemData[] = [
   },
 ]
 
+type RootStackParamList = {
+  Chat: { initialMessage: string }
+  // Add other screen params as needed
+}
+
+type ChatScreenNavigationProp = NavigationProp<RootStackParamList, 'Chat'>
+
 export const FormCore: React.FC<{ data: AccordionItemData[] }> = ({ data }) => {
+  const navigation = useNavigation<ChatScreenNavigationProp>()
+  const { formData, resetFormData } = useFormData()
+
+  const handleSubmit = () => {
+    // Format the form data for the chat
+    const message =
+      `New pre-authorization request:\n\n` +
+      `- Guidelines: ${formData.guidelines || 'Not specified'}\n` +
+      `- State: ${formData.state || 'Not specified'}\n` +
+      `- Treatment: ${formData.treatment || 'Not specified'}\n` +
+      `- Diagnosis: ${formData.diagnosis || 'Not specified'}\n` +
+      `- Medical History: ${formData.medicalHistory || 'Not specified'}\n` +
+      `- CPT/HCPCS Codes: ${formData.codes || 'Not specified'}`
+
+    // Navigate to chat with the formatted message
+    navigation.navigate('Chat', { initialMessage: message })
+  }
+
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
@@ -76,10 +102,18 @@ export const FormCore: React.FC<{ data: AccordionItemData[] }> = ({ data }) => {
         <AccordionCore type="multiple" data={data} />
       </View>
 
-      {/* Submit */}
-      <Button className="mt-6 bg-blue-600 shadow-md active:bg-blue-700">
-        <ButtonText className="text-white font-semibold">Submit Request</ButtonText>
-      </Button>
+      {/* Buttons */}
+      <View className="flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4 mt-6">
+        <Button
+          className="flex-1 bg-blue-600 shadow-md active:bg-blue-700 mb-3"
+          onPress={handleSubmit}
+        >
+          <ButtonText className="text-white font-semibold">Submit Request</ButtonText>
+        </Button>
+        <Button className="flex-1 bg-gray-200 shadow-md" onPress={resetFormData} variant="outline">
+          <ButtonText className="text-gray-800 font-semibold">Reset Form</ButtonText>
+        </Button>
+      </View>
 
       {/* Footer */}
       <Text className="text-center text-xs text-slate-500 mt-4">

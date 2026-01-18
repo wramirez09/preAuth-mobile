@@ -12,26 +12,33 @@ import { states } from '@/app/data/selectOptions'
 
 const GuideFooter = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
-  const { currentStepIndex, setCurrentStepIndex } = useGuide()
+  const { currentStepIndex, setCurrentStepIndex, setIsTransitioning } = useGuide()
   const { formData, resetFormData } = useFormData()
   const isLastStep = currentStepIndex === GUIDE_STEPS.length - 1
+
   const next = React.useCallback(() => {
-    if (isLastStep) {
-      setCurrentStepIndex(0)
-    } else {
-      const nextStep = currentStepIndex + 1
-      setCurrentStepIndex(nextStep)
+    const nextStep = currentStepIndex + 1
+    setCurrentStepIndex(nextStep)
+    requestAnimationFrame(() => {
       navigation.navigate(GUIDE_STEPS[nextStep].id)
-    }
+    })
   }, [currentStepIndex, isLastStep, navigation, setCurrentStepIndex])
 
   const back = React.useCallback(() => {
-    setCurrentStepIndex(currentStepIndex - 1)
-    
-    if (currentStepIndex === 0) {
-      navigation.navigate('GuideWelcome')
-    } else navigation.navigate(GUIDE_STEPS[currentStepIndex - 1].id)
-  }, [currentStepIndex])
+    if (currentStepIndex <= 1) {
+      setCurrentStepIndex(1)
+      requestAnimationFrame(() => {
+        navigation.navigate('GuideWelcome')
+      })
+    } else {
+      const prevStep = currentStepIndex - 1
+      setCurrentStepIndex(prevStep)
+      const step = GUIDE_STEPS[prevStep].id
+      requestAnimationFrame(() => {
+        navigation.navigate(step)
+      })
+    }
+  }, [currentStepIndex, navigation, setCurrentStepIndex])
 
   const handleStartOver = React.useCallback(() => {
     navigation.navigate('GuideWelcome')

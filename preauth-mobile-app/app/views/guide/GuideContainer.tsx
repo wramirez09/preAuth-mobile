@@ -12,20 +12,11 @@ const GuideContainer: React.FC<
   const { currentStepIndex } = useGuide()
   // For the welcome screen (step 0), we don't show the header
   const isWelcomeScreen = currentStepIndex === -1
-  const step = isWelcomeScreen ? null : GUIDE_STEPS[currentStepIndex]
-  const progress = isWelcomeScreen ? 0 : (currentStepIndex + 1) / GUIDE_STEPS.length
+  const step = isWelcomeScreen ? null : GUIDE_STEPS.find((step) => step.step === currentStepIndex)
 
   return (
     <SafeContainer className="h-full">
-      {showHeader && step && (
-        <GuideHeader
-          title={step.title}
-          subTitle={step.subTitle}
-          progress={progress}
-          stepIndex={currentStepIndex + 1}
-          totalSteps={GUIDE_STEPS.length}
-        />
-      )}
+      {showHeader && step && <GuideHeader title={step.title} subTitle={step.subTitle} />}
       <View className={`flex-1`}>{children}</View>
       <GuideFooter />
     </SafeContainer>
