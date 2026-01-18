@@ -5,16 +5,7 @@ import { TreatmentSelect } from '@/components/Form/TreatmentSelect'
 import LinearGradientCore from '@/components/LinearGradientCore'
 import SafeContainer from '@/components/SafeContainer'
 
-import {
-  FormControl,
-  Textarea,
-  Heading,
-  TextareaInput,
-  ButtonText,
-  Button,
-  Text,
-  View,
-} from '@gluestack-ui/themed'
+import { Heading, ButtonText, Button, Text, View } from '@gluestack-ui/themed'
 import { Activity, ClipboardList, FileBarChart } from 'lucide-react-native'
 import * as React from 'react'
 import { ReactNode } from 'react'

@@ -21,6 +21,7 @@ import { useAuth } from '@/app/views/auth/context'
 import SafeContainer from './SafeContainer'
 import { refNavigate } from '@/app/utils/navigationRef'
 import { useGuide } from '@/app/views/context/Guide/context'
+import { GuideStepId } from '@/app/views/context/Guide/guideProvider'
 
 type Props = {
   isOpen: boolean
@@ -29,7 +30,7 @@ type Props = {
 const DrawerCore: React.FC<Props> = ({ isOpen }) => {
   const { setIsDrawerOpen } = useDrawer()
   const { user, signOut } = useAuth()
-  const { setCurrentStepIndex } = useGuide()
+  const { setCurrentStepIndex, currentStepIndex } = useGuide()
   const email = user?.email
   const name = user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? 'User'
 
@@ -41,6 +42,12 @@ const DrawerCore: React.FC<Props> = ({ isOpen }) => {
 
   const closeDrawer = (path: any) => {
     setIsDrawerOpen(false)
+  }
+
+  const closeThenNavigate = (path: string) => {
+    if (currentStepIndex > 1) setCurrentStepIndex(1)
+    setIsDrawerOpen(false)
+    refNavigate(path as keyof typeof refNavigate)
   }
 
   return (
@@ -83,19 +90,18 @@ const DrawerCore: React.FC<Props> = ({ isOpen }) => {
                   icon={Compass}
                   label="Guide Me"
                   onPress={() => {
-                    setCurrentStepIndex(1)
-                    closeDrawer('Guide')
+                    closeThenNavigate('Guide')
                   }}
                 />
                 <DrawerItem
                   icon={FileText}
                   label="Full Form"
-                  onPress={() => closeDrawer('PreAuthForm')}
+                  onPress={() => closeThenNavigate('PreAuthForm')}
                 />
                 <DrawerItem
                   icon={MessageCircle}
                   label="Go to Chat"
-                  onPress={() => closeDrawer('Chat')}
+                  onPress={() => closeThenNavigate('Chat')}
                 />
 
                 <Divider className="my-2" />

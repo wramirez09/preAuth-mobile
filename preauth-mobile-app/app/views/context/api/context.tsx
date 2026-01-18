@@ -3,7 +3,7 @@ import { createContext } from "react";
 import { IMessage } from "react-native-gifted-chat";
 
 export type ApiContextType = {
-    onSend: (newMessages: IMessage[] | undefined, accessToken: string) => Promise<void>
+    onSend: (newMessages: IMessage[] | undefined) => Promise<void>
     messages: IMessage[],
     isLoading: boolean
 };

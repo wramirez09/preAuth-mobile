@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, View, Text } from 'react-native'
+import { Platform, View, ActivityIndicator } from 'react-native'
 import {
   Actions,
   Composer,
@@ -15,9 +15,10 @@ import QueryActionSheet from './QueryActionSheet'
 import { Box } from '@/components/ui/box'
 import { useApi } from '../context/Api/context'
 import { CirclePlus, SendIcon } from 'lucide-react-native'
+import { ChatBubble, ChatTime } from './ChatBubble'
 
 type Props = {
-  accessToken: string
+  accessToken?: string
   initialMessage?: {
     message: string
   }
@@ -103,25 +104,22 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   // Handle initial message when component mounts
   React.useEffect(() => {
     if (initialMessage && !hasProcessedInitialMessage && messages.length === 0) {
-      onSend(
-        [
-          {
-            _id: Math.random().toString(),
-            text: initialMessage.message,
-            createdAt: new Date(),
-            user: { _id: 1 }, // Set as user message (assuming 1 is the user ID)
-          },
-        ],
-        accessToken
-      )
+      onSend([
+        {
+          _id: Math.random().toString(),
+          text: initialMessage.message,
+          createdAt: new Date(),
+          user: { _id: 1 },
+        },
+      ])
       setHasProcessedInitialMessage(true)
     }
-  }, [initialMessage, hasProcessedInitialMessage, messages.length, onSend, accessToken])
+  }, [initialMessage, hasProcessedInitialMessage, messages.length, onSend])
 
   const keyboardVerticalOffset = insets.bottom + (Platform.OS === 'ios' ? 90 : 0)
 
   const handleSendMessage = async (messages: IMessage[]) => {
-    if (accessToken) await onSend(messages, accessToken)
+    await onSend(messages)
   }
 
   const CustomActions = (props: any) => (
@@ -140,32 +138,32 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   )
 
   return (
-    <>
-      <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
-        <GiftedChat
-          messages={messages}
-          renderSend={CustomSend}
-          renderComposer={RenderComposer}
-          renderInputToolbar={RenderInputToolbar}
-          onSend={handleSendMessage}
-          user={{ _id: 1 }}
-          isTyping={isLoading}
-          keyboardAvoidingViewProps={{
-            keyboardVerticalOffset,
-          }}
-          isSendButtonAlwaysVisible
-          isScrollToBottomEnabled
-          isInverted={false}
-          isAvatarOnTop
-          renderAvatar={null}
-          isUserAvatarVisible={false}
-          renderActions={(props) => <CustomActions {...props} />}
-        />
-        <QueryActionSheet
-          showActionsheet={showActionsheet}
-          handleClose={() => setShowActionsheet(false)}
-        />
-      </View>
-    </>
+    <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
+      <GiftedChat
+        messages={messages}
+        renderSend={CustomSend}
+        renderComposer={RenderComposer}
+        renderInputToolbar={RenderInputToolbar}
+        renderTime={(props) => <ChatTime {...props} />}
+        renderBubble={(props) => <ChatBubble {...props} />}
+        onSend={handleSendMessage}
+        user={{ _id: 1 }}
+        isTyping={isLoading}
+        keyboardAvoidingViewProps={{
+          keyboardVerticalOffset,
+        }}
+        isSendButtonAlwaysVisible
+        isScrollToBottomEnabled
+        isInverted={false}
+        isAvatarOnTop
+        renderAvatar={null}
+        isUserAvatarVisible={false}
+        renderActions={(props) => <CustomActions {...props} />}
+      />
+      <QueryActionSheet
+        showActionsheet={showActionsheet}
+        handleClose={() => setShowActionsheet(false)}
+      />
+    </View>
   )
 }
