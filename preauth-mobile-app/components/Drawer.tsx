@@ -41,7 +41,6 @@ const DrawerCore: React.FC<Props> = ({ isOpen }) => {
 
   const closeDrawer = (path: any) => {
     setIsDrawerOpen(false)
-    refNavigate(path)
   }
 
   return (
