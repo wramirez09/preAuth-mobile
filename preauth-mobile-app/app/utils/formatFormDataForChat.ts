@@ -1,3 +1,4 @@
+import { states } from '@/app/data/selectOptions'
 export const formatFormDataForChat = (formData: any) => {
   const { guidelines, treatment, state, states, diagnosis, medicalHistory, codes } = formData
 

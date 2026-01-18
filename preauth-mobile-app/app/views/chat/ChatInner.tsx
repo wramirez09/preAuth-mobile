@@ -1,137 +1,166 @@
 import * as React from 'react'
-import { Platform, View, TouchableOpacity, Keyboard } from 'react-native'
-import { GiftedChat, IMessage, InputToolbar, Composer, Send } from 'react-native-gifted-chat'
+import { Platform, View, Text } from 'react-native'
+import {
+  Actions,
+  Composer,
+  ComposerProps,
+  GiftedChat,
+  IMessage,
+  InputToolbar,
+  InputToolbarProps,
+  Send,
+} from 'react-native-gifted-chat'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useRoute, RouteProp } from '@react-navigation/native'
-import { Plus, Send as SendIcon } from 'lucide-react-native'
-import * as Haptics from 'expo-haptics'
-
 import QueryActionSheet from './QueryActionSheet'
+import { Box } from '@/components/ui/box'
 import { useApi } from '../context/Api/context'
-
-type RootStackParamList = {
-  Chat: { initialMessage?: string }
-}
-
-type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>
+import { CirclePlus, SendIcon } from 'lucide-react-native'
 
 type Props = {
   accessToken: string
+  initialMessage?: {
+    message: string
+  }
 }
 
-const PRIMARY_BLUE = '#3B82F6' // calm blue
-const DISABLED_BLUE = '#BFDBFE' // disabled send
-const INPUT_BG = '#EFF6FF' // light blue background
-const ICON_GRAY = '#60A5FA' // subtle icon
-
-export default function ChatInner({ accessToken }: Props) {
-  const route = useRoute<ChatScreenRouteProp>()
-  const insets = useSafeAreaInsets()
-  const { onSend, messages, isLoading } = useApi()
-
-  const [showActionsheet, setShowActionsheet] = React.useState(false)
-  const [composerText, setComposerText] = React.useState('')
-
-  const keyboardVerticalOffset = insets.bottom + (Platform.OS === 'ios' ? 80 : 0)
-
-  const canSend = composerText.trim().length > 0
-
-  const handleSendMessage = async (msgs: IMessage[]) => {
-    if (!accessToken || !canSend) return
-
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    Keyboard.dismiss()
-    setComposerText('')
-    await onSend(msgs, accessToken)
-  }
-
-  /* ───────── ChatGPT-Style Input ───────── */
-
-  const CustomInputToolbar = (props: any) => (
+const RenderInputToolbar = (props: InputToolbarProps<IMessage>) => {
+  return (
     <InputToolbar
       {...props}
       containerStyle={{
-        backgroundColor: 'transparent',
-        borderTopWidth: 0,
-        paddingHorizontal: 16,
-        paddingBottom: 10,
+        borderRadius: 20,
+        borderWidth: 0,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
+      primaryStyle={{
+        alignItems: 'center',
+        backgroundColor: '#2B5DE4',
+        height: 45,
+        width: '100%',
+        borderRadius: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        paddingLeft: 10,
+        paddingRight: 10,
       }}
     />
   )
+}
 
-  const CustomComposer = (props: any) => (
+const RenderComposer = (props: ComposerProps) => {
+  return (
     <Composer
       {...props}
-      text={composerText}
-      onTextChanged={setComposerText}
-      textInputStyle={{
-        flex: 1,
-        backgroundColor: INPUT_BG,
-        borderRadius: 22,
-        paddingHorizontal: 14,
-        paddingVertical: 10,
-        fontSize: 16,
-        color: '#111827',
+      textInputProps={{
+        ...props.textInputProps, // Preserve any existing textInputProps
+        style: {
+          color: '#FFF',
+          borderWidth: 0,
+          marginLeft: 0,
+        },
+        placeholderTextColor: 'white',
       }}
-      placeholder="Your message"
-      placeholderTextColor={PRIMARY_BLUE}
     />
   )
+}
 
-  const CustomActions = () => (
-    <TouchableOpacity
-      onPress={() => setShowActionsheet(true)}
-      activeOpacity={0.7}
-      style={{
-        width: 28,
-        height: 28,
-        borderRadius: 14,
-        alignItems: 'center',
+const CustomSend = (props: any) => {
+  const canSend = Boolean(props.text?.trim())
+
+  return (
+    <Send
+      {...props}
+      tes
+      containerStyle={{
         justifyContent: 'center',
-        alignSelf: 'center',
-        marginRight: 6,
+        alignItems: 'center',
+        marginLeft: 6,
       }}
     >
-      <Plus size={16} color={PRIMARY_BLUE} />
-    </TouchableOpacity>
-  )
-
-  const CustomSend = (props: any) => (
-    <Send {...props} disabled={!canSend}>
       <View
         style={{
-          width: 28,
-          height: 28,
-          borderRadius: 14,
+          width: 32,
+          height: 32,
+          borderRadius: 16,
           alignItems: 'center',
           justifyContent: 'center',
-          alignSelf: 'center',
-          marginLeft: 6,
+          backgroundColor: '#2147B0',
         }}
       >
-        <SendIcon size={16} color={canSend ? PRIMARY_BLUE : DISABLED_BLUE} />
+        <SendIcon size={16} color="white" />
       </View>
     </Send>
+  )
+}
+export default function ChatInner({ accessToken, initialMessage }: Props) {
+  const insets = useSafeAreaInsets()
+  const [showActionsheet, setShowActionsheet] = React.useState(false)
+  const { onSend, messages, isLoading } = useApi()
+  const [hasProcessedInitialMessage, setHasProcessedInitialMessage] = React.useState(false)
+
+  // Handle initial message when component mounts
+  React.useEffect(() => {
+    if (initialMessage && !hasProcessedInitialMessage && messages.length === 0) {
+      onSend(
+        [
+          {
+            _id: Math.random().toString(),
+            text: initialMessage.message,
+            createdAt: new Date(),
+            user: { _id: 1 }, // Set as user message (assuming 1 is the user ID)
+          },
+        ],
+        accessToken
+      )
+      setHasProcessedInitialMessage(true)
+    }
+  }, [initialMessage, hasProcessedInitialMessage, messages.length, onSend, accessToken])
+
+  const keyboardVerticalOffset = insets.bottom + (Platform.OS === 'ios' ? 90 : 0)
+
+  const handleSendMessage = async (messages: IMessage[]) => {
+    if (accessToken) await onSend(messages, accessToken)
+  }
+
+  const CustomActions = (props: any) => (
+    <Actions
+      className="flex align-center justify-center"
+      {...props}
+      icon={() => (
+        <Box className="items-center justify-center">
+          <CirclePlus size={15} color="white" />
+        </Box>
+      )}
+      onPressActionButton={() => {
+        setShowActionsheet(true)
+      }}
+    />
   )
 
   return (
     <>
-      <View style={{ flex: 1, margin: 16 }}>
+      <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
         <GiftedChat
           messages={messages}
+          renderSend={CustomSend}
+          renderComposer={RenderComposer}
+          renderInputToolbar={RenderInputToolbar}
           onSend={handleSendMessage}
           user={{ _id: 1 }}
           isTyping={isLoading}
-          keyboardAvoidingViewProps={{ keyboardVerticalOffset }}
+          keyboardAvoidingViewProps={{
+            keyboardVerticalOffset,
+          }}
+          isSendButtonAlwaysVisible
+          isScrollToBottomEnabled
           isInverted={false}
+          isAvatarOnTop
           renderAvatar={null}
           isUserAvatarVisible={false}
-          renderInputToolbar={CustomInputToolbar}
-          renderComposer={CustomComposer}
-          renderActions={CustomActions}
-          renderSend={CustomSend}
+          renderActions={(props) => <CustomActions {...props} />}
         />
-
         <QueryActionSheet
           showActionsheet={showActionsheet}
           handleClose={() => setShowActionsheet(false)}

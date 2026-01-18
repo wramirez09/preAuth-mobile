@@ -20,6 +20,7 @@ import { useDrawer } from '@/app/views/context/Drawer/context'
 import { useAuth } from '@/app/views/auth/context'
 import SafeContainer from './SafeContainer'
 import { refNavigate } from '@/app/utils/navigationRef'
+import { useGuide } from '@/app/views/context/Guide/context'
 
 type Props = {
   isOpen: boolean
@@ -28,7 +29,7 @@ type Props = {
 const DrawerCore: React.FC<Props> = ({ isOpen }) => {
   const { setIsDrawerOpen } = useDrawer()
   const { user, signOut } = useAuth()
-
+  const { setCurrentStepIndex } = useGuide()
   const email = user?.email
   const name = user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? 'User'
 
@@ -39,8 +40,8 @@ const DrawerCore: React.FC<Props> = ({ isOpen }) => {
   }
 
   const closeDrawer = (path: any) => {
-    refNavigate(path)
     setIsDrawerOpen(false)
+    refNavigate(path)
   }
 
   return (
@@ -79,7 +80,14 @@ const DrawerCore: React.FC<Props> = ({ isOpen }) => {
 
               {/* ───────── Actions ───────── */}
               <DrawerBody contentContainerClassName="px-4 py-4 gap-3">
-                <DrawerItem icon={Compass} label="Guide Me" onPress={() => closeDrawer('Guide')} />
+                <DrawerItem
+                  icon={Compass}
+                  label="Guide Me"
+                  onPress={() => {
+                    setCurrentStepIndex(1)
+                    closeDrawer('Guide')
+                  }}
+                />
                 <DrawerItem
                   icon={FileText}
                   label="Full Form"
