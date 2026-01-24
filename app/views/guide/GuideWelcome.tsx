@@ -1,20 +1,20 @@
 import {
-  Text,
-  Heading,
-  Card,
-  View,
   Button,
   ButtonText,
-  Divider,
+  Card,
   Center,
+  Divider,
+  Heading,
+  Text,
+  View,
 } from '@gluestack-ui/themed'
 
-import React, { useCallback } from 'react'
-import { ArrowRight, CheckCircle, RotateCcw, Sparkles } from 'lucide-react-native'
 import LinearGradientCore from '@/components/LinearGradientCore'
-import { Pressable } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { ArrowRight, CheckCircle, RotateCcw, Sparkles } from 'lucide-react-native'
+import React, { useCallback } from 'react'
+import { Pressable } from 'react-native'
 import { useGuide } from '../context/Guide/context'
 
 const FeatureItem = ({ text }: { text: string }) => (
@@ -26,10 +26,15 @@ const FeatureItem = ({ text }: { text: string }) => (
 
 const GuideWelcome: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
-  const { currentStepIndex, setCurrentStepIndex } = useGuide()
+  const { setCurrentStepIndex } = useGuide();
+
+  const handleStart = () => {
+    setCurrentStepIndex(1)
+    navigation.navigate('Guidelines')
+  }
 
   const handleStartOver = useCallback(() => {
-    setCurrentStepIndex(0)
+    setCurrentStepIndex(1)
     navigation.navigate('Pick')
   }, [])
   return (
@@ -63,7 +68,7 @@ const GuideWelcome: React.FC = () => {
           {/* Primary Button */}
           <Button
             className="bg-blue-600 rounded-lg mb-4"
-            onPress={() => navigation.navigate('Guidelines')}
+            onPress={() => handleStart()}
           >
             <ButtonText className="text-white font-semibold">Begin</ButtonText>
             <ArrowRight color="white" size={18} style={{ marginLeft: 8 }} />

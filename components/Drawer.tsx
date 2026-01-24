@@ -1,34 +1,25 @@
-import * as React from 'react'
-import {
-  Drawer,
-  DrawerBackdrop,
-  DrawerContent,
-  DrawerHeader,
-  DrawerBody,
-  DrawerFooter,
-} from '@/components/ui/drawer'
-import { Button, ButtonText, ButtonIcon } from '@/components/ui/button'
-import { Text } from '@/components/ui/text'
-import { VStack } from '@/components/ui/vstack'
-import { Pressable } from '@/components/ui/pressable'
-import { Divider } from '@/components/ui/divider'
-import { Avatar, AvatarFallbackText, AvatarImage } from '@/components/ui/avatar'
 import { Icon } from '@/components/ui/icon'
-import { Wallet, LogOut, Compass, FileText, MessageCircle } from 'lucide-react-native'
+import {
+  Avatar, AvatarFallbackText, AvatarImage, Button, ButtonIcon, ButtonText, Divider,
 
-import { useDrawer } from '@/app/views/context/Drawer/context'
-import { useAuth } from '@/app/views/auth/context'
-import SafeContainer from './SafeContainer'
+  Pressable, Text, VStack,
+} from '@gluestack-ui/themed'
+import { Compass, FileText, LogOut, MessageCircle, Wallet } from 'lucide-react-native'
+import * as React from 'react'
+
 import { refNavigate } from '@/app/utils/navigationRef'
+import { useAuth } from '@/app/views/auth/context'
+import { useDrawer } from '@/app/views/context/Drawer/context'
 import { useGuide } from '@/app/views/context/Guide/context'
-import { GuideStepId } from '@/app/views/context/Guide/guideProvider'
+import SafeContainer from './SafeContainer'
+import { Drawer, DrawerBackdrop, DrawerBody, DrawerContent, DrawerFooter, DrawerHeader } from './ui/drawer'
 
 type Props = {
   isOpen: boolean
 }
 
 const DrawerCore: React.FC<Props> = ({ isOpen }) => {
-  const { setIsDrawerOpen } = useDrawer()
+  const { setIsDrawerOpen, isDrawerOpen } = useDrawer()
   const { user, signOut } = useAuth()
   const { setCurrentStepIndex, currentStepIndex } = useGuide()
   const email = user?.email
@@ -51,8 +42,8 @@ const DrawerCore: React.FC<Props> = ({ isOpen }) => {
   }
 
   return (
-    <Drawer isOpen={isOpen} onClose={closeDrawer} anchor="right">
-      <DrawerBackdrop />
+    <Drawer isOpen={isOpen} onClose={() => setIsDrawerOpen(false)} anchor="right">
+      {isDrawerOpen && <DrawerBackdrop />}
       <DrawerContent className="w-[280px]">
         <SafeContainer className="h-full">
           <VStack className="flex-1 justify-between">

@@ -1,12 +1,12 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import GuideWelcome from './GuideWelcome'
-import Guidelines from './steps/Guidelines'
-import Treatment from './steps/Treatment'
-import State from './steps/State'
-import History from './steps/History'
-import Diagnosis from './steps/Diagnosis'
-import Review from './steps/Review'
 import Codes from './steps/Codes'
+import Diagnosis from './steps/Diagnosis'
+import Guidelines from './steps/Guidelines'
+import History from './steps/History'
+import Review from './steps/Review'
+import State from './steps/State'
+import Treatment from './steps/Treatment'
 
 export const GuideStack = createNativeStackNavigator({
   initialRouteName: 'GuideWelcome',
@@ -33,10 +33,10 @@ export const GuideStack = createNativeStackNavigator({
         headerShown: false,
       },
     },
-    Diagnosis: {
-      screen: Diagnosis,
+    State: {
+      screen: State,
       options: {
-        title: 'Diagnosis',
+        title: 'State',
         headerShown: false,
       },
     },
@@ -47,10 +47,10 @@ export const GuideStack = createNativeStackNavigator({
         headerShown: false,
       },
     },
-    State: {
-      screen: State,
+    Diagnosis: {
+      screen: Diagnosis,
       options: {
-        title: 'State',
+        title: 'Diagnosis',
         headerShown: false,
       },
     },

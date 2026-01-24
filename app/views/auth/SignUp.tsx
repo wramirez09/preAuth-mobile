@@ -1,24 +1,27 @@
-import * as React from "react";
 import SafeContainer from "@/components/SafeContainer";
-import { VStack } from "@/components/ui/vstack";
+
 import {
+    Button, ButtonText,
+    Center,
     FormControl,
-    FormControlLabel,
     FormControlError,
-    FormControlErrorText,
     FormControlErrorIcon,
+    FormControlErrorText,
     FormControlHelper,
     FormControlHelperText,
+    FormControlLabel,
     FormControlLabelText,
+    Heading,
+    Image,
     Input, InputField,
     Text,
-    Heading,
-    Button, ButtonText
+    View
 } from '@gluestack-ui/themed';
-import { useAuth } from "./context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View } from 'react-native';
+import * as React from "react";
+import logoImage from '../../assets/images/ndLogo.png';
+import { useAuth } from "./context";
 
 
 
@@ -52,7 +55,15 @@ const SignUp: React.FC = () => {
 
     return (
         <SafeContainer>
-            <VStack>
+            <Center className="w-full h-full px-2">
+                 <View style={{ width: 80, height: 80, marginBottom: 24 }}>
+                              <Image
+                                source={logoImage}
+                                style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
+                                alt="noteDoctor ai"
+                              />
+                            </View>
+            <View className="w-full">
                 <View className="mb-5">
                     <Heading size="xl" className="text-center">
                         Sign up
@@ -66,8 +77,9 @@ const SignUp: React.FC = () => {
                     <FormControlLabel>
                         <FormControlLabelText>Display Name</FormControlLabelText>
                     </FormControlLabel>
-                    <Input variant="outline" size="lg" className="shadow-md">
+                    <Input variant="outline" size="lg" className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center">
                         <InputField
+                       
                             placeholder="Bill"
                             type="text"
                             autoCapitalize="none"
@@ -90,7 +102,7 @@ const SignUp: React.FC = () => {
                     <FormControlLabel>
                         <FormControlLabelText>Email</FormControlLabelText>
                     </FormControlLabel>
-                    <Input variant="outline" size="lg" className="shadow-md">
+                    <Input variant="outline" size="lg" className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center">
                         <InputField
                             placeholder="m@example.com"
                             type="text"
@@ -111,11 +123,12 @@ const SignUp: React.FC = () => {
                 </FormControl>
 
                 <FormControl>
-                    <Button size="md" onPress={() => userSignIn()}>
-                        <ButtonText>Login</ButtonText>
+                    <Button size="md" onPress={() => userSignIn()} className="h-14 rounded-2xl bg-blue-600 items-center justify-center shadow-sm  mb-6">
+                        <ButtonText>Create Account</ButtonText>
                     </Button>
                 </FormControl>
-            </VStack>
+            </View>
+            </Center>
         </SafeContainer>
     );
 };

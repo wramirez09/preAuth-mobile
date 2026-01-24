@@ -1,9 +1,7 @@
-import React, { ReactNode } from 'react'
-import { Text } from '@gluestack-ui/themed'
-import { View } from 'react-native'
 import { Card } from '@/components/ui/card'
+import { Text, View } from '@gluestack-ui/themed'
 import { LucideIcon } from 'lucide-react-native'
-import { icons } from '@tabler/icons-react'
+import React from 'react'
 
 export const CardWrapper: React.FC<
   React.PropsWithChildren<{ Icon: LucideIcon; title: string }>

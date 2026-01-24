@@ -1,12 +1,10 @@
-import GuideContainer from '../GuideContainer'
-import { FileText } from 'lucide-react-native'
-import { Text } from '@gluestack-ui/themed'
 import { GuidelinesSelect } from '@/components/Form/GuidelinesSelect'
+import { Text } from '@gluestack-ui/themed'
+import { FileText } from 'lucide-react-native'
 import { CardWrapper, SubCard } from '../components/CarWrapper'
-import { useFormData } from '../../context/FormData/context'
+import GuideContainer from '../GuideContainer'
 
 const Guidelines: React.FC = () => {
-  const { setFormData } = useFormData()
   return (
     <GuideContainer>
       <CardWrapper title="Guidelines" Icon={FileText}>

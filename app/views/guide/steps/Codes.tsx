@@ -1,10 +1,10 @@
-import { Text, TextareaInput, Textarea, FormControl } from '@gluestack-ui/themed'
+import CodesTextArea from '@/components/Form/CodesTextArea'
+import { Text } from '@gluestack-ui/themed'
+import { Activity } from 'lucide-react-native'
 import GuideContainer from '../GuideContainer'
 import { CardWrapper, SubCard } from '../components/CarWrapper'
-import { Activity } from 'lucide-react-native'
-import CodesTextArea from '@/components/Form/CodesTextArea'
 
-const Diagnosis: React.FC = () => {
+const Codes: React.FC = () => {
   return (
     <GuideContainer>
       <CardWrapper title="CPT or HCPCS" Icon={Activity}>
@@ -21,4 +21,4 @@ const Diagnosis: React.FC = () => {
   )
 }
 
-export default Diagnosis
+export default Codes

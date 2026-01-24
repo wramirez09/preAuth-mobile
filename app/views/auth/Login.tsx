@@ -1,29 +1,28 @@
-import * as React from 'react'
 import SafeContainer from '@/components/SafeContainer'
-import { VStack } from '@/components/ui/vstack'
 import {
-  FormControl,
-  FormControlLabel,
-  FormControlError,
-  FormControlErrorText,
-  FormControlErrorIcon,
-  FormControlHelper,
-  FormControlHelperText,
-  FormControlLabelText,
-  Input,
-  InputField,
-  Text,
-  Heading,
   Button,
   ButtonText,
   Center,
+  FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
+  FormControlHelper,
+  FormControlHelperText,
+  FormControlLabel,
+  FormControlLabelText,
+  Heading,
   Image,
+  Input,
+  InputField,
+  Text,
+  View,
 } from '@gluestack-ui/themed'
-import { useAuth } from './context'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { View } from 'react-native'
+import * as React from 'react'
 import logoImage from '../../assets/images/ndLogo.png'
+import { useAuth } from './context'
 
 const Login: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
@@ -58,12 +57,12 @@ const Login: React.FC = () => {
   return (
     <SafeContainer>
       <Center className="w-full h-full px-2">
-        <VStack className="w-full">
-          <View className="mb-6 justify-center items-center">
-            <View className="w-20 h-20 mb-6">
+        <View className="w-full">
+          <View style={{ marginBottom: 24, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ width: 80, height: 80, marginBottom: 24 }}>
               <Image
                 source={logoImage}
-                className="w-full h-full object-contain"
+                style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
                 alt="noteDoctor ai"
               />
             </View>
@@ -77,12 +76,14 @@ const Login: React.FC = () => {
 
           <FormControl className="mb-5">
             <FormControlLabel>
-              <FormControlLabelText className="block text-sm mb-1">Email</FormControlLabelText>
+              <FormControlLabelText marginLeft={6} size="sm">
+                Email
+              </FormControlLabelText>
             </FormControlLabel>
             <Input
               variant="outline"
               size="lg"
-              className="shadow-md w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg"
+              className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
             >
               <InputField
                 placeholder="Enter email"
@@ -96,7 +97,7 @@ const Login: React.FC = () => {
               />
             </Input>
             <FormControlHelper>
-              <FormControlHelperText className="text-xs text-gray-400 mt-1.5">
+              <FormControlHelperText className="text-xs text-gray-400">
                 Enter your email address
               </FormControlHelperText>
             </FormControlHelper>
@@ -108,9 +109,15 @@ const Login: React.FC = () => {
 
           <FormControl className="mb-10">
             <FormControlLabel>
-              <FormControlLabelText>Password</FormControlLabelText>
+              <FormControlLabelText marginLeft={4} size="sm">
+                Password
+              </FormControlLabelText>
             </FormControlLabel>
-            <Input variant="outline" size="lg" className="shadow-md">
+            <Input
+              variant="outline"
+              size="lg"
+              className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
+            >
               <InputField
                 placeholder="secret password"
                 type="password"
@@ -122,7 +129,9 @@ const Login: React.FC = () => {
               />
             </Input>
             <FormControlHelper>
-              <FormControlHelperText>Enter your password</FormControlHelperText>
+              <FormControlHelperText className="text-xs text-gray-400">
+                Enter your password
+              </FormControlHelperText>
             </FormControlHelper>
             <FormControlError>
               <FormControlErrorIcon />
@@ -142,7 +151,7 @@ const Login: React.FC = () => {
           <Text className="text-center text-gray-500 text-sm my-6">
             Secure • Encrypted • Trusted by Thousands
           </Text>
-        </VStack>
+        </View>
       </Center>
     </SafeContainer>
   )

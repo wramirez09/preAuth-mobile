@@ -1,5 +1,8 @@
+import { Box } from '@/components/ui/box'
+import { View } from '@gluestack-ui/themed'
+import { CirclePlus, SendIcon } from 'lucide-react-native'
 import * as React from 'react'
-import { Platform, View, ActivityIndicator } from 'react-native'
+import { Platform } from 'react-native'
 import {
   Actions,
   Composer,
@@ -11,12 +14,9 @@ import {
   Send,
 } from 'react-native-gifted-chat'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import QueryActionSheet from './QueryActionSheet'
-import { Box } from '@/components/ui/box'
 import { useApi } from '../context/Api/context'
-import { CirclePlus, SendIcon } from 'lucide-react-native'
 import { ChatBubble, ChatTime } from './ChatBubble'
-import { useFormData } from '../context/FormData/context'
+import QueryActionSheet from './QueryActionSheet'
 
 type Props = {
   accessToken?: string
@@ -100,8 +100,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   const insets = useSafeAreaInsets()
   const [showActionsheet, setShowActionsheet] = React.useState(false)
   const { onSend, messages, isLoading } = useApi()
-  const [hasProcessedInitialMessage, setHasProcessedInitialMessage] = React.useState(false)
-  const { resetFormData } = useFormData()
+
 
   React.useEffect(() => {
     if (initialMessage) {
@@ -175,7 +174,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
           autoCapitalize: 'none',
           enablesReturnKeyAutomatically: true,
           returnKeyType: 'send',
-          onSubmitEditing: ({ nativeEvent: { text } }) => {
+          onSubmitEditing: ({ nativeEvent: { text } }: { nativeEvent: { text: string } }) => {
             if (text.trim().length > 0) {
               handleSendMessage([
                 {

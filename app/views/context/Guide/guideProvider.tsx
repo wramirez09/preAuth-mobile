@@ -1,5 +1,6 @@
-import { GuideContext } from './context'
+import { refNavigate } from '@/app/utils/navigationRef'
 import React from 'react'
+import { GuideContext } from './context'
 export type GuideStepId =
   | 'welcome'
   | 'Guidelines'
@@ -65,23 +66,66 @@ export const GuideProvider: React.FC<React.PropsWithChildren<any>> = ({ children
   const [isTransitioning, setIsTransitioning] = React.useState(false)
   const [isGuideOpen, setIsGuideOpen] = React.useState(false)
   const [currentStepIndex, setCurrentStepIndex] = React.useState(1)
+  const [completedSteps, setCompletedSteps] = React.useState<Set<number>>(new Set())
 
-  const values = React.useMemo(() => {
-    return {
-      isGuideOpen,
-      setIsGuideOpen,
-      currentStepIndex,
-      setCurrentStepIndex,
-      isTransitioning,
-      setIsTransitioning,
+  const goToStep = React.useCallback((step: number) => {
+    const targetIndex = step - 1
+    if (targetIndex >= 0 && targetIndex < GUIDE_STEPS.length) {
+      setIsTransitioning(true)
+      setCurrentStepIndex(targetIndex)
+      const targetStep = GUIDE_STEPS[targetIndex]
+      refNavigate(targetStep.id as any)
+      setTimeout(() => setIsTransitioning(false), 300)
     }
-  }, [
+  }, [])
+
+  const goToNextStep = React.useCallback(() => {
+    const nextStepIndex = currentStepIndex + 1
+    if (nextStepIndex < GUIDE_STEPS.length) {
+      // Update the current step index first
+      setCurrentStepIndex(nextStepIndex)
+      // Mark current step as complete
+      setCompletedSteps(prev => new Set([...prev, currentStepIndex]))
+      // Navigate to the next step (using 1-based step number)
+      const nextStep = nextStepIndex + 1
+      goToStep(nextStep)
+    }
+  }, [currentStepIndex, goToStep])
+
+  const goToPrevStep = React.useCallback(() => {
+    const prevStepIndex = currentStepIndex - 1
+    if (prevStepIndex >= 0) {
+      goToStep(prevStepIndex + 1) // Convert to 1-based step number
+    }
+  }, [currentStepIndex, goToStep])
+
+  const markStepComplete = React.useCallback((step: number) => {
+    setCompletedSteps(prev => new Set([...prev, step - 1]))
+  }, [])
+
+  const values = React.useMemo(() => ({
     isGuideOpen,
-    currentStepIndex,
     setIsGuideOpen,
+    currentStepIndex,
     setCurrentStepIndex,
     isTransitioning,
     setIsTransitioning,
+    goToStep,
+    goToNextStep,
+    goToPrevStep,
+    markStepComplete,
+    currentStep: GUIDE_STEPS[currentStepIndex],
+    completedSteps,
+    totalSteps: GUIDE_STEPS.length,
+  }), [
+    isGuideOpen,
+    currentStepIndex,
+    isTransitioning,
+    goToStep,
+    goToNextStep,
+    goToPrevStep,
+    markStepComplete,
+    completedSteps,
   ])
 
   return <GuideContext.Provider value={{ ...values }}>{children}</GuideContext.Provider>

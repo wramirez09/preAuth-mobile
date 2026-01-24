@@ -1,18 +1,15 @@
-import { Heading } from '@/components/ui/heading'
-import { Text } from '@/components/ui/text'
-import GuideContainer from '../GuideContainer'
-import { Pressable, ScrollView, View } from 'react-native'
+
+import { Heading, ScrollView, Text, View } from '@gluestack-ui/themed'
 import { CheckCircle2, Edit2, FileCheck } from 'lucide-react-native'
+import { Pressable } from 'react-native'
+import GuideContainer from '../GuideContainer'
 
-
+import { states } from '@/app/data/selectOptions'
+import { refNavigate } from '@/app/utils/navigationRef'
+import { Card } from '@/components/ui/card'
 import * as React from 'react'
 import { useFormData } from '../../context/FormData/context'
-import { Card } from '@/components/ui/card'
 import { useGuide } from '../../context/Guide/context'
-import { refNavigate } from '@/app/utils/navigationRef'
-import { states } from '@/app/data/selectOptions'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useNavigation } from '@react-navigation/native'
 import { GUIDE_STEPS, GuideStepId } from '../../context/Guide/guideProvider'
 
 type RootStackParamList = {
@@ -21,7 +18,6 @@ type RootStackParamList = {
 }
 
 const getState = (stateId: number): string => {
-  console.log({ stateId })
   return states.find((state) => state.state_id === stateId)?.description || ''
 }
 

@@ -50,7 +50,7 @@ const RootStack = createNativeStackNavigator({
     Home: {
       screen: Home,
       options: {
-        title: 'Welcoome',
+        title: 'Welcome',
         headerBackVisible: false,
         headerBackButtonMenuEnabled: false,
         headerRight: () => <HeaderRight />,

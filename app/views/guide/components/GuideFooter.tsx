@@ -1,25 +1,26 @@
 import { Button, ButtonText, View } from '@gluestack-ui/themed'
-import { ArrowRight, ArrowLeft, RotateCcw } from 'lucide-react-native'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react-native'
 import { useGuide } from '../../context/Guide/context'
 import { GUIDE_STEPS } from '../../context/Guide/guideProvider'
 
+import { formatFormDataForChat } from '@/app/utils/formatFormDataForChat'
 import * as React from 'react'
 import { useFormData } from '../../context/FormData/context'
-import { formatFormDataForChat } from '@/app/utils/formatFormDataForChat'
 
 const GuideFooter = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
   const { currentStepIndex, setCurrentStepIndex, setIsTransitioning } = useGuide()
   const { formData, resetFormData } = useFormData()
-  const isLastStep = currentStepIndex === GUIDE_STEPS.length - 1
-
+  const isLastStep = currentStepIndex === GUIDE_STEPS.length
+  
   const next = React.useCallback(() => {
     const nextStep = currentStepIndex + 1
     setCurrentStepIndex(nextStep)
+    const step = GUIDE_STEPS.find((step)=> step.step === nextStep)
     requestAnimationFrame(() => {
-      navigation.navigate(GUIDE_STEPS[nextStep].id)
+      navigation.navigate(step?.id || '')
     })
   }, [currentStepIndex, isLastStep, navigation, setCurrentStepIndex])
 
@@ -32,9 +33,11 @@ const GuideFooter = () => {
     } else {
       const prevStep = currentStepIndex - 1
       setCurrentStepIndex(prevStep)
-      const step = GUIDE_STEPS[prevStep].id
+      
+      const step = GUIDE_STEPS.find((step)=> step.step === prevStep)
+  
       requestAnimationFrame(() => {
-        navigation.navigate(step)
+        navigation.navigate(step?.id || "")
       })
     }
   }, [currentStepIndex, navigation, setCurrentStepIndex])
