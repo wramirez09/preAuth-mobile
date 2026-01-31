@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "preauth-mobile-app",
-    "slug": "preauth-mobile-app",
+    "name": "noteDoctor.ai.app",
+    "slug": "noteDoctor.ai.app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "preauthmobileapp",
+    "scheme": "notedoctoraiapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.notedoctoraiapp.preauth",
       "supportsTablet": true,
       "infoPlist": {
         "NSAppTransportSecurity": {
@@ -17,6 +18,7 @@
       }
     },
     "android": {
+       "package": "com.notedoctoraiapp.preauth",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

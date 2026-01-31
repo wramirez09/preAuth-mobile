@@ -58,7 +58,13 @@ const Login: React.FC = () => {
     <SafeContainer>
       <Center className="w-full h-full px-2">
         <View className="w-full">
-          <View style={{ marginBottom: 24, justifyContent: 'center', alignItems: 'center' }}>
+          <View
+            style={{
+              marginBottom: 24,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <View style={{ width: 80, height: 80, marginBottom: 24 }}>
               <Image
                 source={logoImage}
@@ -93,7 +99,7 @@ const Login: React.FC = () => {
                 keyboardType="email-address"
                 returnKeyType="next"
                 enablesReturnKeyAutomatically
-                onChangeText={(value) => setEmail(value)}
+                onChangeText={value => setEmail(value)}
               />
             </Input>
             <FormControlHelper>
@@ -125,7 +131,7 @@ const Login: React.FC = () => {
                 keyboardType="default"
                 returnKeyType="next"
                 enablesReturnKeyAutomatically
-                onChangeText={(value) => setPassword(value)}
+                onChangeText={value => setPassword(value)}
               />
             </Input>
             <FormControlHelper>

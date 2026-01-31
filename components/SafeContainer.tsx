@@ -1,10 +1,13 @@
+import { View } from '@gluestack-ui/themed'
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 
-
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { View } from 'react-native';
-
-const SafeContainer: React.FC<React.PropsWithChildren<{ className?: string, lowTopPadding?: boolean }>> = ({ children, className, lowTopPadding = true }) => {
-  const insets = useSafeAreaInsets();
+const SafeContainer: React.FC<
+  React.PropsWithChildren<{ className?: string; lowTopPadding?: boolean }>
+> = ({ children, className, lowTopPadding = true }) => {
+  const insets = useSafeAreaInsets()
 
   return (
     <SafeAreaProvider>
@@ -20,7 +23,7 @@ const SafeContainer: React.FC<React.PropsWithChildren<{ className?: string, lowT
         {children}
       </View>
     </SafeAreaProvider>
-  );
-};
+  )
+}
 
-export default SafeContainer;
+export default SafeContainer
