@@ -20,7 +20,8 @@ export const GUIDE_STEPS: {
   {
     id: 'Guidelines',
     title: 'Select Guidelines',
-    subTitle: "Choose the specific Guidelines you're requesting pre-authorization for.",
+    subTitle:
+      "Choose the specific Guidelines you're requesting pre-authorization for.",
     step: 1,
   },
   {
@@ -32,41 +33,49 @@ export const GUIDE_STEPS: {
   {
     id: 'Treatment',
     title: 'Select Treatment',
-    subTitle: "Choose the specific treatment or procedure you're requesting pre-authorization for.",
+    subTitle:
+      "Choose the specific treatment or procedure you're requesting pre-authorization for. Only one is required",
     step: 3,
   },
   {
     id: 'Diagnosis',
     title: 'Provide Diagnosis',
-    subTitle: "Add diagnosis information you're requesting pre-authorization for.",
+    subTitle:
+      "Add diagnosis information you're requesting pre-authorization for.",
     step: 4,
   },
   {
     id: 'History',
     title: 'Medical History',
-    subTitle: "Add medical history information you're requesting pre-authorization for,",
+    subTitle:
+      "Add medical history information you're requesting pre-authorization for,",
     step: 5,
   },
-  {
-    id: 'Codes',
-    title: 'Add CPT or HCPCS',
-    subTitle: "Add specific CPT or HCPCS codes you're requesting pre-authorization for.",
-    step: 6,
-  },
+  // {
+  //   id: 'Codes',
+  //   title: 'Add CPT or HCPCS',
+  //   subTitle:
+  //     "Add specific CPT or HCPCS codes you're requesting pre-authorization for.",
+  //   step: 6,
+  // },
   {
     id: 'Review',
     title: 'Review Your Information',
     subTitle:
       'Please review all the information below before submitting your pre-authorization request for.',
-    step: 7,
+    step: 6,
   },
 ]
 
-export const GuideProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
+export const GuideProvider: React.FC<React.PropsWithChildren<any>> = ({
+  children,
+}) => {
   const [isTransitioning, setIsTransitioning] = React.useState(false)
   const [isGuideOpen, setIsGuideOpen] = React.useState(false)
   const [currentStepIndex, setCurrentStepIndex] = React.useState(1)
-  const [completedSteps, setCompletedSteps] = React.useState<Set<number>>(new Set())
+  const [completedSteps, setCompletedSteps] = React.useState<Set<number>>(
+    new Set()
+  )
 
   const goToStep = React.useCallback((step: number) => {
     const targetIndex = step - 1
@@ -103,30 +112,37 @@ export const GuideProvider: React.FC<React.PropsWithChildren<any>> = ({ children
     setCompletedSteps(prev => new Set([...prev, step - 1]))
   }, [])
 
-  const values = React.useMemo(() => ({
-    isGuideOpen,
-    setIsGuideOpen,
-    currentStepIndex,
-    setCurrentStepIndex,
-    isTransitioning,
-    setIsTransitioning,
-    goToStep,
-    goToNextStep,
-    goToPrevStep,
-    markStepComplete,
-    currentStep: GUIDE_STEPS[currentStepIndex],
-    completedSteps,
-    totalSteps: GUIDE_STEPS.length,
-  }), [
-    isGuideOpen,
-    currentStepIndex,
-    isTransitioning,
-    goToStep,
-    goToNextStep,
-    goToPrevStep,
-    markStepComplete,
-    completedSteps,
-  ])
+  const values = React.useMemo(
+    () => ({
+      isGuideOpen,
+      setIsGuideOpen,
+      currentStepIndex,
+      setCurrentStepIndex,
+      isTransitioning,
+      setIsTransitioning,
+      goToStep,
+      goToNextStep,
+      goToPrevStep,
+      markStepComplete,
+      currentStep: GUIDE_STEPS[currentStepIndex],
+      completedSteps,
+      totalSteps: GUIDE_STEPS.length,
+    }),
+    [
+      isGuideOpen,
+      currentStepIndex,
+      isTransitioning,
+      goToStep,
+      goToNextStep,
+      goToPrevStep,
+      markStepComplete,
+      completedSteps,
+    ]
+  )
 
-  return <GuideContext.Provider value={{ ...values }}>{children}</GuideContext.Provider>
+  return (
+    <GuideContext.Provider value={{ ...values }}>
+      {children}
+    </GuideContext.Provider>
+  )
 }

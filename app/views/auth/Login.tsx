@@ -65,14 +65,14 @@ const Login: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            <View style={{ width: 80, height: 80, marginBottom: 24 }}>
+            <View style={{ width: 60, height: 60, marginBottom: 24 }}>
               <Image
                 source={logoImage}
                 style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
                 alt="noteDoctor ai"
               />
             </View>
-            <Heading size="3xl" className="text-center">
+            <Heading size="2xl" className="text-center">
               Welcome back
             </Heading>
             <Text size="sm" className="text-center">
@@ -99,7 +99,7 @@ const Login: React.FC = () => {
                 keyboardType="email-address"
                 returnKeyType="next"
                 enablesReturnKeyAutomatically
-                onChangeText={value => setEmail(value)}
+                onChangeText={value => setEmail(value.toLowerCase())}
               />
             </Input>
             <FormControlHelper>

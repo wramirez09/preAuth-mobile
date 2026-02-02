@@ -1,7 +1,7 @@
 import { Button, ButtonText, View } from '@gluestack-ui/themed'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react-native'
+import { ArrowLeft, ArrowRight } from 'lucide-react-native'
 import { useGuide } from '../../context/Guide/context'
 import { GUIDE_STEPS } from '../../context/Guide/guideProvider'
 
@@ -11,14 +11,15 @@ import { useFormData } from '../../context/FormData/context'
 
 const GuideFooter = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
-  const { currentStepIndex, setCurrentStepIndex, setIsTransitioning } = useGuide()
+  const { currentStepIndex, setCurrentStepIndex, setIsTransitioning } =
+    useGuide()
   const { formData, resetFormData } = useFormData()
   const isLastStep = currentStepIndex === GUIDE_STEPS.length
-  
+
   const next = React.useCallback(() => {
     const nextStep = currentStepIndex + 1
     setCurrentStepIndex(nextStep)
-    const step = GUIDE_STEPS.find((step)=> step.step === nextStep)
+    const step = GUIDE_STEPS.find(step => step.step === nextStep)
     requestAnimationFrame(() => {
       navigation.navigate(step?.id || '')
     })
@@ -33,11 +34,11 @@ const GuideFooter = () => {
     } else {
       const prevStep = currentStepIndex - 1
       setCurrentStepIndex(prevStep)
-      
-      const step = GUIDE_STEPS.find((step)=> step.step === prevStep)
-  
+
+      const step = GUIDE_STEPS.find(step => step.step === prevStep)
+
       requestAnimationFrame(() => {
-        navigation.navigate(step?.id || "")
+        navigation.navigate(step?.id || '')
       })
     }
   }, [currentStepIndex, navigation, setCurrentStepIndex])
@@ -47,14 +48,10 @@ const GuideFooter = () => {
     navigation.navigate('GuideWelcome')
   }, [currentStepIndex])
 
-  const handleFormDataReset = React.useCallback(() => {
-    resetFormData()
-  }, [formData])
-
   const handleSubmitToChat = () => {
     setCurrentStepIndex(1)
     // Format the form data for the chat
-    const formattedMessage = formatFormDataForChat({ ...formData })
+    const formattedMessage = formatFormDataForChat(formData)
     // Navigate to chat with the formatted message
     navigation.navigate('Chat', {
       initialMessage: {
@@ -65,46 +62,46 @@ const GuideFooter = () => {
 
   return (
     <View>
-      {isLastStep ? (
-        <Button className="bg-blue-600 rounded-lg mb-4" onPress={() => handleSubmitToChat()}>
-          <ButtonText className="text-white font-semibold text-sm">Submit</ButtonText>
-
-          <ArrowRight color="white" size={18} style={{ marginLeft: 8 }} />
-        </Button>
-      ) : (
-        <Button className="bg-blue-600 rounded-lg mb-4" onPress={() => next()}>
-          <ButtonText className="text-white font-semibold text-sm">Next Step</ButtonText>
-
-          <ArrowRight color="white" size={18} style={{ marginLeft: 8 }} />
+      {isLastStep && (
+        <Button
+          className="bg-green-600 rounded-lg mb-4"
+          onPress={() => handleSubmitToChat()}
+        >
+          <ButtonText className="text-white font-semibold text-sm">
+            Submit
+          </ButtonText>
         </Button>
       )}
-      {currentStepIndex >= 0 ? (
-        <View className="flex flex-row gap-2 justify-center">
+      {currentStepIndex >= 0 && !isLastStep ? (
+        <View className="gap-2">
+          <Button className="bg-blue-600 rounded-lg" onPress={() => next()}>
+            <ButtonText className="text-white font-semibold text-sm">
+              Next Step
+            </ButtonText>
+
+            <ArrowRight color="white" size={18} />
+          </Button>
           <Button
-            className="bg-white rounded-lg mb-4 border-gray-300 flex-1 justify-between"
+            className="bg-white rounded-lg border-gray-300"
             onPress={() => back()}
             variant="outline"
           >
-            <ArrowLeft color="black" size={18} style={{ marginLeft: 8 }} />
-            <ButtonText className="text-black font-semibold text-sm">Previous Step</ButtonText>
-          </Button>
-          <Button
-            className="bg-white rounded-lg mb-4 border-gray-300 flex-1 justify-between"
-            onPress={() => handleFormDataReset()}
-            variant="outline"
-          >
-            <RotateCcw size={18} color="#111827" />
-            <ButtonText className="text-black font-semibold text-sm">Reset Form data</ButtonText>
+            <ArrowLeft color="black" size={18} />
+            <ButtonText className="text-black font-semibold text-sm">
+              Previous Step
+            </ButtonText>
           </Button>
         </View>
       ) : (
         <Button
-          className="bg-white rounded-lg mb-4 border-gray-300"
+          className="bg-white rounded-lg border-gray-300"
           onPress={() => handleStartOver()}
           variant="outline"
         >
-          <ArrowLeft color="black" size={18} style={{ marginLeft: 8 }} />
-          <ButtonText className="text-black font-semibold text-sm">Back to Menu</ButtonText>
+          <ArrowLeft color="black" size={18} />
+          <ButtonText className="text-black font-semibold text-sm">
+            Back to Menu
+          </ButtonText>
         </Button>
       )}
     </View>

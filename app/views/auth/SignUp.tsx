@@ -64,14 +64,14 @@ const SignUp: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            <View style={{ width: 80, height: 80, marginBottom: 24 }}>
+            <View style={{ width: 60, height: 60, marginBottom: 24 }}>
               <Image
                 source={logoImage}
                 style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
                 alt="noteDoctor ai"
               />
             </View>
-            <Heading size="3xl" className="text-center">
+            <Heading size="2xl" className="text-center">
               Subscribe
             </Heading>
             <Text size="sm" className="text-center">
@@ -125,8 +125,9 @@ const SignUp: React.FC = () => {
               className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
             >
               <InputField
-                placeholder="m@example.com"
-                type="email"
+                placeholder="email@example.com"
+                type="text"
+                autoCapitalize="none"
                 autoComplete="email"
                 keyboardType="email-address"
                 returnKeyType="next"

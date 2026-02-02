@@ -1,7 +1,6 @@
-import React from 'react'
-import { FormDataContext } from './context'
-import { FormData } from './context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import React from 'react'
+import { FormData, FormDataContext } from './context'
 
 // Key for AsyncStorage
 const FORM_DATA_STORAGE_KEY = '@formData'
@@ -13,6 +12,7 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
 }) => {
   const [formData, setFormData] = React.useState<FormData>({})
   const [isInitialized, setIsInitialized] = React.useState(false)
+  const [messages, setMessages] = React.useState<any[]>([])
 
   // Load saved form data on initial render
   React.useEffect(() => {
@@ -37,7 +37,10 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
     const saveFormData = async () => {
       if (isInitialized && Object.keys(formData).length > 0) {
         try {
-          await AsyncStorage.setItem(FORM_DATA_STORAGE_KEY, JSON.stringify(formData))
+          await AsyncStorage.setItem(
+            FORM_DATA_STORAGE_KEY,
+            JSON.stringify(formData)
+          )
         } catch (error) {
           throw new Error('Failed to save form data')
         }
@@ -49,8 +52,7 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
 
   // Update function that merges new data with existing data
   const updateFormData = React.useCallback((newData: Partial<FormData>) => {
-
-    setFormData((prev) => {
+    setFormData(prev => {
       const updated = {
         ...prev,
         ...newData,

@@ -47,10 +47,10 @@ export const accordionFormData: AccordionItemData[] = [
   },
 ]
 
-export const FormCore: React.FC<{ data: AccordionItemData[]; handleCloseDrawer?: () => void }> = ({
-  data,
-  handleCloseDrawer,
-}) => {
+export const FormCore: React.FC<{
+  data: AccordionItemData[]
+  handleCloseDrawer?: () => void
+}> = ({ data, handleCloseDrawer }) => {
   const navigation = refNavigate
   const { formData, resetFormData } = useFormData()
 
@@ -63,9 +63,6 @@ export const FormCore: React.FC<{ data: AccordionItemData[]; handleCloseDrawer?:
         message: formattedFormData,
       },
     })
-    setTimeout(() => {
-      resetFormData()
-    }, 100)
   }
 
   return (
@@ -92,13 +89,21 @@ export const FormCore: React.FC<{ data: AccordionItemData[]; handleCloseDrawer?:
       {/* Buttons */}
       <View className="flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4 mt-6">
         <Button
-          className="flex-1 bg-blue-600 shadow-md active:bg-blue-700 mb-3"
+          className="flex-1 bg-blue-600  active:bg-blue-700 mb-3"
           onPress={handleSubmit}
         >
-          <ButtonText className="text-white font-semibold">Submit Request</ButtonText>
+          <ButtonText className="text-white font-semibold">
+            Submit Request
+          </ButtonText>
         </Button>
-        <Button className="flex-1 bg-gray-200 shadow-md" onPress={resetFormData} variant="outline">
-          <ButtonText className="text-gray-800 font-semibold">Reset Form</ButtonText>
+        <Button
+          className="flex-1 bg-gray-200 border-gray-200"
+          onPress={resetFormData}
+          variant="outline"
+        >
+          <ButtonText className="text-gray-800 font-semibold">
+            Reset Form
+          </ButtonText>
         </Button>
       </View>
 
@@ -123,7 +128,8 @@ const QueryForm: React.FC = () => {
           Pre-Authorization Request
         </Heading>
         <Text className="text-slate-600 mb-6 text-sm pr-10">
-          Please complete the following information to submit your pre-authorization request.
+          Please complete the following information to submit your
+          pre-authorization request.
         </Text>
         <FormCore data={data} />
       </SafeContainer>

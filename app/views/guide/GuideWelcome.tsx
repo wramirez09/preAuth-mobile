@@ -12,10 +12,16 @@ import {
 import LinearGradientCore from '@/components/LinearGradientCore'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { ArrowRight, CheckCircle, RotateCcw, Sparkles } from 'lucide-react-native'
+import {
+  ArrowRight,
+  CheckCircle,
+  RotateCcw,
+  Sparkles,
+} from 'lucide-react-native'
 import React, { useCallback } from 'react'
 import { Pressable } from 'react-native'
 import { useGuide } from '../context/Guide/context'
+import { useFormData } from '../context/FormData/context'
 
 const FeatureItem = ({ text }: { text: string }) => (
   <View className="flex-row items-center my-3">
@@ -26,7 +32,8 @@ const FeatureItem = ({ text }: { text: string }) => (
 
 const GuideWelcome: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
-  const { setCurrentStepIndex } = useGuide();
+  const { setCurrentStepIndex } = useGuide()
+  const { resetFormData } = useFormData()
 
   const handleStart = () => {
     setCurrentStepIndex(1)
@@ -35,6 +42,7 @@ const GuideWelcome: React.FC = () => {
 
   const handleStartOver = useCallback(() => {
     setCurrentStepIndex(1)
+    resetFormData()
     navigation.navigate('Pick')
   }, [])
   return (
@@ -88,7 +96,9 @@ const GuideWelcome: React.FC = () => {
           {/* Footer */}
           <Text className="text-center text-gray-500 text-sm">
             Need assistance?{' '}
-            <Text className="text-blue-600 font-medium text-sm">Contact Support</Text>
+            <Text className="text-blue-600 font-medium text-sm">
+              Contact Support
+            </Text>
           </Text>
         </View>
       </Card>

@@ -101,7 +101,6 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   const [showActionsheet, setShowActionsheet] = React.useState(false)
   const { onSend, messages, isLoading } = useApi()
 
-
   React.useEffect(() => {
     if (initialMessage) {
       onSend(
@@ -118,7 +117,8 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
     }
   }, [initialMessage])
 
-  const keyboardVerticalOffset = insets.bottom + (Platform.OS === 'ios' ? 90 : 0)
+  const keyboardVerticalOffset =
+    insets.bottom + (Platform.OS === 'ios' ? 90 : 0)
 
   const handleSendMessage = async (messages: IMessage[] = []) => {
     if (!messages.length || !messages[0]?.text?.trim()) {
@@ -160,8 +160,8 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
         renderSend={CustomSend}
         renderComposer={RenderComposer}
         renderInputToolbar={RenderInputToolbar}
-        renderTime={(props) => <ChatTime {...props} />}
-        renderBubble={(props) => <ChatBubble {...props} />}
+        renderTime={props => <ChatTime {...props} />}
+        renderBubble={props => <ChatBubble {...props} />}
         onSend={handleSendMessage}
         user={{ _id: 1 }}
         isTyping={isLoading}
@@ -174,7 +174,11 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
           autoCapitalize: 'none',
           enablesReturnKeyAutomatically: true,
           returnKeyType: 'send',
-          onSubmitEditing: ({ nativeEvent: { text } }: { nativeEvent: { text: string } }) => {
+          onSubmitEditing: ({
+            nativeEvent: { text },
+          }: {
+            nativeEvent: { text: string }
+          }) => {
             if (text.trim().length > 0) {
               handleSendMessage([
                 {
@@ -193,7 +197,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
         isAvatarOnTop
         renderAvatar={null}
         isUserAvatarVisible={true}
-        renderActions={(props) => <CustomActions {...props} />}
+        renderActions={props => <CustomActions {...props} />}
         minInputToolbarHeight={50}
       />
       <QueryActionSheet
