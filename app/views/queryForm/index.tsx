@@ -26,21 +26,21 @@ export type AccordionItemData = {
 export const accordionFormData: AccordionItemData[] = [
   {
     label: 'Diagnosis',
-    icon: <Activity size={18} color="#2563eb" />,
+    icon: <Activity size={18} color="#F97316" />,
     component: () => {
       return <DiagnosisTextArea />
     },
   },
   {
     label: 'Medical History',
-    icon: <ClipboardList size={18} color="#2563eb" />,
+    icon: <ClipboardList size={18} color="#F43F5E" />,
     component: () => {
       return <HistoryTextArea />
     },
   },
   {
     label: 'CPT or HCPCS',
-    icon: <FileBarChart size={18} color="#2563eb" />,
+    icon: <FileBarChart size={18} color="#4F46E5" />,
     component: () => {
       return <CodesTextArea />
     },

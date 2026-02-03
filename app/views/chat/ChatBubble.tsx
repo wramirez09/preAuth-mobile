@@ -1,6 +1,11 @@
+import { Text, View } from '@gluestack-ui/themed'
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { Bubble, BubbleProps, IMessage, TimeProps } from 'react-native-gifted-chat'
+import {
+  Bubble,
+  BubbleProps,
+  IMessage,
+  TimeProps,
+} from 'react-native-gifted-chat'
 import Markdown, { MarkdownProps } from 'react-native-markdown-display'
 
 type Props = BubbleProps<IMessage>
@@ -119,7 +124,7 @@ export function ChatBubble(props: Props) {
             lineHeight: 22,
           },
         }}
-        renderMessageText={(messageProps) => {
+        renderMessageText={messageProps => {
           const content = messageProps.currentMessage?.text ?? ''
 
           if (isUser) {
@@ -132,7 +137,7 @@ export function ChatBubble(props: Props) {
 
           return <Markdown style={markdownStyles}>{content}</Markdown>
         }}
-        renderTime={(timeProps) => (
+        renderTime={timeProps => (
           <View
             style={{
               alignSelf: 'flex-start',

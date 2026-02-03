@@ -1,15 +1,23 @@
 import { formLabels } from '@/app/data/labels'
-import { insuranceProvidersOptions, SelectOption } from '@/app/data/selectOptions'
-import { FileText } from 'lucide-react-native'
-import SelectCore from '../SelectCore'
-import { FormControl, FormControlLabel, FormControlLabelText, HStack } from '@gluestack-ui/themed'
-import React from 'react'
+import {
+  insuranceProvidersOptions,
+  SelectOption,
+} from '@/app/data/selectOptions'
 import { useFormData } from '@/app/views/context/FormData/context'
+import {
+  FormControl,
+  FormControlLabel,
+  FormControlLabelText,
+  HStack,
+} from '@gluestack-ui/themed'
+import { FileText } from 'lucide-react-native'
+import React from 'react'
+import SelectCore from '../SelectCore'
 
-export const GuidelinesSelect: React.FC<{ showIcon?: boolean; showLable?: boolean }> = ({
-  showIcon = true,
-  showLable = true,
-}) => {
+export const GuidelinesSelect: React.FC<{
+  showIcon?: boolean
+  showLable?: boolean
+}> = ({ showIcon = true, showLable = true }) => {
   const { formData, setFormData } = useFormData()
   const handleOnSelect = React.useCallback(
     (value: SelectOption) => {

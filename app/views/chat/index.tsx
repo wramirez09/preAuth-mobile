@@ -1,5 +1,6 @@
 import { RootStackParamList } from '@/app/utils/navigationRef'
 import { useAuth } from '@/app/views/auth/context'
+import LinearGradientCore from '@/components/LinearGradientCore'
 import SafeContainer from '@/components/SafeContainer'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { Text } from 'react-native'
@@ -19,10 +20,15 @@ export const Chat: React.FC = () => {
   }
 
   return (
-    <ChatInner
-      accessToken={session.access_token}
-      initialMessage={initialMessage}
-    />
+    <LinearGradientCore
+      className="h-full w-full rounded-none"
+      colors={['#eff6ff', '#FFF', '#eef2ff']}
+    >
+      <ChatInner
+        accessToken={session.access_token}
+        initialMessage={initialMessage}
+      />
+    </LinearGradientCore>
   )
 }
 

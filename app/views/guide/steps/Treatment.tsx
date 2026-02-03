@@ -9,10 +9,20 @@ const Treatment: React.FC = () => {
   return (
     <ScrollView>
       <GuideContainer>
-        <CardWrapper title="Treatment" Icon={Stethoscope}>
+        <CardWrapper
+          title="Treatment"
+          Icon={Stethoscope}
+          iconColor="#7C3AED"
+          iconBgColor="bg-violet-50"
+        >
           <TreatmentSelect showIcon={false} showLabel={false} />
         </CardWrapper>
-        <CardWrapper title="CPT or HCPCS" Icon={Activity}>
+        <CardWrapper
+          title="CPT or HCPCS"
+          Icon={Activity}
+          iconColor="#4F46E5"
+          iconBgColor="bg-indigo-50"
+        >
           <CodesTextArea />
         </CardWrapper>
         <SubCard>

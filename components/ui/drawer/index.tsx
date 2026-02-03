@@ -281,7 +281,7 @@ const DrawerContent = React.forwardRef<
 
 const DrawerHeader = React.forwardRef<
   React.ComponentRef<typeof UIDrawer.Header>,
-  IDrawerHeaderProps
+  IDrawerHeaderProps & { className?: string }
 >(function DrawerHeader({ className, ...props }, ref) {
   return (
     <UIDrawer.Header

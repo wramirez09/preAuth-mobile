@@ -20,12 +20,12 @@ import {
 } from 'lucide-react-native'
 import * as React from 'react'
 
-import { refNavigate } from '@/app/utils/navigationRef'
 import { useAuth } from '@/app/views/auth/context'
 import { useDrawer } from '@/app/views/context/Drawer/context'
 import { useGuide } from '@/app/views/context/Guide/context'
 
 import { createApiUrl } from '@/app/utils'
+import { refNavigate } from '@/app/utils/navigationRef'
 import { useApi } from '@/app/views/context/Api/context'
 import { Linking } from 'react-native'
 import SafeContainer from './SafeContainer'
@@ -70,10 +70,22 @@ const DrawerCore: React.FC<Props> = ({ isOpen, disabled }) => {
   }
 
   const handleExport = React.useCallback(async () => {
-    console.log('messages', messages)
+    // Transform mobile message format to web app format
+    const transformedMessages = messages.map(msg => ({
+      role: msg.user._id === 1 ? 'user' : 'assistant',
+      content: msg.text,
+      id: msg._id,
+      createdAt:
+        typeof msg.createdAt === 'number'
+          ? new Date(msg.createdAt).toISOString()
+          : msg.createdAt?.toISOString() || new Date().toISOString(),
+    }))
+
     const exportUrl = createApiUrl('pdf')
-    await Linking.openURL(JSON.stringify(messages))
-    console.log('Export URL:', exportUrl)
+    const queryParams = new URLSearchParams({
+      data: JSON.stringify(transformedMessages),
+    }).toString()
+    await Linking.openURL(`${exportUrl}?${queryParams}`)
   }, [messages])
 
   return (
@@ -144,13 +156,16 @@ const DrawerCore: React.FC<Props> = ({ isOpen, disabled }) => {
                   label="Export"
                   onPress={() => handleExport()}
                 />
-                <DrawerItem
-                  iconClassName="text-emerald-500"
-                  icon={ImportIcon}
-                  label="Import"
-                  onPress={() => {}}
-                  // disabled
-                />
+                <>
+                  <DrawerItem
+                    iconClassName="text-emerald-500"
+                    icon={ImportIcon}
+                    label="Import"
+                    onPress={() => {}}
+                    disabled
+                  />
+                  <Text className="text-xs">not supported at this time</Text>
+                </>
               </DrawerBody>
             </VStack>
 

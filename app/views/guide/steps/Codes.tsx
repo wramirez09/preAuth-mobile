@@ -7,14 +7,19 @@ import { CardWrapper, SubCard } from '../components/CarWrapper'
 const Codes: React.FC = () => {
   return (
     <GuideContainer>
-      <CardWrapper title="CPT or HCPCS" Icon={Activity}>
+      <CardWrapper
+        title="CPT or HCPCS"
+        Icon={Activity}
+        iconColor="#eef2ff"
+        iconBgColor="bg-indigo-300"
+      >
         <CodesTextArea />
       </CardWrapper>
       <SubCard>
         <Text className="text-xs">
-          <Text className="text-xs font-bold">Need Help?&nbsp;</Text>If you're not sure which CPT or
-          HCPCS code(s) to add, you can chat with our support team or consult your healthcare
-          provider.
+          <Text className="text-xs font-bold">Need Help?&nbsp;</Text>If you're
+          not sure which CPT or HCPCS code(s) to add, you can chat with our
+          support team or consult your healthcare provider.
         </Text>
       </SubCard>
     </GuideContainer>
