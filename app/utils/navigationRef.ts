@@ -1,6 +1,5 @@
 // Update your navigationRef.ts file
 import { createNavigationContainerRef } from '@react-navigation/native'
-import { NavigatorScreenParams } from '@react-navigation/native'
 
 export type RootStackParamList = {
   Home: undefined

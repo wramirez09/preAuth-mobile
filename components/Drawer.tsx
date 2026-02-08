@@ -24,10 +24,10 @@ import { useAuth } from '@/app/views/auth/context'
 import { useDrawer } from '@/app/views/context/Drawer/context'
 import { useGuide } from '@/app/views/context/Guide/context'
 
-import { createApiUrl } from '@/app/utils'
 import { refNavigate } from '@/app/utils/navigationRef'
 import { useApi } from '@/app/views/context/Api/context'
-import { Linking } from 'react-native'
+import { PDFExportService } from '@/services/pdfExportService'
+import { Alert } from 'react-native'
 import SafeContainer from './SafeContainer'
 import {
   Drawer,
@@ -70,23 +70,22 @@ const DrawerCore: React.FC<Props> = ({ isOpen, disabled }) => {
   }
 
   const handleExport = React.useCallback(async () => {
-    // Transform mobile message format to web app format
-    const transformedMessages = messages.map(msg => ({
-      role: msg.user._id === 1 ? 'user' : 'assistant',
-      content: msg.text,
-      id: msg._id,
-      createdAt:
-        typeof msg.createdAt === 'number'
-          ? new Date(msg.createdAt).toISOString()
-          : msg.createdAt?.toISOString() || new Date().toISOString(),
-    }))
+    try {
+      if (!messages || messages.length === 0) {
+        Alert.alert('No Messages', 'There are no messages to export.')
+        return
+      }
 
-    const exportUrl = createApiUrl('pdf')
-    const queryParams = new URLSearchParams({
-      data: JSON.stringify(transformedMessages),
-      ismobile: 'true',
-    }).toString()
-    await Linking.openURL(`${exportUrl}?${queryParams}`)
+      await PDFExportService.exportChatToPDF(messages)
+    } catch (error) {
+      console.error('Export failed:', error)
+      Alert.alert(
+        'Export Failed',
+        error instanceof Error
+          ? error.message
+          : 'Failed to export PDF. Please try again.'
+      )
+    }
   }, [messages])
 
   return (
