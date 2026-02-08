@@ -16,12 +16,14 @@ export type FormDataContext = {
   formData: FormData
   setFormData: UpdateFormData
   resetFormData: () => Promise<void>
+  resetKey: number
 }
 
 const defaultContext: FormDataContext = {
   formData: {},
   setFormData: () => {},
   resetFormData: async () => {},
+  resetKey: 0,
 }
 
 export const FormDataContext =

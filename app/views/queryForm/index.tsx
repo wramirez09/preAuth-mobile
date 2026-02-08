@@ -52,7 +52,7 @@ export const FormCore: React.FC<{
   handleCloseDrawer?: () => void
 }> = ({ data, handleCloseDrawer }) => {
   const navigation = refNavigate
-  const { formData, resetFormData } = useFormData()
+  const { formData, resetFormData, resetKey } = useFormData()
 
   const handleSubmit = () => {
     const formattedFormData = formatFormDataForChat(formData)
@@ -74,18 +74,26 @@ export const FormCore: React.FC<{
       contentContainerStyle={{ paddingBottom: 32 }}
     >
       {/* Card */}
-      <View className="p-0 m-">
+      <View key={`form-card-${resetKey}`} className="p-0 m-">
         {/* Guidelines */}
-        <GuidelinesSelect />
+        <View key={`guidelines-${resetKey}`}>
+          <GuidelinesSelect />
+        </View>
 
         {/* State */}
-        <StateSelect />
+        <View key={`state-${resetKey}`}>
+          <StateSelect />
+        </View>
 
         {/* Treatment */}
-        <TreatmentSelect />
+        <View key={`treatment-${resetKey}`}>
+          <TreatmentSelect />
+        </View>
 
         {/* Accordion */}
-        <AccordionCore type="multiple" data={data} />
+        <View key={`accordion-${resetKey}`}>
+          <AccordionCore type="multiple" data={data} />
+        </View>
       </View>
 
       {/* Buttons */}

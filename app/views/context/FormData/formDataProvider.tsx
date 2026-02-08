@@ -11,6 +11,7 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
   children: React.ReactNode
 }) => {
   const [formData, setFormData] = React.useState<FormData>({})
+  const [resetKey, setResetKey] = React.useState(0)
   const [isInitialized, setIsInitialized] = React.useState(false)
   const [messages, setMessages] = React.useState<any[]>([])
 
@@ -73,6 +74,7 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
         medicalHistory: undefined,
         codes: undefined,
       })
+      setResetKey(prev => prev + 1)
       console.log('Form data has been reset')
     } catch (error) {
       console.error('Failed to reset form data', error)
@@ -90,6 +92,7 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
         formData,
         setFormData: updateFormData,
         resetFormData,
+        resetKey,
       }}
     >
       {children}
