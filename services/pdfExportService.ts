@@ -1,5 +1,6 @@
 import * as Print from 'expo-print'
 import * as Sharing from 'expo-sharing'
+import { marked } from 'marked'
 import { IMessage } from 'react-native-gifted-chat'
 
 export interface MessageForPDF {
@@ -42,24 +43,42 @@ export class PDFExportService {
   }
 
   private static generateHTML(messages: MessageForPDF[]): string {
-    const messagesHTML = messages
-      .map(msg => {
-        const messageClass =
-          msg.role === 'user' ? 'user-message' : 'assistant-message'
-        const roleLabel = msg.role === 'user' ? 'You' : 'AI Assistant'
+    // Separate user and assistant messages
+    const userMessages = messages.filter(msg => msg.role === 'user')
+    const assistantMessages = messages.filter(msg => msg.role === 'assistant')
 
-        return `
-          <div class="message ${messageClass}">
-            <div class="message-header">
-              <span class="role">${roleLabel}</span>
-              <span class="timestamp">${msg.timestamp}</span>
-            </div>
-            <div class="message-content">
-              ${this.convertMarkdownToHTML(msg.content)}
-            </div>
+    // Generate HTML for user messages first
+    const userMessagesHTML = userMessages
+      .map(
+        msg => `
+        <div class="message user-message">
+          <div class="message-header">
+            <span class="role">You</span>
+            <span class="timestamp">${msg.timestamp}</span>
           </div>
-        `
-      })
+          <div class="message-content prose prose-sm max-w-none">
+            <p>${msg.content}</p>
+          </div>
+        </div>
+      `
+      )
+      .join('')
+
+    // Generate HTML for assistant messages
+    const assistantMessagesHTML = assistantMessages
+      .map(
+        msg => `
+        <div class="message assistant-message">
+          <div class="message-header">
+            <span class="role">AI Assistant</span>
+            <span class="timestamp">${msg.timestamp}</span>
+          </div>
+          <div class="message-content prose prose-sm max-w-none">
+            ${marked(msg.content)}
+          </div>
+        </div>
+      `
+      )
       .join('')
 
     return `
@@ -69,6 +88,14 @@ export class PDFExportService {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Pre-Authorization Chat Transcript</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+          tailwind.config = {
+            plugins: {
+              '@tailwindcss/typography': {}
+            }
+          }
+        </script>
         <style>
           body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -142,58 +169,6 @@ export class PDFExportService {
             line-height: 1.6;
           }
           
-          .message-content h1 {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 16px 0 8px;
-            color: #1f2937;
-          }
-          
-          .message-content h2 {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 14px 0 6px;
-            color: #1f2937;
-          }
-          
-          .message-content h3 {
-            font-size: 15px;
-            font-weight: 600;
-            margin: 12px 0 6px;
-            color: #1f2937;
-          }
-          
-          .message-content p {
-            margin: 8px 0;
-          }
-          
-          .message-content ul, .message-content ol {
-            margin: 8px 0;
-            padding-left: 20px;
-          }
-          
-          .message-content li {
-            margin: 4px 0;
-          }
-          
-          .message-content strong {
-            font-weight: 600;
-            color: #1f2937;
-          }
-          
-          .message-content em {
-            font-style: italic;
-            color: #4b5563;
-          }
-          
-          .message-content code {
-            background: #f3f4f6;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 13px;
-          }
-          
           .footer {
             margin-top: 40px;
             padding-top: 20px;
@@ -216,7 +191,15 @@ export class PDFExportService {
         </div>
         
         <div class="messages">
-          ${messagesHTML}
+          <div class="section">
+            <h2 class="text-xl font-semibold mb-4 text-blue-600">User Queries</h2>
+            ${userMessagesHTML}
+          </div>
+          
+          <div class="section mt-8">
+            <h2 class="text-xl font-semibold mb-4 text-green-600">AI Assistant Responses</h2>
+            ${assistantMessagesHTML}
+          </div>
         </div>
         
         <div class="footer">
@@ -226,33 +209,5 @@ export class PDFExportService {
       </body>
       </html>
     `
-  }
-
-  private static convertMarkdownToHTML(markdown: string): string {
-    return (
-      markdown
-        // Headers
-        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        // Bold
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        // Italic
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        // Code
-        .replace(/`(.+?)`/g, '<code>$1</code>')
-        // Line breaks
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/\n/g, '<br>')
-        // Wrap in paragraphs
-        .replace(/^(.+)$/gm, '<p>$1</p>')
-        // Clean up empty paragraphs
-        .replace(/<p><\/p>/g, '')
-        .replace(/<p>(<h[1-6]>)/g, '$1')
-        .replace(/(<\/h[1-6]>)<\/p>/g, '$1')
-        // Lists
-        .replace(/^\* (.+)$/gim, '<li>$1</li>')
-        .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
-    )
   }
 }

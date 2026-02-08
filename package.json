@@ -51,6 +51,8 @@
     "expo-web-browser": "~15.0.10",
     "lucide-react": "^0.562.0",
     "lucide-react-native": "^0.562.0",
+    "markdown-to-html": "^0.0.13",
+    "marked": "^17.0.1",
     "react": "19.1.0",
     "react-aria": "^3.45.0",
     "react-dom": "19.1.0",
