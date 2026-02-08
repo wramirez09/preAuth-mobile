@@ -57,12 +57,14 @@ export const FormCore: React.FC<{
   const handleSubmit = () => {
     const formattedFormData = formatFormDataForChat(formData)
 
-    handleCloseDrawer?.()
+    console.log({ formattedFormData })
     navigation('Chat', {
       initialMessage: {
         message: formattedFormData,
       },
     })
+
+    handleCloseDrawer?.()
   }
 
   return (
@@ -116,7 +118,7 @@ export const FormCore: React.FC<{
 }
 
 const QueryForm: React.FC = () => {
-  const data = React.useMemo(() => accordionFormData, [])
+  const data = React.useMemo(() => accordionFormData, [accordionFormData])
 
   return (
     <LinearGradientCore

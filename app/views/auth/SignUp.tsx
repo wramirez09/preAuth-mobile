@@ -2,6 +2,8 @@ import SafeContainer from '@/components/SafeContainer'
 
 import LinearGradientCore from '@/components/LinearGradientCore'
 import {
+  Button,
+  ButtonText,
   Center,
   FormControl,
   FormControlError,
@@ -164,6 +166,16 @@ const SignUp: React.FC = () => {
                 name={displayName}
               />
             </FormControl>
+            <View className="flex-row items-center justify-center">
+              <Text>Already have an account?</Text>
+              <Button
+                variant="link"
+                onPress={() => navigation.navigate('Login')}
+              >
+                <Text> </Text>
+                <ButtonText>login</ButtonText>
+              </Button>
+            </View>
             <Text className="text-center text-gray-500 text-sm my-6">
               Secure • Encrypted • Trusted by Thousands
             </Text>

@@ -1,4 +1,3 @@
-import { View, KeyboardAvoidingView, Platform } from 'react-native'
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -6,17 +5,22 @@ import {
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
 } from '@/components/ui/actionsheet'
-import { Heading, Text } from '@gluestack-ui/themed'
-import { accordionFormData, FormCore } from '../queryForm'
 import { useSheetHeight } from '@/hooks/useFormSheet'
+import { Heading, KeyboardAvoidingView, Text, View } from '@gluestack-ui/themed'
+import React from 'react'
+import { Platform } from 'react-native'
 import FormDataProvider from '../context/FormData/formDataProvider'
+import { accordionFormData, FormCore } from '../queryForm'
 
 interface QueryActionSheetProps {
   showActionsheet: boolean
   handleClose?: () => void
 }
 
-const QueryActionSheet: React.FC<QueryActionSheetProps> = ({ showActionsheet, handleClose }) => {
+const QueryActionSheet: React.FC<QueryActionSheetProps> = ({
+  showActionsheet,
+  handleClose,
+}) => {
   const { maxHeight, keyboardHeight, keyboardOpen } = useSheetHeight()
 
   return (
@@ -27,17 +31,15 @@ const QueryActionSheet: React.FC<QueryActionSheetProps> = ({ showActionsheet, ha
         style={{
           maxHeight,
           flex: 1,
-          paddingBottom: Platform.OS === 'android' && keyboardOpen ? keyboardHeight : 0,
+          paddingBottom:
+            Platform.OS === 'android' && keyboardOpen ? keyboardHeight : 0,
         }}
       >
         <ActionsheetDragIndicatorWrapper>
           <ActionsheetDragIndicator />
         </ActionsheetDragIndicatorWrapper>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{ flex: 1 }}
-        >
+        <KeyboardAvoidingView>
           {/* Header */}
           <View className="px-4 pb-2">
             <Heading className="text-2xl font-bold text-slate-900 mb-2">
@@ -50,7 +52,10 @@ const QueryActionSheet: React.FC<QueryActionSheetProps> = ({ showActionsheet, ha
 
           {/* ScrollView owns height */}
           <FormDataProvider>
-            <FormCore data={accordionFormData} handleCloseDrawer={handleClose} />
+            <FormCore
+              data={accordionFormData}
+              handleCloseDrawer={handleClose}
+            />
           </FormDataProvider>
         </KeyboardAvoidingView>
       </ActionsheetContent>

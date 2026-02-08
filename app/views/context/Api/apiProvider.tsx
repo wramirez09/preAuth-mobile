@@ -1,6 +1,6 @@
-import React from 'react'
-import { IMessage, GiftedChat } from 'react-native-gifted-chat'
 import { createApiUrl } from '@/app/utils'
+import React from 'react'
+import { GiftedChat, IMessage } from 'react-native-gifted-chat'
 import { ApiContext } from './context'
 
 function generateUniqueId() {
@@ -8,11 +8,16 @@ function generateUniqueId() {
 }
 
 function normalizeAssistantMessages(raw: any[]): IMessage[] {
+  if (!Array.isArray(raw)) {
+    console.warn('normalizeAssistantMessages: raw is not an array', raw)
+    return []
+  }
+
   return raw
-    .filter((m) => m.role === 'assistant')
-    .map((m) => ({
+    .filter(m => m && typeof m === 'object' && m.role === 'assistant')
+    .map(m => ({
       _id: m.id ?? generateUniqueId(),
-      text: String(m.content),
+      text: String(m.content || ''),
       createdAt: m.createdAt ? new Date(m.createdAt) : new Date(),
       user: {
         _id: 2,
@@ -21,14 +26,13 @@ function normalizeAssistantMessages(raw: any[]): IMessage[] {
     }))
 }
 
-export const ApiProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const ApiProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
   const [messages, setMessages] = React.useState<IMessage[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const apiUrl = React.useMemo(
-    () => createApiUrl('api/chat/agents'),
-    []
-  )
+  const apiUrl = React.useMemo(() => createApiUrl('api/chat/agents'), [])
 
   const onSend = React.useCallback(
     async (newMessages: IMessage[] = [], accessToken?: string) => {
@@ -37,11 +41,10 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({ children }) => 
       const userMessage = newMessages[0]
 
       // 1️⃣ Optimistically add user message
-      setMessages((prev) => GiftedChat.append(prev, newMessages))
+      setMessages(prev => GiftedChat.append(prev, newMessages))
       setIsLoading(true)
 
       try {
-
         const res = await fetch(apiUrl, {
           method: 'POST',
           headers: {
@@ -50,17 +53,19 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({ children }) => 
             'x-client': 'mobile',
           },
           body: JSON.stringify({
-            messages: [
-              { role: 'user', content: userMessage.text },
-            ],
+            messages: [{ role: 'user', content: userMessage.text }],
           }),
         })
 
-        const data = await res.json()
+        if (!res.ok) {
+          throw new Error(`API request failed with status ${res.status}`)
+        }
 
+        const data = await res.json()
+        console.log({ res })
         // 3️⃣ Append ONLY assistant messages
         const messages = normalizeAssistantMessages(data.messages)
-        setMessages((prev) => GiftedChat.append(prev, messages))
+        setMessages(prev => GiftedChat.append(prev, messages))
       } catch (e) {
         console.error('Chat error', e)
       } finally {

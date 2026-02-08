@@ -84,6 +84,7 @@ const DrawerCore: React.FC<Props> = ({ isOpen, disabled }) => {
     const exportUrl = createApiUrl('pdf')
     const queryParams = new URLSearchParams({
       data: JSON.stringify(transformedMessages),
+      ismobile: 'true',
     }).toString()
     await Linking.openURL(`${exportUrl}?${queryParams}`)
   }, [messages])

@@ -29,7 +29,14 @@ const Login: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
-  const { signIn, user, loading } = useAuth()
+  const [forgotPasswordLoading, setForgotPasswordLoading] =
+    React.useState(false)
+  const [forgotPasswordError, setForgotPasswordError] = React.useState<
+    string | null
+  >(null)
+  const [forgotPasswordSuccess, setForgotPasswordSuccess] =
+    React.useState(false)
+  const { signIn, user, loading, resetPassword } = useAuth()
 
   const userSignIn = React.useCallback(async () => {
     try {
@@ -44,6 +51,10 @@ const Login: React.FC = () => {
       console.error('Login failed:', err)
     }
   }, [email, password])
+
+  const handleForgotPassword = React.useCallback(async () => {
+    navigation.navigate('ResetPassword')
+  }, [email, resetPassword])
 
   if (loading) {
     return (
@@ -101,7 +112,7 @@ const Login: React.FC = () => {
                 className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
               >
                 <InputField
-                  placeholder="Enter email"
+                  placeholder="email@domain.com"
                   type="text"
                   autoCapitalize="none"
                   autoComplete="email"
@@ -111,11 +122,7 @@ const Login: React.FC = () => {
                   onChangeText={value => setEmail(value.toLowerCase())}
                 />
               </Input>
-              <FormControlHelper>
-                <FormControlHelperText className="text-xs text-gray-400">
-                  Enter your email address
-                </FormControlHelperText>
-              </FormControlHelper>
+
               <FormControlError>
                 <FormControlErrorIcon />
                 <FormControlErrorText>Email is required</FormControlErrorText>
@@ -144,8 +151,27 @@ const Login: React.FC = () => {
                 />
               </Input>
               <FormControlHelper>
-                <FormControlHelperText className="text-xs text-gray-400">
-                  Enter your password
+                <FormControlHelperText>
+                  <View className="flex flex-col gap-2">
+                    <Text
+                      className="text-blue-600 text-sm font-bold"
+                      onPress={handleForgotPassword}
+                    >
+                      {forgotPasswordLoading
+                        ? 'Sending reset link...'
+                        : 'Forgot password?'}
+                    </Text>
+                    {forgotPasswordSuccess && (
+                      <Text className="text-green-600 text-xs">
+                        Password reset link sent! Check your email.
+                      </Text>
+                    )}
+                    {forgotPasswordError && (
+                      <Text className="text-red-600 text-xs">
+                        {forgotPasswordError}
+                      </Text>
+                    )}
+                  </View>
                 </FormControlHelperText>
               </FormControlHelper>
               <FormControlError>
@@ -165,6 +191,17 @@ const Login: React.FC = () => {
                 <ButtonText>Login</ButtonText>
               </Button>
             </FormControl>
+            <View className="flex flex-row items-center justify-center">
+              <Text className="text-center test-blue-600">
+                Don't have an account?{' '}
+              </Text>
+              <Button
+                onPress={() => navigation.navigate('SignUp')}
+                variant="link"
+              >
+                <ButtonText>sign up</ButtonText>
+              </Button>
+            </View>
             <Text className="text-center text-gray-500 text-sm my-6">
               Secure • Encrypted • Trusted by Thousands
             </Text>

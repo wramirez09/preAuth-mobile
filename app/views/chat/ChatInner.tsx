@@ -130,6 +130,8 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
       return
     }
 
+    console.log({ messages })
+
     try {
       await onSend(messages, accessToken)
       console.log('Message sent successfully')

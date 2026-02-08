@@ -17,6 +17,7 @@ import { navigationRef } from './utils/navigationRef'
 import { AuthProvider } from './views/auth/authProvider'
 import { useAuth } from './views/auth/context'
 import Login from './views/auth/Login'
+import ResetPassword from './views/auth/resetPassword'
 import SignUp from './views/auth/SignUp'
 import Chat from './views/chat'
 import { ApiProvider } from './views/context/Api/apiProvider'
@@ -110,6 +111,12 @@ const RootStack = createNativeStackNavigator({
         headerBackVisible: false,
         headerBackButtonMenuEnabled: false,
         headerRight: () => <HeaderRight />,
+      },
+    },
+    ResetPassword: {
+      screen: ResetPassword,
+      options: {
+        title: 'Reset Password',
       },
     },
   },

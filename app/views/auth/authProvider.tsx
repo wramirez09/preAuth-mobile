@@ -1,7 +1,7 @@
-import { AuthContext } from './context'
-import * as React from 'react'
-import { Session, User } from '@supabase/supabase-js'
 import supabase from '@/app/lib/supabase'
+import { Session, User } from '@supabase/supabase-js'
+import * as React from 'react'
+import { AuthContext } from './context'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = React.useState<Session | null>(null)
@@ -87,8 +87,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const resetPassword = async (email: string) => {
+    setLoading(true)
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email)
+
+      if (error) {
+        throw error
+      }
+    } catch (error) {
+      console.error('Reset password error:', error)
+      throw error
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ session, user, loading, signIn, signOut, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{
+        session,
+        user,
+        loading,
+        signIn,
+        signOut,
+        resetPassword,
+        isAuthenticated,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
