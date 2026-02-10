@@ -1,7 +1,7 @@
 import { Button, ButtonText, View } from '@gluestack-ui/themed'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { ArrowLeft, ArrowRight } from 'lucide-react-native'
+import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react-native'
 import { useGuide } from '../../context/Guide/context'
 import { GUIDE_STEPS } from '../../context/Guide/guideProvider'
 
@@ -13,7 +13,7 @@ const GuideFooter = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
   const { currentStepIndex, setCurrentStepIndex, setIsTransitioning } =
     useGuide()
-  const { formData, resetFormData } = useFormData()
+  const { formData, resetFormData, isSubmitDisabled } = useFormData()
   const isLastStep = currentStepIndex === GUIDE_STEPS.length
 
   const next = React.useCallback(() => {
@@ -60,12 +60,15 @@ const GuideFooter = () => {
     })
   }
 
+  console.log(isSubmitDisabled)
+
   return (
     <View>
       {isLastStep && (
         <Button
-          className="bg-green-600 rounded-lg mb-4"
+          className={`rounded-lg mb-4 ${isSubmitDisabled ? 'bg-gray-400' : 'bg-green-600'}`}
           onPress={() => handleSubmitToChat()}
+          disabled={isSubmitDisabled}
         >
           <ButtonText className="text-white font-semibold text-sm">
             Submit
@@ -93,16 +96,28 @@ const GuideFooter = () => {
           </Button>
         </View>
       ) : (
-        <Button
-          className="bg-white rounded-lg border-gray-300"
-          onPress={() => handleStartOver()}
-          variant="outline"
-        >
-          <ArrowLeft color="black" size={18} />
-          <ButtonText className="text-black font-semibold text-sm">
-            Back to Menu
-          </ButtonText>
-        </Button>
+        <View className="flex-row items-center justify-center gap-2">
+          <Button
+            className="bg-white rounded-lg border-gray-300 gap-2 flex-1"
+            onPress={() => handleStartOver()}
+            variant="outline"
+          >
+            <RotateCcw size={18} color="#111827" />
+            <ButtonText className="text-black font-semibold text-sm">
+              Start Over
+            </ButtonText>
+          </Button>
+          <Button
+            variant="outline"
+            className="bg-white rounded-lg border-gray-300 gap-2 flex-1"
+            onPress={() => resetFormData()}
+          >
+            <RotateCcw size={18} color="#111827" />
+            <ButtonText className="text-black font-semibold text-sm">
+              Reset Query
+            </ButtonText>
+          </Button>
+        </View>
       )}
     </View>
   )

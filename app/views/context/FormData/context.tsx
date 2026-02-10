@@ -17,6 +17,7 @@ export type FormDataContext = {
   setFormData: UpdateFormData
   resetFormData: () => Promise<void>
   resetKey: number
+  isSubmitDisabled: boolean
 }
 
 const defaultContext: FormDataContext = {
@@ -24,6 +25,7 @@ const defaultContext: FormDataContext = {
   setFormData: () => {},
   resetFormData: async () => {},
   resetKey: 0,
+  isSubmitDisabled: false,
 }
 
 export const FormDataContext =

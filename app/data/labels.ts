@@ -1,5 +1,3 @@
-
-
 export const formLabels = {
   guidelinesSelect: {
     label: 'Guidelines',
@@ -14,7 +12,7 @@ export const formLabels = {
     helperText: 'Select a State',
   },
   treatmentSelect: {
-    label: 'Treatment',
+    label: 'Pre-Auth Request',
     placeholder: 'MRI',
     errorMessage: '',
     helperText: ' Select Treatment',

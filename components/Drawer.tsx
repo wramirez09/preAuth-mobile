@@ -49,6 +49,8 @@ const DrawerCore: React.FC<Props> = ({ isOpen, disabled }) => {
   const { setCurrentStepIndex, currentStepIndex } = useGuide()
   const { messages } = useApi()
 
+  const [isLoading, setIsLoading] = React.useState(false)
+
   const email = user?.email
   const name =
     user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? 'User'
@@ -76,7 +78,7 @@ const DrawerCore: React.FC<Props> = ({ isOpen, disabled }) => {
         return
       }
 
-      await PDFExportService.exportChatToPDF(messages)
+      const pdf = await PDFExportService.exportChatToPDF(messages)
     } catch (error) {
       console.error('Export failed:', error)
       Alert.alert(

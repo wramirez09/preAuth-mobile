@@ -10,7 +10,9 @@ export interface MessageForPDF {
 }
 
 export class PDFExportService {
-  static async exportChatToPDF(messages: IMessage[]): Promise<void> {
+  static async exportChatToPDF(
+    messages: IMessage[]
+  ): Promise<{ pdfGenerated: boolean }> {
     try {
       // Transform messages to PDF format
       const pdfMessages: MessageForPDF[] = messages.map(msg => ({
@@ -36,6 +38,7 @@ export class PDFExportService {
       })
 
       console.log('PDF exported successfully:', uri)
+      return { pdfGenerated: true }
     } catch (error) {
       console.error('Error exporting PDF:', error)
       throw new Error('Failed to export PDF. Please try again.')

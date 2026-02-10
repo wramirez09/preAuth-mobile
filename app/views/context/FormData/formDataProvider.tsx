@@ -13,7 +13,10 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
   const [formData, setFormData] = React.useState<FormData>({})
   const [resetKey, setResetKey] = React.useState(0)
   const [isInitialized, setIsInitialized] = React.useState(false)
-  const [messages, setMessages] = React.useState<any[]>([])
+
+  const isSubmitDisabled = React.useMemo(() => {
+    return !formData.treatment || !formData.guidelines
+  }, [formData])
 
   // Load saved form data on initial render
   React.useEffect(() => {
@@ -93,6 +96,7 @@ const FormDataProvider: React.FC<React.PropsWithChildren<any>> = ({
         setFormData: updateFormData,
         resetFormData,
         resetKey,
+        isSubmitDisabled,
       }}
     >
       {children}

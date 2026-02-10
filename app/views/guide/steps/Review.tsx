@@ -1,5 +1,4 @@
-
-import { Heading, ScrollView, Text, View } from '@gluestack-ui/themed'
+import { Center, Heading, Text, View } from '@gluestack-ui/themed'
 import { CheckCircle2, Edit2, FileCheck } from 'lucide-react-native'
 import { Pressable } from 'react-native'
 import GuideContainer from '../GuideContainer'
@@ -18,7 +17,7 @@ type RootStackParamList = {
 }
 
 const getState = (stateId: number): string => {
-  return states.find((state) => state.state_id === stateId)?.description || ''
+  return states.find(state => state.state_id === stateId)?.description || ''
 }
 
 const Review: React.FC = () => {
@@ -53,25 +52,32 @@ const Review: React.FC = () => {
   }
 
   return (
-    <ScrollView className="h-full">
-      <GuideContainer showHeader={false}>
+    <GuideContainer showHeader={false}>
+      <Center className="h-full w-full">
         <View className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <FileCheck size={16} color="#00a63e" />
         </View>
-        <Heading className="text-2xl mb-2 text-center">Review Your Information</Heading>
-        <Text className="text-gray-600 text-center text-sm mb-6">
-          Please review all the information below before submitting your pre-authorization request.
+        <Heading className="text-2xl mb-2 text-center">
+          Review Your Information
+        </Heading>
+        <Text className="text-gray-600 text-center text-sm mb-10">
+          Please review all the information below before submitting your
+          pre-authorization request.
         </Text>
         {GUIDE_STEPS.map((card, index) => {
-          if (card.step === 7) return null
+          if (card.step === 6) return null
           return (
-            <Card className="p-5 bg-white shadow-sm mb-3" key={index}>
+            <Card className="p-5 bg-white shadow-sm mb-3 w-full" key={index}>
               <View className="flex-row items-start justify-between">
                 <View className="flex-row gap-4">
                   <CheckCircle2 size={20} color="#16a34a" />
                   <View>
-                    <Text className="font-medium text-gray-900 mb-1">{card.title}</Text>
-                    <Text className="text-xs text-gray-700 mb-1">{getFormData(card.id)}</Text>
+                    <Text className="font-medium text-gray-900 mb-1">
+                      {card.title}
+                    </Text>
+                    <Text className="text-xs text-gray-700 mb-1">
+                      {getFormData(card.id)}
+                    </Text>
                   </View>
                 </View>
 
@@ -86,8 +92,8 @@ const Review: React.FC = () => {
             </Card>
           )
         })}
-      </GuideContainer>
-    </ScrollView>
+      </Center>
+    </GuideContainer>
   )
 }
 
