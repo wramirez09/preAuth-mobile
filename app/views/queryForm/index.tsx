@@ -76,22 +76,22 @@ export const FormCore: React.FC<{
       {/* Card */}
       <View key={`form-card-${resetKey}`} className="p-0 m-">
         {/* Guidelines */}
-        <View key={`guidelines-${resetKey}`}>
+        <View key={`guidelines-${resetKey}`} className="mb-3">
           <GuidelinesSelect />
         </View>
 
         {/* State */}
-        <View key={`state-${resetKey}`}>
+        <View key={`state-${resetKey}`} className="mb-3">
           <StateSelect />
         </View>
 
         {/* Treatment */}
-        <View key={`treatment-${resetKey}`}>
+        <View key={`treatment-${resetKey}`} className="mb-3">
           <TreatmentSelect />
         </View>
 
         {/* Accordion */}
-        <View key={`accordion-${resetKey}`}>
+        <View key={`accordion-${resetKey}`} className="mb-3">
           <AccordionCore type="multiple" data={data} />
         </View>
       </View>
@@ -134,10 +134,10 @@ const QueryForm: React.FC = () => {
       colors={['#eff6ff', '#FFF', '#eef2ff']}
     >
       <SafeContainer className="h-full">
-        <Heading className="text-2xl font-bold text-slate-900 mb-3">
+        <Heading className="text-2xl font-bold text-slate-900 my-6">
           Pre-Authorization Request
         </Heading>
-        <Text className="text-slate-600 mb-6 text-sm pr-10">
+        <Text className="text-slate-600 mb-6 text-sm pr-10 mb-6">
           Please complete the following information to submit your
           pre-authorization request.
         </Text>

@@ -31,8 +31,35 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const [messages, setMessages] = React.useState<IMessage[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
+  const [hasShownWelcome, setHasShownWelcome] = React.useState(false)
 
   const apiUrl = React.useMemo(() => createApiUrl('api/chat/agents'), [])
+
+  const addWelcomeMessage = React.useCallback(() => {
+    const welcomeMessage: IMessage = {
+      _id: 'welcome-message',
+      text: "Hello! I'm here to help you with your pre-authorization request. I can assist you with checking coverage, submitting requests, and answering questions about the pre-authorization process. How can I help you today?",
+      createdAt: new Date(),
+      user: {
+        _id: 2,
+        name: 'Assistant',
+      },
+    }
+    setMessages([welcomeMessage])
+    setHasShownWelcome(true)
+  }, [])
+
+  React.useEffect(() => {
+    // Only show welcome message if there are truly no messages
+    // This check runs after any initial messages would be added
+    const timer = setTimeout(() => {
+      if (!hasShownWelcome && messages.length === 0) {
+        addWelcomeMessage()
+      }
+    }, 100) // Small delay to allow initial messages to be processed
+
+    return () => clearTimeout(timer)
+  }, [messages.length, hasShownWelcome, addWelcomeMessage])
 
   const onSend = React.useCallback(
     async (newMessages: IMessage[] = [], accessToken?: string) => {
@@ -75,8 +102,13 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
     [apiUrl, messages, isLoading]
   )
 
+  const clearMessages = React.useCallback(() => {
+    setMessages([])
+    setHasShownWelcome(false)
+  }, [])
+
   return (
-    <ApiContext.Provider value={{ onSend, messages, isLoading }}>
+    <ApiContext.Provider value={{ onSend, clearMessages, messages, isLoading }}>
       {children}
     </ApiContext.Provider>
   )

@@ -19,6 +19,7 @@ import { useAuth } from './views/auth/context'
 import Login from './views/auth/Login'
 import ResetPassword from './views/auth/resetPassword'
 import SignUp from './views/auth/SignUp'
+import UpdatePasswordForm from './views/auth/UpdatePasswordForm'
 import Chat from './views/chat'
 import { ApiProvider } from './views/context/Api/apiProvider'
 import { useDrawer } from './views/context/Drawer/context'
@@ -117,6 +118,23 @@ const RootStack = createNativeStackNavigator({
       screen: ResetPassword,
       options: {
         title: 'Reset Password',
+      },
+    },
+    UpdatePassword: {
+      screen: UpdatePasswordForm,
+      options: {
+        title: 'Set Password',
+        headerBackVisible: false,
+        headerBackButtonMenuEnabled: false,
+        headerLeft: () => (
+          <Button
+            size="xs"
+            variant="link"
+            onPress={() => navigationRef.current?.navigate('Home')}
+          >
+            <ButtonText>Back</ButtonText>
+          </Button>
+        ),
       },
     },
   },

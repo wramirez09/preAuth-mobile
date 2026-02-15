@@ -93,7 +93,7 @@ const Login: React.FC = () => {
                 />
               </View>
               <Heading size="2xl" className="text-center">
-                Welcome back
+                Welcome to NoteDoctor.ai
               </Heading>
               <Text size="sm" className="text-center">
                 Sign in to your account to continue

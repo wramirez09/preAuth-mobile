@@ -1,6 +1,13 @@
+import {
+  Actionsheet,
+  ActionsheetBackdrop,
+  ActionsheetContent,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+} from '@/components/ui/actionsheet'
 import { Box } from '@/components/ui/box'
-import { View } from '@gluestack-ui/themed'
-import { CirclePlus, SendIcon } from 'lucide-react-native'
+import { Button, ButtonText, Heading, Text, View } from '@gluestack-ui/themed'
+import { CirclePlus, SendIcon, Trash2 } from 'lucide-react-native'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import {
@@ -99,7 +106,12 @@ const CustomSend = (props: any) => {
 export default function ChatInner({ accessToken, initialMessage }: Props) {
   const insets = useSafeAreaInsets()
   const [showActionsheet, setShowActionsheet] = React.useState(false)
-  const { onSend, messages, isLoading } = useApi()
+  const [showClearConfirm, setShowClearConfirm] = React.useState(false)
+  const { onSend, messages, isLoading, clearMessages } = useApi()
+
+  const hasMessagesExcludingWelcome = (messages: IMessage[]) => {
+    return messages.some(message => message._id !== 'welcome-message')
+  }
 
   React.useEffect(() => {
     if (initialMessage) {
@@ -115,7 +127,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
         accessToken
       )
     }
-  }, [initialMessage])
+  }, [initialMessage, onSend, accessToken])
 
   const keyboardVerticalOffset =
     insets.bottom + (Platform.OS === 'ios' ? 90 : 0)
@@ -140,19 +152,44 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
     }
   }
 
+  const handleClearChat = () => {
+    clearMessages()
+    setShowClearConfirm(false)
+  }
+
   const CustomActions = (props: any) => (
-    <Actions
-      className="flex align-center justify-center"
-      {...props}
-      icon={() => (
-        <Box className="items-center justify-center">
-          <CirclePlus size={15} color="white" />
-        </Box>
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      {/* Clear Chat Action */}
+      {hasMessagesExcludingWelcome(messages) && (
+        <View style={{ marginRight: 8 }}>
+          <Actions
+            {...props}
+            icon={() => (
+              <Box className="items-center justify-center">
+                <Trash2 size={15} color="white" />
+              </Box>
+            )}
+            onPressActionButton={() => {
+              setShowClearConfirm(true)
+            }}
+          />
+        </View>
       )}
-      onPressActionButton={() => {
-        setShowActionsheet(true)
-      }}
-    />
+
+      {/* Existing Plus Action */}
+      <Actions
+        className="flex align-center justify-center"
+        {...props}
+        icon={() => (
+          <Box className="items-center justify-center">
+            <CirclePlus size={15} color="white" />
+          </Box>
+        )}
+        onPressActionButton={() => {
+          setShowActionsheet(true)
+        }}
+      />
+    </View>
   )
 
   return (
@@ -202,10 +239,49 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
         renderActions={props => <CustomActions {...props} />}
         minInputToolbarHeight={50}
       />
+
       <QueryActionSheet
         showActionsheet={showActionsheet}
         handleClose={() => setShowActionsheet(false)}
       />
+
+      {/* Clear Chat Confirmation Actionsheet */}
+      <Actionsheet
+        isOpen={showClearConfirm}
+        onClose={() => setShowClearConfirm(false)}
+      >
+        <ActionsheetBackdrop />
+        <ActionsheetContent>
+          <ActionsheetDragIndicatorWrapper>
+            <ActionsheetDragIndicator />
+          </ActionsheetDragIndicatorWrapper>
+
+          <View className="px-4 py-6">
+            <Heading className="text-xl font-bold text-slate-900 mb-4">
+              Clear Chat History?
+            </Heading>
+            <Text className="text-slate-600 mb-6">
+              This will permanently delete all messages in this conversation.
+              This action cannot be undone.
+            </Text>
+
+            <View className="flex-col space-y-3">
+              <Button
+                variant="outline"
+                onPress={() => setShowClearConfirm(false)}
+              >
+                <ButtonText className="text-slate-700">Cancel</ButtonText>
+              </Button>
+              <Button
+                style={{ backgroundColor: '#ef4444' }}
+                onPress={handleClearChat}
+              >
+                <ButtonText style={{ color: 'white' }}>Clear Chat</ButtonText>
+              </Button>
+            </View>
+          </View>
+        </ActionsheetContent>
+      </Actionsheet>
     </View>
   )
 }
