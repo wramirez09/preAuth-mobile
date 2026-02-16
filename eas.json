@@ -1,0 +1,12 @@
+{
+  "build": {
+    "preview": {
+      "distribution": "store",
+      "channel": "preview"
+    },
+    "production": {
+      "distribution": "store",
+      "channel": "production"
+    }
+  }
+}
