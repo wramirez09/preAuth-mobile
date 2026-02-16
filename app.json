@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "noteDoctor.ai.app",
-    "slug": "noteDoctor.ai.app",
+    "name": "noteDoctor",
+    "slug": "notedoctorai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -18,7 +18,7 @@
       }
     },
     "android": {
-       "package": "com.notedoctoraiapp.preauth",
+      "package": "com.notedoctoraiapp.preauth",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -50,6 +50,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b59e60b6-ff95-42cc-bcc5-eb144f307548"
+      }
+    },
+    "owner": "miteshpndai"
   }
 }
