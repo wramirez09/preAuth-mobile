@@ -174,7 +174,11 @@ module.exports = {
         heading: undefined,
         body: undefined,
         mono: undefined,
-        jakarta: ['ui-sans-serif', ' sans-serif', 'var(--font-plus-jakarta-sans)'],
+        jakarta: [
+          'ui-sans-serif',
+          ' sans-serif',
+          'var(--font-plus-jakarta-sans)',
+        ],
         roboto: ['ui-sans-serif', ' sans-serif', 'var(--font-roboto)'],
         code: ['ui-sans-serif', ' sans-serif', 'var(--font-source-code-pro)'],
         inter: ['ui-sans-serif', ' sans-serif', 'var(--font-inter)'],

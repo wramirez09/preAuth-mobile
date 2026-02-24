@@ -1,9 +1,10 @@
 const { getDefaultConfig } = require('expo/metro-config')
-const { withNativewind } = require('nativewind/metro')
+const { withNativeWind } = require('nativewind/metro')
+const path = require('path')
 
-const config = getDefaultConfig(__dirname)
+const config = getDefaultConfig(path.resolve(__dirname))
 
-module.exports = withNativewind(config, {
+module.exports = withNativeWind(config, {
   input: './global.css',
-  configPath: './tailwind.config.js',
+  configPath: path.resolve(__dirname, './tailwind.config.js'),
 })

@@ -32,6 +32,7 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
   const [messages, setMessages] = React.useState<IMessage[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
   const [hasShownWelcome, setHasShownWelcome] = React.useState(false)
+  const abortControllerRef = React.useRef<AbortController | null>(null)
 
   const apiUrl = React.useMemo(() => createApiUrl('api/chat/agents'), [])
 
@@ -61,11 +62,28 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
     return () => clearTimeout(timer)
   }, [messages.length, hasShownWelcome, addWelcomeMessage])
 
+  // Cleanup effect to abort requests on unmount
+  React.useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
+  }, [])
+
   const onSend = React.useCallback(
     async (newMessages: IMessage[] = [], accessToken?: string) => {
       if (!newMessages.length || isLoading || !accessToken) return
 
       const userMessage = newMessages[0]
+
+      // Cancel any existing request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+
+      // Create new AbortController for this request
+      abortControllerRef.current = new AbortController()
 
       // 1️⃣ Optimistically add user message
       setMessages(prev => GiftedChat.append(prev, newMessages))
@@ -82,6 +100,7 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
           body: JSON.stringify({
             messages: [{ role: 'user', content: userMessage.text }],
           }),
+          signal: abortControllerRef.current.signal,
         })
 
         if (!res.ok) {
@@ -94,15 +113,29 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         const messages = normalizeAssistantMessages(data.messages)
         setMessages(prev => GiftedChat.append(prev, messages))
       } catch (e) {
-        console.error('Chat error', e)
+        // Don't log error for aborted requests
+        if (e instanceof Error && e.name !== 'AbortError') {
+          console.error('Chat error', e)
+        }
       } finally {
         setIsLoading(false)
+        abortControllerRef.current = null
       }
     },
     [apiUrl, messages, isLoading]
   )
 
   const clearMessages = React.useCallback(() => {
+    // Abort any ongoing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+      abortControllerRef.current = null
+    }
+
+    // Reset loading state
+    setIsLoading(false)
+
+    // Clear messages
     setMessages([])
     setHasShownWelcome(false)
   }, [])

@@ -94,7 +94,7 @@ const GuideWelcome: React.FC = () => {
               className="border border-gray-300 rounded-lg py-3 flex-row items-center justify-center"
             >
               <RotateCcw size={18} color="#111827" />
-              <Text className="ml-2 font-medium text-gray-900">Start Over</Text>
+              <Text className="ml-2 font-medium text-gray-900">Main Menu</Text>
             </Pressable>
 
             <Divider className="my-6" />
