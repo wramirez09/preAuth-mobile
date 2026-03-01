@@ -139,6 +139,12 @@ const DrawerCore: React.FC<Props> = ({ isOpen, disabled }) => {
                   onPress={() => closeThenNavigate('Pick')}
                 />
                 <DrawerItem
+                  iconClassName="text-purple-600"
+                  icon={Share}
+                  label="Guide"
+                  onPress={() => closeThenNavigate('Guide')}
+                />
+                <DrawerItem
                   iconClassName="text-emerald-600"
                   icon={FileText}
                   label="Full Form"

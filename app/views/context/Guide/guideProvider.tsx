@@ -76,6 +76,7 @@ export const GuideProvider: React.FC<React.PropsWithChildren<any>> = ({
   const [completedSteps, setCompletedSteps] = React.useState<Set<number>>(
     new Set()
   )
+  const [isEditingFromReview, setIsEditingFromReview] = React.useState(false)
 
   const goToStep = React.useCallback((step: number) => {
     const targetIndex = step - 1
@@ -124,6 +125,8 @@ export const GuideProvider: React.FC<React.PropsWithChildren<any>> = ({
       goToNextStep,
       goToPrevStep,
       markStepComplete,
+      isEditingFromReview,
+      setIsEditingFromReview,
       currentStep: GUIDE_STEPS[currentStepIndex],
       completedSteps,
       totalSteps: GUIDE_STEPS.length,
@@ -137,6 +140,7 @@ export const GuideProvider: React.FC<React.PropsWithChildren<any>> = ({
       goToPrevStep,
       markStepComplete,
       completedSteps,
+      isEditingFromReview,
     ]
   )
 

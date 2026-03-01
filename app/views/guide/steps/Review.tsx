@@ -22,9 +22,15 @@ const getState = (stateId: number): string => {
 
 const Review: React.FC = () => {
   const { formData } = useFormData()
-  const { setCurrentStepIndex } = useGuide()
+  const { setCurrentStepIndex, setIsEditingFromReview } = useGuide()
+
+  // Reset edit flag when Review component loads
+  React.useEffect(() => {
+    setIsEditingFromReview(false)
+  }, [setIsEditingFromReview])
 
   const handleNavigate = (path: string, step: number) => {
+    setIsEditingFromReview(true)
     setCurrentStepIndex(step)
     requestAnimationFrame(() => {
       refNavigate(path as any)

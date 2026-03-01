@@ -11,10 +11,23 @@ import { useFormData } from '../../context/FormData/context'
 
 const GuideFooter = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
-  const { currentStepIndex, setCurrentStepIndex, setIsTransitioning } =
-    useGuide()
+  const {
+    currentStepIndex,
+    setCurrentStepIndex,
+    setIsTransitioning,
+    isEditingFromReview,
+    setIsEditingFromReview: setEditingFromReview,
+  } = useGuide()
   const { formData, resetFormData, isSubmitDisabled } = useFormData()
   const isLastStep = currentStepIndex === GUIDE_STEPS.length
+
+  const backToReview = React.useCallback(() => {
+    setEditingFromReview(false)
+    setCurrentStepIndex(6) // Review step is step 6
+    requestAnimationFrame(() => {
+      navigation.navigate('Review')
+    })
+  }, [navigation, setCurrentStepIndex, setEditingFromReview])
 
   const next = React.useCallback(() => {
     const nextStep = currentStepIndex + 1
@@ -77,13 +90,25 @@ const GuideFooter = () => {
       )}
       {currentStepIndex >= 0 && !isLastStep ? (
         <View className="gap-2">
-          <Button className="bg-blue-600 rounded-lg" onPress={() => next()}>
-            <ButtonText className="text-white font-semibold text-sm">
-              Next Step
-            </ButtonText>
+          {isEditingFromReview ? (
+            <Button
+              className="bg-purple-600 rounded-lg"
+              onPress={() => backToReview()}
+            >
+              <ButtonText className="text-white font-semibold text-sm">
+                Back to Review
+              </ButtonText>
+              <ArrowRight color="white" size={18} />
+            </Button>
+          ) : (
+            <Button className="bg-blue-600 rounded-lg" onPress={() => next()}>
+              <ButtonText className="text-white font-semibold text-sm">
+                Next Step
+              </ButtonText>
 
-            <ArrowRight color="white" size={18} />
-          </Button>
+              <ArrowRight color="white" size={18} />
+            </Button>
+          )}
           <Button
             className="bg-white rounded-lg border-gray-300"
             onPress={() => back()}
