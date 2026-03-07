@@ -1,4 +1,5 @@
 import { useFormData } from '@/app/views/context/FormData/context'
+import PatientInfoWarning from '@/components/PatientInfoWarning'
 import { FormControl, Textarea, TextareaInput } from '@gluestack-ui/themed'
 import React from 'react'
 
@@ -21,6 +22,7 @@ const DiagnosisTextArea: React.FC = () => {
           onChangeText={handleChange}
         />
       </Textarea>
+      <PatientInfoWarning compact={true} />
     </FormControl>
   )
 }

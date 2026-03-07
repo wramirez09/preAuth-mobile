@@ -1,3 +1,4 @@
+import PatientInfoWarning from '@/components/PatientInfoWarning'
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -9,7 +10,7 @@ import { Box } from '@/components/ui/box'
 import { Button, ButtonText, Heading, Text, View } from '@gluestack-ui/themed'
 import { CirclePlus, SendIcon, Trash2 } from 'lucide-react-native'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Animated, Platform } from 'react-native'
 import {
   Actions,
   Composer,
@@ -107,6 +108,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   const insets = useSafeAreaInsets()
   const [showActionsheet, setShowActionsheet] = React.useState(false)
   const [showClearConfirm, setShowClearConfirm] = React.useState(false)
+  const fadeAnim = React.useRef(new Animated.Value(1)).current
   const { onSend, messages, isLoading, clearMessages } = useApi()
 
   const hasMessagesExcludingWelcome = (messages: IMessage[]) => {
@@ -128,6 +130,23 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
       )
     }
   }, [initialMessage, onSend, accessToken])
+
+  // Fade out HIPAA warning when user has sent messages
+  React.useEffect(() => {
+    if (hasMessagesExcludingWelcome(messages)) {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start()
+    } else {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start()
+    }
+  }, [messages, fadeAnim])
 
   const keyboardVerticalOffset =
     insets.bottom + (Platform.OS === 'ios' ? 90 : 0)
@@ -194,6 +213,21 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
 
   return (
     <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
+      <Animated.View
+        style={{
+          opacity: fadeAnim,
+          transform: [
+            {
+              translateY: fadeAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-20, 0],
+              }),
+            },
+          ],
+        }}
+      >
+        <PatientInfoWarning compact={false} />
+      </Animated.View>
       <GiftedChat
         messages={messages}
         renderSend={CustomSend}
