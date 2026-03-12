@@ -11,5 +11,21 @@
       "distribution": "store",
       "channel": "production"
     }
+  },
+  "submit": {
+    "preview": {
+      "ios": {
+        "appleId": "wramirez1980@gmail.com",
+        "ascAppId": "",
+        "appleTeamId": "WV9S867ABX"
+      }
+    },
+    "production": {
+      "ios": {
+        "appleId": "wramirez1980@gmail.com",
+        "ascAppId": "",
+        "appleTeamId": "WV9S867ABX"
+      }
+    }
   }
 }

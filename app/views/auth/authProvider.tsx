@@ -1,5 +1,6 @@
 import supabase from '@/app/lib/supabase'
 import { Session, User } from '@supabase/supabase-js'
+import * as SplashScreen from 'expo-splash-screen'
 import * as React from 'react'
 import { AuthContext } from './context'
 
@@ -23,6 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error getting session:', error)
       } finally {
         setLoading(false)
+        await SplashScreen.hideAsync()
       }
     }
 

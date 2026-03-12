@@ -92,6 +92,9 @@ importers:
       expo-image:
         specifier: ~3.0.11
         version: 3.0.11(expo@54.0.30)(react-native-web@0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      expo-insights:
+        specifier: ^55.0.10
+        version: 55.0.10(expo@54.0.30)
       expo-linear-gradient:
         specifier: ^15.0.8
         version: 15.0.8(expo@54.0.30)(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -203,9 +206,6 @@ importers:
       text-encoding:
         specifier: ^0.7.0
         version: 0.7.0
-      tva:
-        specifier: link:@gluestack-ui/nativewind-utils/tva
-        version: link:@gluestack-ui/nativewind-utils/tva
       typescript-eslint:
         specifier: ^8.51.0
         version: 8.51.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3)
@@ -955,8 +955,8 @@ packages:
   '@expo/html-elements@0.12.5':
     resolution: {integrity: sha512-28KWO88YKykKU7ke5sEQs5TivFRMs1Aktz13xxgqAf5rTgb+lka0VKVt3W2fG7ksbUQ407rtUqz7SEAq298NvQ==}
 
-  '@expo/html-elements@0.13.8':
-    resolution: {integrity: sha512-dY8cbf9dkigI7YqIcz5k1Y2GpVG++WKPLp51q5xAGHYNyW7RyuGUPKjgiwK4Th0GBcQFBVCZuu/XZerPqMFA7g==}
+  '@expo/html-elements@55.0.3':
+    resolution: {integrity: sha512-/adnZVHXZ9NaaR7z5bz9lIFmIvMX8ghEfWucAjwuUwcq4jFfgun6VYjhs/9s0j93EC1FQl9HXWnl8oGCxp0YZg==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -3810,6 +3810,9 @@ packages:
   expo-eas-client@1.0.8:
     resolution: {integrity: sha512-5or11NJhSeDoHHI6zyvQDW2cz/yFyE+1Cz8NTs5NK8JzC7J0JrkUgptWtxyfB6Xs/21YRNifd3qgbBN3hfKVgA==}
 
+  expo-eas-client@55.0.2:
+    resolution: {integrity: sha512-fjOgSXaZFBK2Xmzn/uw0DTF3BsYv97JEa4PYXXqVCEvNJPwJB1cV1eX6Xyq6iKGIhMPH9k62sOc+oUdt094WCw==}
+
   expo-file-system@19.0.21:
     resolution: {integrity: sha512-s3DlrDdiscBHtab/6W1osrjGL+C2bvoInPJD7sOwmxfJ5Woynv2oc+Fz1/xVXaE/V7HE/+xrHC/H45tu6lZzzg==}
     peerDependencies:
@@ -3838,6 +3841,11 @@ packages:
     peerDependenciesMeta:
       react-native-web:
         optional: true
+
+  expo-insights@55.0.10:
+    resolution: {integrity: sha512-Qkj2o/pwGw3CTzDvwxOoW3aVEm3tIfUa6q7elTDTSxFVZhxQDNLUxuRLxVSzGla7ACcBzEnmqos7E/8zGbTQXg==}
+    peerDependencies:
+      expo: '*'
 
   expo-json-utils@0.15.0:
     resolution: {integrity: sha512-duRT6oGl80IDzH2LD2yEFWNwGIC2WkozsB6HF3cDYNoNNdUvFk6uN3YiwsTsqVM/D0z6LEAQ01/SlYvN+Fw0JQ==}
@@ -4197,6 +4205,7 @@ packages:
   glob@9.3.5:
     resolution: {integrity: sha512-e1LleDykUz2Iu+MTYdkSsuWX8lvAjAcs0Xef0lNIu0S2wOAzuTxCJtcd9S3cijlwYF18EsU3rzb8jPVobxDh9Q==}
     engines: {node: '>=16 || 14 >=14.17'}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-dirs@0.1.1:
     resolution: {integrity: sha512-NknMLn7F2J7aflwFOlGdNIuCDpN3VGoSoB+aap3KABFWbHVn1TCgFC+np23J8W2BiZbjfEw3BFBycSMv1AFblg==}
@@ -7519,7 +7528,7 @@ snapshots:
 
   '@expo/html-elements@0.12.5': {}
 
-  '@expo/html-elements@0.13.8(react-native-web@0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@expo/html-elements@55.0.3(react-native-web@0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0)
@@ -8047,7 +8056,7 @@ snapshots:
 
   '@gluestack-ui/themed@1.1.73(0af59651f5eb8dbd462f5f530a97dedd)':
     dependencies:
-      '@expo/html-elements': 0.13.8(react-native-web@0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@expo/html-elements': 55.0.3(react-native-web@0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@gluestack-style/animation-resolver': 1.0.4(@gluestack-style/react@1.0.57)
       '@gluestack-style/legend-motion-animation-driver': 1.0.3(@gluestack-style/react@1.0.57)(@legendapp/motion@2.5.3(nativewind@4.2.1(react-native-reanimated@4.1.6(@babel/core@7.28.5)(react-native-worklets@0.5.1(@babel/core@7.28.5)(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-svg@15.12.1(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)(tailwindcss@3.4.1))(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))
       '@gluestack-style/react': 1.0.57
@@ -11481,6 +11490,8 @@ snapshots:
 
   expo-eas-client@1.0.8: {}
 
+  expo-eas-client@55.0.2: {}
+
   expo-file-system@19.0.21(expo@54.0.30)(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0)):
     dependencies:
       expo: 54.0.30(@babel/core@7.28.5)(@expo/metro-runtime@6.1.2)(expo-router@6.0.21)(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -11504,6 +11515,11 @@ snapshots:
       react-native: 0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0)
     optionalDependencies:
       react-native-web: 0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+
+  expo-insights@55.0.10(expo@54.0.30):
+    dependencies:
+      expo: 54.0.30(@babel/core@7.28.5)(@expo/metro-runtime@6.1.2)(expo-router@6.0.21)(react-native@0.81.5(@babel/core@7.28.5)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      expo-eas-client: 55.0.2
 
   expo-json-utils@0.15.0: {}
 

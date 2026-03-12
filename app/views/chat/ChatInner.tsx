@@ -10,7 +10,7 @@ import { Box } from '@/components/ui/box'
 import { Button, ButtonText, Heading, Text, View } from '@gluestack-ui/themed'
 import { CirclePlus, SendIcon, Trash2 } from 'lucide-react-native'
 import * as React from 'react'
-import { Animated, Platform } from 'react-native'
+import { Animated, Keyboard, Platform } from 'react-native'
 import {
   Actions,
   Composer,
@@ -212,7 +212,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   )
 
   return (
-    <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
+    <View style={{ flex: 1, marginBottom: 30, marginHorizontal: 12 }}>
       <Animated.View
         style={{
           opacity: fadeAnim,
@@ -262,6 +262,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
                 },
               ])
             }
+            Keyboard.dismiss()
           },
         }}
         isSendButtonAlwaysVisible
