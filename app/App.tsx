@@ -39,6 +39,7 @@ function HeaderRight() {
   return (
     <Button
       variant="link"
+      action="primary"
       onPress={() => setIsDrawerOpen(!isDrawerOpen)}
       ml="$2"
     >
@@ -76,6 +77,7 @@ const RootStack = createNativeStackNavigator({
           <Button
             size="xs"
             variant="link"
+            action="primary"
             onPress={() => navigationRef.current?.navigate('Home')}
           >
             <ButtonText>Back</ButtonText>
@@ -130,6 +132,7 @@ const RootStack = createNativeStackNavigator({
           <Button
             size="xs"
             variant="link"
+            action="primary"
             onPress={() => navigationRef.current?.navigate('Home')}
           >
             <ButtonText>Back</ButtonText>
