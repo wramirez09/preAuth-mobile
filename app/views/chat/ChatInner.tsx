@@ -219,22 +219,13 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   )
 
   return (
-    <View style={{ flex: 1, marginBottom: 30, margin: 20 }}>
-      <Animated.View
-        style={{
-          opacity: fadeAnim,
-          transform: [
-            {
-              translateY: fadeAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [-20, 0],
-              }),
-            },
-          ],
-        }}
-      >
-        <PatientInfoWarning compact={false} />
-      </Animated.View>
+    <View
+      style={{
+        flex: 1,
+        marginBottom: 30,
+        marginHorizontal: 12,
+      }}
+    >
       <GiftedChat
         messages={messages}
         renderSend={CustomSend}
@@ -280,6 +271,29 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
         renderActions={props => <CustomActions {...props} />}
         minInputToolbarHeight={50}
       />
+
+      {/* Absolutely positioned HIPAA warning overlay */}
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: 10,
+          left: 0,
+          right: 0,
+          zIndex: 1,
+          opacity: fadeAnim,
+          transform: [
+            {
+              translateY: fadeAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-20, 0],
+              }),
+            },
+          ],
+        }}
+        pointerEvents={hasMessagesExcludingWelcome(messages) ? 'none' : 'auto'}
+      >
+        <PatientInfoWarning compact={false} />
+      </Animated.View>
 
       <QueryActionSheet
         showActionsheet={showActionsheet}
