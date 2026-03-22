@@ -2,7 +2,7 @@
   "expo": {
     "name": "noteDoctor",
     "slug": "notedoctorai",
-    "version": "1.0.0",
+    "version": "1.0.1-beta-2",
     "buildNumber": "2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
