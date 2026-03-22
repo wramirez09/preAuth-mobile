@@ -3,6 +3,7 @@
     "name": "noteDoctor",
     "slug": "notedoctorai",
     "version": "1.0.0",
+    "buildNumber": "2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "notedoctoraiapp",
