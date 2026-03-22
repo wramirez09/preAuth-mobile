@@ -5,11 +5,21 @@
   "build": {
     "preview": {
       "distribution": "store",
-      "channel": "preview"
+      "channel": "preview",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://preauthproduction.vercel.app",
+        "NEXT_PUBLIC_SUPABASE_URL": "https://ewehlzmdgrdiejtifamp.supabase.co",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_cTk8SEnGh0FddNBIh99_0g_dXEUZjjr"
+      }
     },
     "production": {
       "distribution": "store",
-      "channel": "production"
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://preauthproduction.vercel.app",
+        "NEXT_PUBLIC_SUPABASE_URL": "https://ewehlzmdgrdiejtifamp.supabase.co",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_cTk8SEnGh0FddNBIh99_0g_dXEUZjjr"
+      }
     }
   }
 }

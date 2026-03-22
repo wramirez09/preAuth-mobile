@@ -1,13 +1,7 @@
 import { env } from '@/env'
-import Constants from 'expo-constants'
+
 export function createApiUrl(relativePath: string): string {
-  const origin = Constants.experienceUrl.replace('exp://', 'http://')
-
   const path = relativePath.startsWith('/') ? relativePath : `/${relativePath}`
-
-  //   if (process.env.NODE_ENV === 'development') {
-  //     return origin.concat(path);
-  //   }
 
   if (!env.API_URL) {
     throw new Error(
