@@ -110,13 +110,20 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   const [showClearConfirm, setShowClearConfirm] = React.useState(false)
   const fadeAnim = React.useRef(new Animated.Value(1)).current
   const { onSend, messages, isLoading, clearMessages } = useApi()
+  const hasSentInitialMessage = React.useRef(false)
 
   const hasMessagesExcludingWelcome = (messages: IMessage[]) => {
     return messages.some(message => message._id !== 'welcome-message')
   }
 
   React.useEffect(() => {
-    if (initialMessage) {
+    console.log('ChatInner useEffect running', {
+      initialMessage: !!initialMessage,
+      hasSentInitial: hasSentInitialMessage.current,
+    })
+    if (initialMessage && !hasSentInitialMessage.current) {
+      hasSentInitialMessage.current = true
+      console.log('Sending initial message:', initialMessage.message)
       onSend(
         [
           {

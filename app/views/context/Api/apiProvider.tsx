@@ -33,8 +33,9 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
   const [isLoading, setIsLoading] = React.useState(false)
   const [hasShownWelcome, setHasShownWelcome] = React.useState(false)
   const abortControllerRef = React.useRef<AbortController | null>(null)
+  const isRequestingRef = React.useRef(false)
 
-  const apiUrl = React.useMemo(() => createApiUrl('api/chat/agents'), [])
+  const apiUrl = React.useMemo(() => createApiUrl('/api/chat/agents'), [])
 
   const addWelcomeMessage = React.useCallback(() => {
     const welcomeMessage: IMessage = {
@@ -65,6 +66,7 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
   // Cleanup effect to abort requests on unmount
   React.useEffect(() => {
     return () => {
+      console.log('Component unmounting, aborting any ongoing request')
       if (abortControllerRef.current) {
         abortControllerRef.current.abort()
       }
@@ -73,12 +75,22 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
 
   const onSend = React.useCallback(
     async (newMessages: IMessage[] = [], accessToken?: string) => {
-      if (!newMessages.length || isLoading || !accessToken) return
+      if (
+        !newMessages.length ||
+        isLoading ||
+        !accessToken ||
+        isRequestingRef.current
+      )
+        return
 
       const userMessage = newMessages[0]
 
+      // Set requesting flag
+      isRequestingRef.current = true
+
       // Cancel any existing request
       if (abortControllerRef.current) {
+        console.log('Cancelling existing request before making new one')
         abortControllerRef.current.abort()
       }
 
@@ -90,7 +102,23 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
       setIsLoading(true)
 
       try {
-        const res = await fetch(apiUrl, {
+        // Validate inputs
+        if (!accessToken || typeof accessToken !== 'string') {
+          throw new Error('Invalid access token')
+        }
+
+        if (
+          !userMessage.text ||
+          typeof userMessage.text !== 'string' ||
+          !userMessage.text.trim()
+        ) {
+          throw new Error('Invalid message content')
+        }
+
+        const fullUrl = apiUrl.startsWith('http') ? apiUrl : `https://${apiUrl}`
+
+        console.log('Making API request to:', fullUrl)
+        const res = await fetch(fullUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -98,34 +126,62 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
             'x-client': 'mobile',
           },
           body: JSON.stringify({
-            messages: [{ role: 'user', content: userMessage.text }],
+            messages: [{ role: 'user', content: userMessage.text.trim() }],
           }),
           signal: abortControllerRef.current.signal,
         })
 
         if (!res.ok) {
-          throw new Error(`API request failed with status ${res.status}`)
+          const errorMessage =
+            res.status === 500
+              ? 'Server error occurred'
+              : res.status === 401
+                ? 'Authentication failed'
+                : res.status === 429
+                  ? 'Too many requests'
+                  : `API request failed with status ${res.status}`
+          throw new Error(errorMessage)
         }
 
         const data = await res.json()
-        console.log({ res })
+        console.log('API Response:', { status: res.status, data })
         // 3️⃣ Append ONLY assistant messages
         const messages = normalizeAssistantMessages(data.messages)
         setMessages(prev => GiftedChat.append(prev, messages))
       } catch (e) {
         // Don't log error for aborted requests
-        if (e instanceof Error && e.name !== 'AbortError') {
-          console.error('Chat error', e)
+        if (e instanceof Error) {
+          if (e.name === 'AbortError') {
+            console.log('Request was aborted')
+            return
+          }
+
+          // Enhanced error handling
+          if (e.message.includes('Network request failed')) {
+            console.error(
+              'Network error: Please check your internet connection'
+            )
+          } else if (e.message.includes('timeout')) {
+            console.error(
+              'Request timeout: The server took too long to respond'
+            )
+          } else {
+            console.error('Chat error:', e.message)
+          }
+        } else {
+          console.error('Unknown chat error:', e)
         }
       } finally {
         setIsLoading(false)
         abortControllerRef.current = null
+        isRequestingRef.current = false
       }
     },
-    [apiUrl, messages, isLoading]
+    [apiUrl, isLoading]
   )
 
   const clearMessages = React.useCallback(() => {
+    console.log('ClearMessages called, aborting any ongoing request')
     // Abort any ongoing request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
@@ -134,6 +190,9 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
 
     // Reset loading state
     setIsLoading(false)
+
+    // Reset requesting flag
+    isRequestingRef.current = false
 
     // Clear messages
     setMessages([])
