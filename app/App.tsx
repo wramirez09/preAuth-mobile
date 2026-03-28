@@ -41,6 +41,7 @@ function HeaderRight() {
       variant="link"
       onPress={() => setIsDrawerOpen(!isDrawerOpen)}
       ml="$2"
+      className="bg-transparent"
     >
       <Menu />
     </Button>
@@ -77,6 +78,7 @@ const RootStack = createNativeStackNavigator({
             size="xs"
             variant="link"
             onPress={() => navigationRef.current?.navigate('Home')}
+            className="bg-transparent"
           >
             <ButtonText>Back</ButtonText>
           </Button>
@@ -131,6 +133,7 @@ const RootStack = createNativeStackNavigator({
             size="xs"
             variant="link"
             onPress={() => navigationRef.current?.navigate('Home')}
+            className="bg-transparent"
           >
             <ButtonText>Back</ButtonText>
           </Button>
