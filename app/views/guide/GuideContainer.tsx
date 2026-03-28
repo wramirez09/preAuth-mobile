@@ -27,7 +27,12 @@ const GuideContainer: React.FC<
         {showHeader && step && (
           <GuideHeader title={step.title} subTitle={step.subTitle} />
         )}
-        <View className={`flex-1`}>{children}</View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          className="flex-1"
+        >
+          <View className={`flex-1`}>{children}</View>
+        </KeyboardAvoidingView>
         <GuideFooter />
       </SafeContainer>
     </LinearGradientCore>

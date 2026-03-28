@@ -5,6 +5,7 @@ import { TreatmentSelect } from '@/components/Form/TreatmentSelect'
 import LinearGradientCore from '@/components/LinearGradientCore'
 import SafeContainer from '@/components/SafeContainer'
 import { Button, ButtonText, ScrollView, View } from '@gluestack-ui/themed'
+import { KeyboardAvoidingView, Platform } from 'react-native'
 
 import { formatFormDataForChat } from '@/app/utils/formatFormDataForChat'
 import { refNavigate } from '@/app/utils/navigationRef'
@@ -68,60 +69,65 @@ export const FormCore: React.FC<{
   }
 
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      className="flex-1 bg-white p-3 rounded-2xl"
-      contentContainerStyle={{ paddingBottom: 32 }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      className="flex-1"
     >
-      {/* Card */}
-      <View key={`form-card-${resetKey}`} className="p-0 m-">
-        {/* Guidelines */}
-        <View key={`guidelines-${resetKey}`} className="mb-3">
-          <GuidelinesSelect />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        className="flex-1 bg-white p-3 rounded-2xl"
+        contentContainerStyle={{ paddingBottom: 32 }}
+      >
+        {/* Card */}
+        <View key={`form-card-${resetKey}`} className="p-0 m-">
+          {/* Guidelines */}
+          <View key={`guidelines-${resetKey}`} className="mb-3">
+            <GuidelinesSelect />
+          </View>
+
+          {/* State */}
+          <View key={`state-${resetKey}`} className="mb-3">
+            <StateSelect />
+          </View>
+
+          {/* Treatment */}
+          <View key={`treatment-${resetKey}`} className="mb-3">
+            <TreatmentSelect />
+          </View>
+
+          {/* Accordion */}
+          <View key={`accordion-${resetKey}`} className="mb-3">
+            <AccordionCore type="multiple" data={data} />
+          </View>
         </View>
 
-        {/* State */}
-        <View key={`state-${resetKey}`} className="mb-3">
-          <StateSelect />
+        {/* Buttons */}
+        <View className="flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4 mt-6">
+          <Button
+            className="flex-1 bg-blue-600  active:bg-blue-700 mb-3"
+            onPress={handleSubmit}
+          >
+            <ButtonText className="text-white font-semibold">
+              Submit Request
+            </ButtonText>
+          </Button>
+          <Button
+            className="flex-1 bg-gray-200 border-gray-200"
+            onPress={resetFormData}
+            variant="outline"
+          >
+            <ButtonText className="text-gray-800 font-semibold">
+              Reset Form
+            </ButtonText>
+          </Button>
         </View>
 
-        {/* Treatment */}
-        <View key={`treatment-${resetKey}`} className="mb-3">
-          <TreatmentSelect />
-        </View>
-
-        {/* Accordion */}
-        <View key={`accordion-${resetKey}`} className="mb-3">
-          <AccordionCore type="multiple" data={data} />
-        </View>
-      </View>
-
-      {/* Buttons */}
-      <View className="flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4 mt-6">
-        <Button
-          className="flex-1 bg-blue-600  active:bg-blue-700 mb-3"
-          onPress={handleSubmit}
-        >
-          <ButtonText className="text-white font-semibold">
-            Submit Request
-          </ButtonText>
-        </Button>
-        <Button
-          className="flex-1 bg-gray-200 border-gray-200"
-          onPress={resetFormData}
-          variant="outline"
-        >
-          <ButtonText className="text-gray-800 font-semibold">
-            Reset Form
-          </ButtonText>
-        </Button>
-      </View>
-
-      {/* Footer */}
-      <Text className="text-center text-xs text-slate-500 mt-4">
-        All fields are required to process your request
-      </Text>
-    </ScrollView>
+        {/* Footer */}
+        <Text className="text-center text-xs text-slate-500 mt-4">
+          All fields are required to process your request
+        </Text>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
