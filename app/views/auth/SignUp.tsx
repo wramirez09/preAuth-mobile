@@ -23,6 +23,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as React from 'react'
+import { KeyboardAvoidingView, Platform } from 'react-native'
 import logoImage from '../../assets/images/ndLogo.png'
 import { useAuth } from './context'
 import { SubscribeButton } from './SignUpButton'
@@ -63,123 +64,128 @@ const SignUp: React.FC = () => {
     >
       <SafeContainer>
         <Center className="w-full h-full">
-          <View className="w-full">
-            <View
-              style={{
-                marginBottom: 24,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <View style={{ width: 60, height: 60, marginBottom: 24 }}>
-                <Image
-                  source={logoImage}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    resizeMode: 'contain',
-                  }}
-                  alt="noteDoctor ai"
-                />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            className="w-full flex-1"
+          >
+            <View className="w-full">
+              <View
+                style={{
+                  marginBottom: 24,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <View style={{ width: 60, height: 60, marginBottom: 24 }}>
+                  <Image
+                    source={logoImage}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      resizeMode: 'contain',
+                    }}
+                    alt="noteDoctor ai"
+                  />
+                </View>
+                <Heading size="2xl" className="text-center">
+                  Subscribe
+                </Heading>
+                <Text size="sm" className="text-center">
+                  Create a new account
+                </Text>
               </View>
-              <Heading size="2xl" className="text-center">
-                Subscribe
-              </Heading>
-              <Text size="sm" className="text-center">
-                Create a new account
+
+              <FormControl className="mb-5">
+                <FormControlLabel>
+                  <FormControlLabelText marginLeft={6} size="sm">
+                    Display Name
+                  </FormControlLabelText>
+                </FormControlLabel>
+                <Input
+                  variant="outline"
+                  size="lg"
+                  className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
+                >
+                  <InputField
+                    placeholder="Bill"
+                    type="text"
+                    autoCapitalize="none"
+                    keyboardType="default"
+                    returnKeyType="next"
+                    enablesReturnKeyAutomatically
+                    onChangeText={value => setDisplayName(value)}
+                  />
+                </Input>
+                <FormControlHelper>
+                  <FormControlHelperText className="text-xs text-gray-400">
+                    Enter your display name
+                  </FormControlHelperText>
+                </FormControlHelper>
+                <FormControlError>
+                  <FormControlErrorIcon />
+                  <FormControlErrorText>
+                    Display name is required
+                  </FormControlErrorText>
+                </FormControlError>
+              </FormControl>
+
+              <FormControl className="mb-10">
+                <FormControlLabel>
+                  <FormControlLabelText marginLeft={4} size="sm">
+                    Email
+                  </FormControlLabelText>
+                </FormControlLabel>
+                <Input
+                  variant="outline"
+                  size="lg"
+                  className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
+                >
+                  <InputField
+                    placeholder="email@example.com"
+                    type="text"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    enablesReturnKeyAutomatically
+                    onChangeText={value => setEmail(value.toLowerCase())}
+                  />
+                </Input>
+                <FormControlHelper>
+                  <FormControlHelperText className="text-xs text-gray-400">
+                    Enter your email address
+                  </FormControlHelperText>
+                </FormControlHelper>
+                <FormControlError>
+                  <FormControlErrorIcon />
+                  <FormControlErrorText>
+                    Email address is required
+                  </FormControlErrorText>
+                </FormControlError>
+              </FormControl>
+
+              <FormControl>
+                <SubscribeButton
+                  email={email}
+                  disabled={false}
+                  name={displayName}
+                />
+              </FormControl>
+              <View className="flex-row items-center justify-center">
+                <Text>Already have an account?</Text>
+                <Button
+                  variant="link"
+                  onPress={() => navigation.navigate('Login')}
+                >
+                  <Text> </Text>
+                  <ButtonText>login</ButtonText>
+                </Button>
+              </View>
+              <Text className="text-center text-gray-500 text-sm my-6">
+                Secure • Encrypted • Trusted by Thousands
               </Text>
             </View>
-
-            <FormControl className="mb-5">
-              <FormControlLabel>
-                <FormControlLabelText marginLeft={6} size="sm">
-                  Display Name
-                </FormControlLabelText>
-              </FormControlLabel>
-              <Input
-                variant="outline"
-                size="lg"
-                className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
-              >
-                <InputField
-                  placeholder="Bill"
-                  type="text"
-                  autoCapitalize="none"
-                  keyboardType="default"
-                  returnKeyType="next"
-                  enablesReturnKeyAutomatically
-                  onChangeText={value => setDisplayName(value)}
-                />
-              </Input>
-              <FormControlHelper>
-                <FormControlHelperText className="text-xs text-gray-400">
-                  Enter your display name
-                </FormControlHelperText>
-              </FormControlHelper>
-              <FormControlError>
-                <FormControlErrorIcon />
-                <FormControlErrorText>
-                  Display name is required
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
-
-            <FormControl className="mb-10">
-              <FormControlLabel>
-                <FormControlLabelText marginLeft={4} size="sm">
-                  Email
-                </FormControlLabelText>
-              </FormControlLabel>
-              <Input
-                variant="outline"
-                size="lg"
-                className="h-14 rounded-2xl border-2 border-gray-200 bg-white items-center justify-center"
-              >
-                <InputField
-                  placeholder="email@example.com"
-                  type="text"
-                  autoCapitalize="none"
-                  autoComplete="email"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  enablesReturnKeyAutomatically
-                  onChangeText={value => setEmail(value.toLowerCase())}
-                />
-              </Input>
-              <FormControlHelper>
-                <FormControlHelperText className="text-xs text-gray-400">
-                  Enter your email address
-                </FormControlHelperText>
-              </FormControlHelper>
-              <FormControlError>
-                <FormControlErrorIcon />
-                <FormControlErrorText>
-                  Email address is required
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
-
-            <FormControl>
-              <SubscribeButton
-                email={email}
-                disabled={false}
-                name={displayName}
-              />
-            </FormControl>
-            <View className="flex-row items-center justify-center">
-              <Text>Already have an account?</Text>
-              <Button
-                variant="link"
-                onPress={() => navigation.navigate('Login')}
-              >
-                <Text> </Text>
-                <ButtonText>login</ButtonText>
-              </Button>
-            </View>
-            <Text className="text-center text-gray-500 text-sm my-6">
-              Secure • Encrypted • Trusted by Thousands
-            </Text>
-          </View>
+          </KeyboardAvoidingView>
         </Center>
       </SafeContainer>
     </LinearGradientCore>
