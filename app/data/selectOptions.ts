@@ -1,337 +1,326 @@
 export interface SelectOption {
-  value: string;
-  label: string;
-  disabled?: boolean;
-  icon?: React.ReactNode;
-  isdisabled?: boolean,
+  value: string
+  label: string
+  disabled?: boolean
+  icon?: React.ReactNode
+  isdisabled?: boolean
 }
 
 export const insuranceProvidersOptions: SelectOption[] = [
   {
-    value: "Medicare",
-    label: "Medicare",
+    value: 'Medicare',
+    label: 'Medicare',
     isdisabled: false,
   },
   {
-    value: "Carelon",
-    label: "Carelon",
+    value: 'Commercial',
+    label: 'Commercial',
     isdisabled: true,
   },
-  {
-    value: "Evolent",
-    label: "Evolent",
-    isdisabled: true,
-  },
-];
+]
 
 export const defaultInsuranceProvidersOptions: SelectOption[] = [
   {
-    value: "Medicare",
-    label: "Medicare",
+    value: 'Medicare',
+    label: 'Medicare',
     isdisabled: false,
   },
   {
-    value: "Carelon",
-    label: "Carelon",
+    value: 'Commercial',
+    label: 'Commercial',
     isdisabled: true,
   },
-  {
-    value: "Evolent",
-    label: "Evolent",
-    isdisabled: true,
-  },
-];
+]
 
-const allowedEmails = [
-  "miteshp@notedoctor.ai",
-  "wramirez1980@gmail.com",
-
-];
-export const getInsuranceProvidersOptions = (user: { email: string; isSignedIn: boolean }): SelectOption[] => {
+const allowedEmails = ['miteshp@notedoctor.ai', 'wramirez1980@gmail.com']
+export const getInsuranceProvidersOptions = (user: {
+  email: string
+  isSignedIn: boolean
+}): SelectOption[] => {
   return defaultInsuranceProvidersOptions.map(option => {
     // Check if the user is signed in and their email is in the allowed list
     if (user.isSignedIn && allowedEmails.includes(user.email)) {
-      // Enable Carelon and Evolent for allowed users
-      if (option.value === "Carelon" || option.value === "Evolent") {
-        return { ...option, isdisabled: false };
+      // Enable Commercial for allowed users
+      if (option.value === 'Commercial') {
+        return { ...option, isdisabled: false }
       }
     }
-    return option; // Keep other options unchanged
-  });
-};
+    return option // Keep other options unchanged
+  })
+}
 
 export type StateData = {
-  state_id: number;
-  description: string;
-};
+  state_id: number
+  description: string
+}
 
 export const states: StateData[] = [
   {
     state_id: 2,
-    description: "Alabama",
+    description: 'Alabama',
   },
   {
     state_id: 1,
-    description: "Alaska",
+    description: 'Alaska',
   },
   {
     state_id: 4,
-    description: "American Samoa",
+    description: 'American Samoa',
   },
   {
     state_id: 5,
-    description: "Arizona",
+    description: 'Arizona',
   },
   {
     state_id: 3,
-    description: "Arkansas",
+    description: 'Arkansas',
   },
   {
     state_id: 6,
-    description: "California - Entire State",
+    description: 'California - Entire State',
   },
   {
     state_id: 66,
-    description: "California - Northern",
+    description: 'California - Northern',
   },
   {
     state_id: 67,
-    description: "California - Southern",
+    description: 'California - Southern',
   },
   {
     state_id: 8,
-    description: "Colorado",
+    description: 'Colorado',
   },
   {
     state_id: 9,
-    description: "Connecticut",
+    description: 'Connecticut',
   },
   {
     state_id: 11,
-    description: "Delaware",
+    description: 'Delaware',
   },
   {
     state_id: 10,
-    description: "District of Columbia",
+    description: 'District of Columbia',
   },
   {
     state_id: 12,
-    description: "Florida",
+    description: 'Florida',
   },
   {
     state_id: 14,
-    description: "Georgia",
+    description: 'Georgia',
   },
   {
     state_id: 15,
-    description: "Guam",
+    description: 'Guam',
   },
   {
     state_id: 16,
-    description: "Hawaii",
+    description: 'Hawaii',
   },
   {
     state_id: 18,
-    description: "Idaho",
+    description: 'Idaho',
   },
   {
     state_id: 19,
-    description: "Illinois",
+    description: 'Illinois',
   },
   {
     state_id: 20,
-    description: "Indiana",
+    description: 'Indiana',
   },
   {
     state_id: 17,
-    description: "Iowa",
+    description: 'Iowa',
   },
   {
     state_id: 21,
-    description: "Kansas",
+    description: 'Kansas',
   },
   {
     state_id: 22,
-    description: "Kentucky",
+    description: 'Kentucky',
   },
   {
     state_id: 23,
-    description: "Louisiana",
+    description: 'Louisiana',
   },
   {
     state_id: 26,
-    description: "Maine",
+    description: 'Maine',
   },
   {
     state_id: 25,
-    description: "Maryland",
+    description: 'Maryland',
   },
   {
     state_id: 24,
-    description: "Massachusetts",
+    description: 'Massachusetts',
   },
   {
     state_id: 27,
-    description: "Michigan",
+    description: 'Michigan',
   },
   {
     state_id: 28,
-    description: "Minnesota",
+    description: 'Minnesota',
   },
   {
     state_id: 31,
-    description: "Mississippi",
+    description: 'Mississippi',
   },
   {
     state_id: 29,
-    description: "Missouri - Entire State",
+    description: 'Missouri - Entire State',
   },
   {
     state_id: 61,
-    description: "Missouri - Northeastern & Southern",
+    description: 'Missouri - Northeastern & Southern',
   },
   {
     state_id: 62,
-    description: "Missouri - Northwestern",
+    description: 'Missouri - Northwestern',
   },
   {
     state_id: 32,
-    description: "Montana",
+    description: 'Montana',
   },
   {
     state_id: 36,
-    description: "Nebraska",
+    description: 'Nebraska',
   },
   {
     state_id: 40,
-    description: "Nevada",
+    description: 'Nevada',
   },
   {
     state_id: 37,
-    description: "New Hampshire",
+    description: 'New Hampshire',
   },
   {
     state_id: 38,
-    description: "New Jersey",
+    description: 'New Jersey',
   },
   {
     state_id: 39,
-    description: "New Mexico",
+    description: 'New Mexico',
   },
   {
     state_id: 63,
-    description: "New York - Downstate",
+    description: 'New York - Downstate',
   },
   {
     state_id: 41,
-    description: "New York - Entire State",
+    description: 'New York - Entire State',
   },
   {
     state_id: 64,
-    description: "New York - Queens",
+    description: 'New York - Queens',
   },
   {
     state_id: 65,
-    description: "New York - Upstate",
+    description: 'New York - Upstate',
   },
   {
     state_id: 34,
-    description: "North Carolina",
+    description: 'North Carolina',
   },
   {
     state_id: 35,
-    description: "North Dakota",
+    description: 'North Dakota',
   },
   {
     state_id: 60,
-    description: "Northern Mariana Islands",
+    description: 'Northern Mariana Islands',
   },
   {
     state_id: 42,
-    description: "Ohio",
+    description: 'Ohio',
   },
   {
     state_id: 43,
-    description: "Oklahoma",
+    description: 'Oklahoma',
   },
   {
     state_id: 44,
-    description: "Oregon",
+    description: 'Oregon',
   },
   {
     state_id: 45,
-    description: "Pennsylvania",
+    description: 'Pennsylvania',
   },
   {
     state_id: 46,
-    description: "Puerto Rico",
+    description: 'Puerto Rico',
   },
   {
     state_id: 47,
-    description: "Rhode Island",
+    description: 'Rhode Island',
   },
   {
     state_id: 48,
-    description: "South Carolina",
+    description: 'South Carolina',
   },
   {
     state_id: 49,
-    description: "South Dakota",
+    description: 'South Dakota',
   },
   {
     state_id: 50,
-    description: "Tennessee",
+    description: 'Tennessee',
   },
   {
     state_id: 51,
-    description: "Texas",
+    description: 'Texas',
   },
   {
     state_id: 52,
-    description: "Utah",
+    description: 'Utah',
   },
   {
     state_id: 55,
-    description: "Vermont",
+    description: 'Vermont',
   },
   {
     state_id: 54,
-    description: "Virgin Islands",
+    description: 'Virgin Islands',
   },
   {
     state_id: 53,
-    description: "Virginia",
+    description: 'Virginia',
   },
   {
     state_id: 56,
-    description: "Washington",
+    description: 'Washington',
   },
   {
     state_id: 58,
-    description: "West Virginia",
+    description: 'West Virginia',
   },
   {
     state_id: 57,
-    description: "Wisconsin",
+    description: 'Wisconsin',
   },
   {
     state_id: 59,
-    description: "Wyoming",
+    description: 'Wyoming',
   },
-];
+]
 
 export function getStateIdByDescription(
-  description: string,
+  description: string
 ): number | undefined {
   const state = states.find(
-    (item) => item.description.toLowerCase() === description.toLowerCase(),
-  );
-  return state?.state_id;
+    item => item.description.toLowerCase() === description.toLowerCase()
+  )
+  return state?.state_id
 }
 
-export const stateOptions = states.map((state) => {
+export const stateOptions = states.map(state => {
   return {
     label: state.description,
-    value: state.state_id
+    value: state.state_id,
   }
 })
