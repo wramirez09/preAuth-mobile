@@ -2,6 +2,7 @@ import LinearGradientCore from '@/components/LinearGradientCore'
 import SafeContainer from '@/components/SafeContainer'
 import { View } from '@gluestack-ui/themed'
 import React from 'react'
+import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import { useGuide } from '../context/Guide/context'
 import { GUIDE_STEPS } from '../context/Guide/guideProvider'
 import GuideFooter from './components/GuideFooter'
@@ -23,18 +24,20 @@ const GuideContainer: React.FC<
       className="h-full w-full rounded-none"
       colors={['#eff6ff', '#FFF', '#eef2ff']}
     >
-      <SafeContainer className="h-full">
-        {showHeader && step && (
-          <GuideHeader title={step.title} subTitle={step.subTitle} />
-        )}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          className="flex-1"
-        >
-          <View className={`flex-1`}>{children}</View>
-        </KeyboardAvoidingView>
-        <GuideFooter />
-      </SafeContainer>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1"
+      >
+        <ScrollView>
+          <SafeContainer className="h-full">
+            {showHeader && step && (
+              <GuideHeader title={step.title} subTitle={step.subTitle} />
+            )}
+            <View className={`flex-1`}>{children}</View>
+            <GuideFooter />
+          </SafeContainer>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </LinearGradientCore>
   )
 }

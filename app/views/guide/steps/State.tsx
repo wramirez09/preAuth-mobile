@@ -16,7 +16,7 @@ const State: React.FC = () => {
         <StateSelect showIcon={false} showLabel={false} />
       </CardWrapper>
       <SubCard>
-        <Text className="text-xs">
+        <Text className="text-xs mb-5 mt-5">
           <Text className="text-xs font-bold">Need Help?&nbsp;</Text>If you're
           not sure which State to select, you can chat with our support team or
           consult your healthcare provider.

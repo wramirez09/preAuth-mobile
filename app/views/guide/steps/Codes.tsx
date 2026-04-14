@@ -16,7 +16,7 @@ const Codes: React.FC = () => {
         <CodesTextArea />
       </CardWrapper>
       <SubCard>
-        <Text className="text-xs">
+        <Text className="text-xs mt-5">
           <Text className="text-xs font-bold">Need Help?&nbsp;</Text>If you're
           not sure which CPT or HCPCS code(s) to add, you can chat with our
           support team or consult your healthcare provider.

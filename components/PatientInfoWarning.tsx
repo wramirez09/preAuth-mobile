@@ -10,13 +10,7 @@ const PatientInfoWarning: React.FC<PatientInfoWarningProps> = ({
   compact = false,
 }) => {
   return (
-    <Box
-      className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3"
-      style={{
-        marginHorizontal: 20,
-        marginTop: 10,
-      }}
-    >
+    <Box className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3 mt-2 w-full">
       <HStack className="items-start" space="sm">
         <AlertTriangle size={16} color="#F59E0B" style={{ marginTop: 2 }} />
         <View className="flex-1">

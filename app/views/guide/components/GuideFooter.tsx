@@ -101,7 +101,10 @@ const GuideFooter = () => {
               <ArrowRight color="white" size={18} />
             </Button>
           ) : (
-            <Button className="bg-blue-600 rounded-lg" onPress={() => next()}>
+            <Button
+              className="bg-blue-600 rounded-lg mt-5"
+              onPress={() => next()}
+            >
               <ButtonText className="text-white font-semibold text-sm">
                 Next Step
               </ButtonText>
