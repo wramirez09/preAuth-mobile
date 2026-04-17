@@ -23,7 +23,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as React from 'react'
-import { KeyboardAvoidingView, Platform } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native'
 import logoImage from '../../assets/images/ndLogo.png'
 import { useAuth } from './context'
 import { SubscribeButton } from './SignUpButton'
@@ -68,6 +68,7 @@ const SignUp: React.FC = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             className="w-full flex-1"
           >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View className="w-full">
               <View
                 style={{
@@ -185,6 +186,7 @@ const SignUp: React.FC = () => {
                 Secure • Encrypted • Trusted by Thousands
               </Text>
             </View>
+            </TouchableWithoutFeedback>
           </KeyboardAvoidingView>
         </Center>
       </SafeContainer>

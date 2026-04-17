@@ -15,7 +15,7 @@ export const CardWrapper: React.FC<
   title,
   children,
   iconColor = '#2563EB',
-  iconBgColor = '#bg-blue-100',
+  iconBgColor = 'bg-blue-100',
 }) => {
   return (
     <Card className="shadow-sm rounded-2xl mb-6">

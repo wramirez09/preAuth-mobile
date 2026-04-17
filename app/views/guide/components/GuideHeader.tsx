@@ -27,10 +27,10 @@ const GuideHeader: React.FC<Partial<GuideHeaderProps>> = ({ title, subTitle }) =
   return (
     <View className="mb-6">
       <View className="flex-row items-center justify-between">
-        <Text className="tex-gray-600 text-sm">
+        <Text className="text-gray-600 text-sm">
           Step {currentStepIndex!} of {totalSteps - 1}
         </Text>
-        <Text className="tex-gray-600 text-sm">
+        <Text className="text-gray-600 text-sm">
           {calculateProgress().toString().split('.')[0]}%
         </Text>
       </View>

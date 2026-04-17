@@ -9,8 +9,9 @@ import {
   ParamListBase,
 } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Menu } from 'lucide-react-native'
+import { ChevronLeft, Menu } from 'lucide-react-native'
 import React from 'react'
+import { Pressable } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import '../global.css'
 import { navigationRef } from './utils/navigationRef'
@@ -37,14 +38,9 @@ function HeaderRight() {
   const { isDrawerOpen, setIsDrawerOpen } = useDrawer()
   if (!user) return null
   return (
-    <Button
-      variant="link"
-      onPress={() => setIsDrawerOpen(!isDrawerOpen)}
-      ml="$2"
-      className="bg-transparent"
-    >
+    <Pressable onPress={() => setIsDrawerOpen(!isDrawerOpen)} className="px-2">
       <Menu />
-    </Button>
+    </Pressable>
   )
 }
 
@@ -71,18 +67,11 @@ const RootStack = createNativeStackNavigator({
       screen: Login,
       options: {
         title: 'Login',
-        headerBackVisible: false,
+        headerBackButtonDisplayMode: 'minimal',
+        headerBackVisible: true,
+        headerBackImage: () => <ChevronLeft />,
+
         headerBackButtonMenuEnabled: false,
-        headerLeft: () => (
-          <Button
-            size="xs"
-            variant="link"
-            onPress={() => navigationRef.current?.navigate('Home')}
-            className="bg-transparent"
-          >
-            <ButtonText>Back</ButtonText>
-          </Button>
-        ),
       },
     },
     Chat: {

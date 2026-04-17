@@ -14,7 +14,8 @@ import SelectCore from '../SelectCore'
 export const StateSelect: React.FC<{
   showIcon?: boolean
   showLabel?: boolean
-}> = ({ showIcon = true, showLabel = true }) => {
+  onFocus?: () => void
+}> = ({ showIcon = true, showLabel = true, onFocus }) => {
   const { formData, setFormData } = useFormData()
   const handleOnSelect = React.useCallback(
     (value: SelectOption) => {

@@ -59,7 +59,7 @@ const GuideFooter = () => {
   const handleStartOver = React.useCallback(() => {
     setCurrentStepIndex(1)
     navigation.navigate('GuideWelcome')
-  }, [currentStepIndex])
+  }, [navigation, setCurrentStepIndex])
 
   const handleSubmitToChat = () => {
     setCurrentStepIndex(1)
@@ -72,8 +72,6 @@ const GuideFooter = () => {
       },
     })
   }
-
-  console.log(isSubmitDisabled)
 
   return (
     <View>

@@ -12,6 +12,7 @@ type Props = {
   options: SelectOptions[]
   value?: SelectOptions | null
   onChange?: (value: SelectOptions) => void
+  onFocus?: () => void
 }
 
 const SelectCore: React.FC<Props> = ({
