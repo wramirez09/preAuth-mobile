@@ -6,6 +6,7 @@
     "preview": {
       "distribution": "store",
       "channel": "preview",
+      "node": "20.19.5",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://preauthproduction.vercel.app",
         "NEXT_PUBLIC_SUPABASE_URL": "https://ewehlzmdgrdiejtifamp.supabase.co",
@@ -15,6 +16,7 @@
     "production": {
       "distribution": "store",
       "channel": "production",
+      "node": "20.19.5",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://preauthproduction.vercel.app",
         "NEXT_PUBLIC_SUPABASE_URL": "https://ewehlzmdgrdiejtifamp.supabase.co",

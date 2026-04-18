@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "notedoctoraiapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "buildNumber": "13",
       "bundleIdentifier": "com.notedoctoraiapp.preauth",
