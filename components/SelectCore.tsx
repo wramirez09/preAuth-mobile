@@ -1,6 +1,9 @@
 import { Text, View } from '@gluestack-ui/themed'
 import { ChevronDown, Search } from 'lucide-react-native'
+import * as React from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
+
+const CREATE_SENTINEL = '__CREATE__'
 
 type SelectOptions = {
   label: string
@@ -13,6 +16,9 @@ type Props = {
   value?: SelectOptions | null
   onChange?: (value: SelectOptions) => void
   onFocus?: () => void
+  creatable?: boolean
+  onCreateOption?: (inputValue: string) => void
+  formatCreateLabel?: (inputValue: string) => string
 }
 
 const SelectCore: React.FC<Props> = ({
@@ -20,19 +26,66 @@ const SelectCore: React.FC<Props> = ({
   options,
   value,
   onChange,
+  creatable = false,
+  onCreateOption,
+  formatCreateLabel = v => `Create "${v}"`,
 }) => {
-  const data = options.map(o => ({
-    label: o.label,
-    value: o.value,
-  }))
+  const [searchText, setSearchText] = React.useState('')
+  const dropdownRef = React.useRef<SelectDropdown>(null)
+
+  const data = React.useMemo(() => {
+    const base = options.map(o => ({ label: o.label, value: o.value }))
+
+    if (!creatable) return base
+
+    const filtered = searchText.trim()
+      ? base.filter(o =>
+          o.label.toLowerCase().includes(searchText.toLowerCase())
+        )
+      : base
+
+    const exactMatch = base.some(
+      o => o.label.toLowerCase() === searchText.trim().toLowerCase()
+    )
+
+    if (searchText.trim() && !exactMatch) {
+      return [
+        ...filtered,
+        { label: formatCreateLabel(searchText.trim()), value: CREATE_SENTINEL },
+      ]
+    }
+
+    return filtered
+  }, [options, creatable, searchText, formatCreateLabel])
+
+  React.useEffect(() => {
+    if (!value) return
+    const index = data.findIndex(d => d.value === value.value)
+    if (index >= 0) dropdownRef.current?.selectIndex(index)
+  }, [value?.value]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleSelect = React.useCallback(
+    (item: SelectOptions) => {
+      if (item.value === CREATE_SENTINEL) {
+        onCreateOption?.(searchText.trim())
+      } else {
+        onChange?.(item)
+      }
+    },
+    [onChange, onCreateOption, searchText]
+  )
 
   return (
     <SelectDropdown
+      ref={dropdownRef}
       data={data}
       defaultValue={value}
       search
       searchPlaceHolder={`Search ${placeholder}`}
       showsVerticalScrollIndicator
+      disableAutoScroll
+      onChangeSearchInputText={creatable ? setSearchText : undefined}
+      onBlur={() => setSearchText('')}
       /* =========================
                DROPDOWN CONTAINER
             ========================= */
@@ -69,7 +122,7 @@ const SelectCore: React.FC<Props> = ({
                ROW STYLES (IMPORTANT)
             ========================= */
 
-      onSelect={item => onChange?.(item)}
+      onSelect={handleSelect}
       /* =========================
                BUTTON (CLOSED STATE)
             ========================= */
@@ -98,17 +151,22 @@ const SelectCore: React.FC<Props> = ({
       /* =========================
                ROW RENDER (OPTIONAL)
             ========================= */
-      renderItem={(item, index, isSelected) => (
-        <View className={`px-4 py-3 ${isSelected ? 'bg-blue-50' : 'bg-white'}`}>
-          <Text
-            fontSize="$sm"
-            fontWeight={isSelected ? '$medium' : '$regular'}
-            color={isSelected ? '$blue600' : '$gray900'}
+      renderItem={(item, _index, isSelected) => {
+        const isCreate = item.value === CREATE_SENTINEL
+        return (
+          <View
+            className={`px-4 py-3 ${!isCreate && isSelected ? 'bg-blue-50' : 'bg-white'}`}
           >
-            {item.label}
-          </Text>
-        </View>
-      )}
+            <Text
+              fontSize="$sm"
+              fontWeight={isCreate || isSelected ? '$medium' : '$regular'}
+              color={isCreate ? '$blue500' : isSelected ? '$blue600' : '$gray900'}
+            >
+              {item.label}
+            </Text>
+          </View>
+        )
+      }}
     />
   )
 }
