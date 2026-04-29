@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "noteDoctor",
-    "slug": "notedoctorai",
+    "slug": "notedoctor",
     "version": "1.0.12",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
