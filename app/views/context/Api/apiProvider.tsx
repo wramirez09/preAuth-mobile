@@ -1,7 +1,12 @@
 import { createApiUrl } from '@/app/utils'
+import { fetchThreadMessages } from '@/services/chatMessages'
+import { randomUUID } from 'expo-crypto'
 import React from 'react'
+import { AppState, AppStateStatus } from 'react-native'
 import { GiftedChat, IMessage } from 'react-native-gifted-chat'
 import { ApiContext } from './context'
+
+const REQUEST_TIMEOUT_MS = 90_000
 
 function generateUniqueId() {
   return `${Date.now()}-${Math.floor(Math.random() * 10000)}`
@@ -32,8 +37,12 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
   const [messages, setMessages] = React.useState<IMessage[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
   const [hasShownWelcome, setHasShownWelcome] = React.useState(false)
+  const [threadId, setThreadId] = React.useState<string>(() => randomUUID())
   const abortControllerRef = React.useRef<AbortController | null>(null)
-  const isRequestingRef = React.useRef(false)
+  const pendingResumeRef = React.useRef<{
+    threadId: string
+    abortedAt: number
+  } | null>(null)
 
   const apiUrl = React.useMemo(() => createApiUrl('/api/chat/agents'), [])
 
@@ -52,57 +61,89 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
   }, [])
 
   React.useEffect(() => {
-    // Only show welcome message if there are truly no messages
-    // This check runs after any initial messages would be added
     const timer = setTimeout(() => {
       if (!hasShownWelcome && messages.length === 0) {
         addWelcomeMessage()
       }
-    }, 100) // Small delay to allow initial messages to be processed
-
+    }, 100)
     return () => clearTimeout(timer)
   }, [messages.length, hasShownWelcome, addWelcomeMessage])
 
   // Cleanup effect to abort requests on unmount
   React.useEffect(() => {
     return () => {
-      console.log('Component unmounting, aborting any ongoing request')
       if (abortControllerRef.current) {
         abortControllerRef.current.abort()
       }
     }
   }, [])
 
+  const refetchThread = React.useCallback(async (tid: string) => {
+    try {
+      const fetched = await fetchThreadMessages(tid)
+      if (fetched.length === 0) {
+        // Server didn't persist anything (request died before write).
+        // Leave optimistic state as-is; just drop the typing indicator.
+        return
+      }
+      setMessages(fetched)
+    } catch (e) {
+      console.error('refetchThread failed:', e)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  // AppState lifecycle: abort on background, refetch on foreground.
+  React.useEffect(() => {
+    const handleChange = (state: AppStateStatus) => {
+      if (state === 'background' || state === 'inactive') {
+        if (abortControllerRef.current) {
+          pendingResumeRef.current = {
+            threadId,
+            abortedAt: Date.now(),
+          }
+          abortControllerRef.current.abort()
+          abortControllerRef.current = null
+        }
+      } else if (state === 'active') {
+        const pending = pendingResumeRef.current
+        if (pending) {
+          pendingResumeRef.current = null
+          // Keep typing indicator on while we refetch.
+          setIsLoading(true)
+          void refetchThread(pending.threadId)
+        }
+      }
+    }
+
+    const sub = AppState.addEventListener('change', handleChange)
+    return () => sub.remove()
+  }, [threadId, refetchThread])
+
   const onSend = React.useCallback(
     async (newMessages: IMessage[] = [], accessToken?: string) => {
       if (
         !newMessages.length ||
-        isLoading ||
         !accessToken ||
-        isRequestingRef.current
+        abortControllerRef.current !== null
       )
         return
 
       const userMessage = newMessages[0]
 
-      // Set requesting flag
-      isRequestingRef.current = true
+      const controller = new AbortController()
+      abortControllerRef.current = controller
 
-      // Cancel any existing request
-      if (abortControllerRef.current) {
-        console.log('Cancelling existing request before making new one')
-        abortControllerRef.current.abort()
-      }
+      const timeoutId = setTimeout(() => {
+        controller.abort()
+      }, REQUEST_TIMEOUT_MS)
 
-      // Create new AbortController for this request
-      abortControllerRef.current = new AbortController()
-
-      // 1️⃣ Optimistically add user message
+      // Optimistically add user message
       setMessages(prev => GiftedChat.append(prev, newMessages))
       setIsLoading(true)
 
       try {
-        // Validate inputs
         if (!accessToken || typeof accessToken !== 'string') {
           throw new Error('Invalid access token')
         }
@@ -117,7 +158,6 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
 
         const fullUrl = apiUrl.startsWith('http') ? apiUrl : `https://${apiUrl}`
 
-        console.log('Making API request to:', fullUrl)
         const res = await fetch(fullUrl, {
           method: 'POST',
           headers: {
@@ -127,8 +167,9 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
           },
           body: JSON.stringify({
             messages: [{ role: 'user', content: userMessage.text.trim() }],
+            threadId,
           }),
-          signal: abortControllerRef.current.signal,
+          signal: controller.signal,
         })
 
         if (!res.ok) {
@@ -144,19 +185,16 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         }
 
         const data = await res.json()
-        console.log('API Response:', { status: res.status, data })
-        // 3️⃣ Append ONLY assistant messages
-        const messages = normalizeAssistantMessages(data.messages)
-        setMessages(prev => GiftedChat.append(prev, messages))
+        const assistantMessages = normalizeAssistantMessages(data.messages)
+        setMessages(prev => GiftedChat.append(prev, assistantMessages))
       } catch (e) {
-        // Don't log error for aborted requests
         if (e instanceof Error) {
           if (e.name === 'AbortError') {
-            console.log('Request was aborted')
+            // Either AppState background, hard timeout, or unmount.
+            // AppState path will handle refetch via pendingResumeRef.
             return
           }
 
-          // Enhanced error handling
           if (e.message.includes('Network request failed')) {
             console.error(
               'Network error: Please check your internet connection'
@@ -172,35 +210,38 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
           console.error('Unknown chat error:', e)
         }
       } finally {
-        setIsLoading(false)
-        abortControllerRef.current = null
-        isRequestingRef.current = false
+        clearTimeout(timeoutId)
+        // Only release loading + controller if this request is still the
+        // active one. Otherwise a later send already replaced us.
+        if (abortControllerRef.current === controller) {
+          abortControllerRef.current = null
+          // If we were aborted by AppState, the foreground handler will
+          // turn isLoading off after refetch — don't clear here.
+          if (!pendingResumeRef.current) {
+            setIsLoading(false)
+          }
+        }
       }
     },
-    [apiUrl, isLoading]
+    [apiUrl, threadId]
   )
 
   const clearMessages = React.useCallback(() => {
-    console.log('ClearMessages called, aborting any ongoing request')
-    // Abort any ongoing request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
       abortControllerRef.current = null
     }
-
-    // Reset loading state
+    pendingResumeRef.current = null
     setIsLoading(false)
-
-    // Reset requesting flag
-    isRequestingRef.current = false
-
-    // Clear messages
     setMessages([])
     setHasShownWelcome(false)
+    setThreadId(randomUUID())
   }, [])
 
   return (
-    <ApiContext.Provider value={{ onSend, clearMessages, messages, isLoading }}>
+    <ApiContext.Provider
+      value={{ onSend, clearMessages, messages, isLoading, threadId }}
+    >
       {children}
     </ApiContext.Provider>
   )
