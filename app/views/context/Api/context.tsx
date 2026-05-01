@@ -10,6 +10,7 @@ export type ApiContextType = {
   clearMessages: () => void
   messages: IMessage[]
   isLoading: boolean
+  threadId: string
 }
 
 export const ApiContext = createContext<ApiContextType | undefined>(undefined)

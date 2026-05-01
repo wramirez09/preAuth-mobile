@@ -82,7 +82,6 @@ const CustomSend = (props: any) => {
   return (
     <Send
       {...props}
-      tes
       containerStyle={{
         justifyContent: 'center',
         alignItems: 'center',
