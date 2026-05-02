@@ -26,6 +26,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   TouchableWithoutFeedback,
 } from 'react-native'
 import logoImage from '../../assets/images/ndLogo.png'
@@ -81,11 +82,20 @@ const Login: React.FC = () => {
       className="h-full w-full rounded-none"
       colors={['#eff6ff', '#FFF', '#eef2ff']}
     >
-      <SafeContainer>
-        <Center className="w-full h-full px-2">
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            className="w-full flex-1"
+      <SafeContainer className="flex-1">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1, width: '100%' }}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: 'center',
+              paddingHorizontal: 16,
+              paddingVertical: 24,
+            }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
           >
             <TouchableWithoutFeedback
               onPress={dismissKeyboard}
@@ -227,8 +237,8 @@ const Login: React.FC = () => {
                 </Text>
               </View>
             </TouchableWithoutFeedback>
-          </KeyboardAvoidingView>
-        </Center>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeContainer>
     </LinearGradientCore>
   )

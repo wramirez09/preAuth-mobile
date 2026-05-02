@@ -109,33 +109,63 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   const [showClearConfirm, setShowClearConfirm] = React.useState(false)
   const fadeAnim = React.useRef(new Animated.Value(1)).current
   const { onSend, messages, isLoading, isResuming, clearMessages } = useApi()
-  const hasSentInitialMessage = React.useRef(false)
+  const lastInitialMessageRef = React.useRef<string | null>(null)
+  const messagesContainerRef = React.useRef<any>(null)
+  const lastAssistantIdRef = React.useRef<string | number | null>(null)
 
   const hasMessagesExcludingWelcome = (messages: IMessage[]) => {
     return messages.some(message => message._id !== 'welcome-message')
   }
 
   React.useEffect(() => {
+    const text = initialMessage?.message
     console.log('ChatInner useEffect running', {
-      initialMessage: !!initialMessage,
-      hasSentInitial: hasSentInitialMessage.current,
+      hasInitial: !!text,
+      lastSent: lastInitialMessageRef.current,
     })
-    if (initialMessage && !hasSentInitialMessage.current) {
-      hasSentInitialMessage.current = true
-      console.log('Sending initial message:', initialMessage.message)
-      onSend(
-        [
-          {
-            _id: Math.random().toString(),
-            text: initialMessage.message,
-            createdAt: new Date(),
-            user: { _id: 1 },
-          },
-        ],
-        accessToken
-      )
-    }
+    if (!text) return
+    if (lastInitialMessageRef.current === text) return
+    lastInitialMessageRef.current = text
+    console.log('Sending initial message:', text)
+    onSend(
+      [
+        {
+          _id: Math.random().toString(),
+          text,
+          createdAt: new Date(),
+          user: { _id: 1 },
+        },
+      ],
+      accessToken
+    )
   }, [initialMessage, onSend, accessToken])
+
+  // When a new assistant message arrives (from BE response or DB poll),
+  // scroll the inverted list so the start of that message aligns to the top
+  // of the viewport instead of leaving the user on the tail end.
+  React.useEffect(() => {
+    if (!messages.length) return
+    const newest = messages[0]
+    if (!newest || newest.user?._id !== 2) return
+    if (newest._id === 'welcome-message') return
+    if (lastAssistantIdRef.current === newest._id) return
+    lastAssistantIdRef.current = newest._id
+
+    const list = messagesContainerRef.current
+    if (!list?.scrollToIndex) return
+
+    setTimeout(() => {
+      try {
+        list.scrollToIndex({
+          index: 0,
+          viewPosition: 1,
+          animated: true,
+        })
+      } catch (e) {
+        console.warn('[chat-debug] scrollToIndex failed', e)
+      }
+    }, 80)
+  }, [messages])
 
   // Fade out HIPAA warning when user has sent messages
   React.useEffect(() => {
@@ -226,6 +256,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
       }}
     >
       <GiftedChat
+        messagesContainerRef={messagesContainerRef}
         messages={messages}
         renderSend={CustomSend}
         renderComposer={RenderComposer}
