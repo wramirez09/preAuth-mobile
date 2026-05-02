@@ -2,13 +2,13 @@
   "expo": {
     "name": "noteDoctor",
     "slug": "notedoctorai",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "notedoctoraiapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "buildNumber": "15",
+      "buildNumber": "16",
       "bundleIdentifier": "com.notedoctoraiapp.preauth",
       "supportsTablet": true,
       "infoPlist": {
