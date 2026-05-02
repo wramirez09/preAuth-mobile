@@ -1,5 +1,7 @@
 import { createApiUrl } from '@/app/utils'
+import supabase from '@/app/lib/supabase'
 import { fetchThreadMessages } from '@/services/chatMessages'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { randomUUID } from 'expo-crypto'
 import React from 'react'
 import { AppState, AppStateStatus } from 'react-native'
@@ -7,6 +9,46 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat'
 import { ApiContext } from './context'
 
 const REQUEST_TIMEOUT_MS = 90_000
+const PENDING_RESUME_KEY = '@chat/pendingResume'
+const PENDING_RESUME_TTL_MS = 10 * 60 * 1000
+
+type PendingResume = {
+  threadId: string
+  abortedAt: number
+  userMessageText?: string
+}
+
+async function writePendingResume(value: PendingResume) {
+  try {
+    await AsyncStorage.setItem(PENDING_RESUME_KEY, JSON.stringify(value))
+  } catch (e) {
+    console.warn('[chat-debug] writePendingResume failed', e)
+  }
+}
+
+async function readPendingResume(): Promise<PendingResume | null> {
+  try {
+    const raw = await AsyncStorage.getItem(PENDING_RESUME_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as PendingResume
+    if (Date.now() - parsed.abortedAt > PENDING_RESUME_TTL_MS) {
+      await AsyncStorage.removeItem(PENDING_RESUME_KEY)
+      return null
+    }
+    return parsed
+  } catch (e) {
+    console.warn('[chat-debug] readPendingResume failed', e)
+    return null
+  }
+}
+
+async function clearPendingResume() {
+  try {
+    await AsyncStorage.removeItem(PENDING_RESUME_KEY)
+  } catch (e) {
+    console.warn('[chat-debug] clearPendingResume failed', e)
+  }
+}
 
 function generateUniqueId() {
   return `${Date.now()}-${Math.floor(Math.random() * 10000)}`
@@ -36,13 +78,19 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const [messages, setMessages] = React.useState<IMessage[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isResuming, setIsResuming] = React.useState(false)
   const [hasShownWelcome, setHasShownWelcome] = React.useState(false)
+  const [hasHydrated, setHasHydrated] = React.useState(false)
   const [threadId, setThreadId] = React.useState<string>(() => randomUUID())
   const abortControllerRef = React.useRef<AbortController | null>(null)
-  const pendingResumeRef = React.useRef<{
-    threadId: string
-    abortedAt: number
+  const pendingResumeRef = React.useRef<PendingResume | null>(null)
+  const lastSentTextRef = React.useRef<string | null>(null)
+  const resumePollRef = React.useRef<{
+    cancelled: boolean
   } | null>(null)
+  const refetchThreadRef = React.useRef<(tid: string) => Promise<void>>(
+    async () => {}
+  )
 
   const apiUrl = React.useMemo(() => createApiUrl('/api/chat/agents'), [])
 
@@ -61,13 +109,14 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
   }, [])
 
   React.useEffect(() => {
+    if (!hasHydrated) return
     const timer = setTimeout(() => {
       if (!hasShownWelcome && messages.length === 0) {
         addWelcomeMessage()
       }
     }, 100)
     return () => clearTimeout(timer)
-  }, [messages.length, hasShownWelcome, addWelcomeMessage])
+  }, [messages.length, hasShownWelcome, addWelcomeMessage, hasHydrated])
 
   // Cleanup effect to abort requests on unmount
   React.useEffect(() => {
@@ -75,43 +124,160 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
       if (abortControllerRef.current) {
         abortControllerRef.current.abort()
       }
+      if (resumePollRef.current) {
+        resumePollRef.current.cancelled = true
+      }
+    }
+  }, [])
+
+  // Log threadId on mount and whenever it changes — to detect remount-driven regen.
+  React.useEffect(() => {
+    console.log('[chat-debug] ApiProvider threadId set', { threadId })
+  }, [threadId])
+
+  // On mount, hydrate any pending resume from a prior JS lifetime.
+  React.useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const pending = await readPendingResume()
+      console.log('[chat-debug] hydrate pendingResume', { pending })
+      if (cancelled) return
+      if (pending) {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+        if (cancelled) return
+        if (!session) {
+          console.log(
+            '[chat-debug] hydrate: no auth session, dropping pendingResume'
+          )
+          await clearPendingResume()
+          setHasHydrated(true)
+          return
+        }
+        pendingResumeRef.current = pending
+        setThreadId(pending.threadId)
+        if (pending.userMessageText) {
+          const userMsg: IMessage = {
+            _id: `resume-user-${pending.abortedAt}`,
+            text: pending.userMessageText,
+            createdAt: new Date(pending.abortedAt),
+            user: { _id: 1 },
+          }
+          setMessages([userMsg])
+          setHasShownWelcome(true)
+        }
+        setIsLoading(true)
+        setIsResuming(true)
+        void refetchThreadRef.current?.(pending.threadId)
+      }
+      setHasHydrated(true)
+    })()
+    return () => {
+      cancelled = true
     }
   }, [])
 
   const refetchThread = React.useCallback(async (tid: string) => {
+    console.log('[chat-debug] refetchThread starting', { tid })
+    if (resumePollRef.current) {
+      resumePollRef.current.cancelled = true
+    }
+    const pollState = { cancelled: false }
+    resumePollRef.current = pollState
+
+    // BE can take ~60s+ to persist the assistant reply. Poll until we see an
+    // assistant message land, or give up after the timeout.
+    const POLL_INTERVAL_MS = 3_000
+    const POLL_TIMEOUT_MS = 120_000
+    const startedAt = Date.now()
+
     try {
-      const fetched = await fetchThreadMessages(tid)
-      if (fetched.length === 0) {
-        // Server didn't persist anything (request died before write).
-        // Leave optimistic state as-is; just drop the typing indicator.
-        return
+      while (!pollState.cancelled) {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+        if (!session) {
+          console.log('[chat-debug] refetchThread aborted: no auth session')
+          await clearPendingResume()
+          return
+        }
+
+        const fetched = await fetchThreadMessages(tid)
+        console.log('[chat-debug] refetchThread poll', {
+          tid,
+          count: fetched.length,
+          elapsedMs: Date.now() - startedAt,
+        })
+
+        const hasAssistant = fetched.some(
+          m => typeof m.user?._id !== 'undefined' && m.user._id === 2
+        )
+
+        if (hasAssistant) {
+          setMessages(fetched)
+          await clearPendingResume()
+          return
+        }
+
+        if (Date.now() - startedAt >= POLL_TIMEOUT_MS) {
+          console.log('[chat-debug] refetchThread poll timeout', { tid })
+          await clearPendingResume()
+          return
+        }
+
+        await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL_MS))
       }
-      setMessages(fetched)
     } catch (e) {
-      console.error('refetchThread failed:', e)
+      console.error('[chat-debug] refetchThread failed', e)
     } finally {
-      setIsLoading(false)
+      if (resumePollRef.current === pollState) {
+        resumePollRef.current = null
+        setIsLoading(false)
+        setIsResuming(false)
+      }
     }
   }, [])
+
+  React.useEffect(() => {
+    refetchThreadRef.current = refetchThread
+  }, [refetchThread])
 
   // AppState lifecycle: abort on background, refetch on foreground.
   React.useEffect(() => {
     const handleChange = (state: AppStateStatus) => {
+      console.log('[chat-debug] AppState change', {
+        next: state,
+        hasInflight: !!abortControllerRef.current,
+        pendingResume: pendingResumeRef.current,
+        threadId,
+      })
       if (state === 'background' || state === 'inactive') {
         if (abortControllerRef.current) {
-          pendingResumeRef.current = {
+          console.log('[chat-debug] AppState background: aborting in-flight', {
+            threadId,
+          })
+          const pending: PendingResume = {
             threadId,
             abortedAt: Date.now(),
+            userMessageText: lastSentTextRef.current ?? undefined,
           }
+          pendingResumeRef.current = pending
+          void writePendingResume(pending)
           abortControllerRef.current.abort()
           abortControllerRef.current = null
         }
       } else if (state === 'active') {
         const pending = pendingResumeRef.current
         if (pending) {
+          console.log('[chat-debug] AppState active: triggering refetch', {
+            pendingThreadId: pending.threadId,
+            currentThreadId: threadId,
+          })
           pendingResumeRef.current = null
-          // Keep typing indicator on while we refetch.
+          // Keep typing indicator on while we refetch and surface a banner.
           setIsLoading(true)
+          setIsResuming(true)
           void refetchThread(pending.threadId)
         }
       }
@@ -130,6 +296,11 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
       )
         return
 
+      console.log('[chat-debug] onSend entry', {
+        threadId,
+        messageCount: newMessages.length,
+      })
+
       const userMessage = newMessages[0]
 
       const controller = new AbortController()
@@ -141,7 +312,17 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
 
       // Optimistically add user message
       setMessages(prev => GiftedChat.append(prev, newMessages))
+      lastSentTextRef.current = userMessage.text
       setIsLoading(true)
+
+      // Persist a resume marker eagerly. If iOS suspends/kills JS while
+      // backgrounded, the AppState handler may not get a chance to flush
+      // AsyncStorage. Writing now ensures recovery on next launch.
+      void writePendingResume({
+        threadId,
+        abortedAt: Date.now(),
+        userMessageText: userMessage.text,
+      })
 
       try {
         if (!accessToken || typeof accessToken !== 'string') {
@@ -157,6 +338,8 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         }
 
         const fullUrl = apiUrl.startsWith('http') ? apiUrl : `https://${apiUrl}`
+
+        console.log('[chat-debug] onSend fetch starting', { threadId, fullUrl })
 
         const res = await fetch(fullUrl, {
           method: 'POST',
@@ -187,9 +370,14 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         const data = await res.json()
         const assistantMessages = normalizeAssistantMessages(data.messages)
         setMessages(prev => GiftedChat.append(prev, assistantMessages))
+        await clearPendingResume()
       } catch (e) {
         if (e instanceof Error) {
           if (e.name === 'AbortError') {
+            console.log('[chat-debug] onSend AbortError', {
+              threadId,
+              pendingResume: pendingResumeRef.current,
+            })
             // Either AppState background, hard timeout, or unmount.
             // AppState path will handle refetch via pendingResumeRef.
             return
@@ -211,6 +399,11 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         }
       } finally {
         clearTimeout(timeoutId)
+        console.log('[chat-debug] onSend finally', {
+          threadId,
+          stillActive: abortControllerRef.current === controller,
+          pendingResume: pendingResumeRef.current,
+        })
         // Only release loading + controller if this request is still the
         // active one. Otherwise a later send already replaced us.
         if (abortControllerRef.current === controller) {
@@ -232,7 +425,14 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
       abortControllerRef.current = null
     }
     pendingResumeRef.current = null
+    lastSentTextRef.current = null
+    void clearPendingResume()
+    if (resumePollRef.current) {
+      resumePollRef.current.cancelled = true
+      resumePollRef.current = null
+    }
     setIsLoading(false)
+    setIsResuming(false)
     setMessages([])
     setHasShownWelcome(false)
     setThreadId(randomUUID())
@@ -240,7 +440,7 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
 
   return (
     <ApiContext.Provider
-      value={{ onSend, clearMessages, messages, isLoading, threadId }}
+      value={{ onSend, clearMessages, messages, isLoading, isResuming, threadId }}
     >
       {children}
     </ApiContext.Provider>

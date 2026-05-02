@@ -10,7 +10,7 @@ import { Box } from '@/components/ui/box'
 import { Button, ButtonText, Heading, Text, View } from '@gluestack-ui/themed'
 import { CirclePlus, SendIcon, Trash2 } from 'lucide-react-native'
 import * as React from 'react'
-import { Animated, Platform } from 'react-native'
+import { ActivityIndicator, Animated, Platform } from 'react-native'
 import {
   Actions,
   Composer,
@@ -108,7 +108,7 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
   const [showActionsheet, setShowActionsheet] = React.useState(false)
   const [showClearConfirm, setShowClearConfirm] = React.useState(false)
   const fadeAnim = React.useRef(new Animated.Value(1)).current
-  const { onSend, messages, isLoading, clearMessages } = useApi()
+  const { onSend, messages, isLoading, isResuming, clearMessages } = useApi()
   const hasSentInitialMessage = React.useRef(false)
 
   const hasMessagesExcludingWelcome = (messages: IMessage[]) => {
@@ -270,6 +270,37 @@ export default function ChatInner({ accessToken, initialMessage }: Props) {
         renderActions={props => <CustomActions {...props} />}
         minInputToolbarHeight={50}
       />
+
+      {isResuming && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 12,
+            right: 12,
+            zIndex: 2,
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: '#1e293b',
+            borderRadius: 8,
+            paddingVertical: 10,
+            paddingHorizontal: 12,
+          }}
+        >
+          <ActivityIndicator size="small" color="#ffffff" />
+          <Text
+            style={{
+              color: 'white',
+              marginLeft: 10,
+              fontSize: 13,
+              flex: 1,
+            }}
+          >
+            Reconnecting — your response is still being prepared. This can take
+            up to a minute.
+          </Text>
+        </View>
+      )}
 
       {/* Absolutely positioned HIPAA warning overlay */}
       <Animated.View

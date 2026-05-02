@@ -10,6 +10,7 @@ export type ApiContextType = {
   clearMessages: () => void
   messages: IMessage[]
   isLoading: boolean
+  isResuming: boolean
   threadId: string
 }
 

@@ -88,6 +88,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+    "@react-native-community/cli": "latest",
     "@types/react": "~19.1.0",
     "@types/react-native-dotenv": "^0.2.2",
     "autoprefixer": "^10.4.23",

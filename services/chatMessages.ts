@@ -26,11 +26,19 @@ export function rowToIMessage(row: ChatMessageRow): IMessage {
 export async function fetchThreadMessages(
   threadId: string
 ): Promise<IMessage[]> {
+  console.log('[chat-debug] fetchThreadMessages query starting', { threadId })
   const { data, error } = await supabase
     .from('chat_messages')
     .select('id, thread_id, role, content, created_at')
     .eq('thread_id', threadId)
     .order('created_at', { ascending: true })
+
+  console.log('[chat-debug] fetchThreadMessages query result', {
+    threadId,
+    rowCount: data?.length ?? 0,
+    error: error?.message,
+    errorDetails: error,
+  })
 
   if (error) {
     throw new Error(`fetchThreadMessages failed: ${error.message}`)
