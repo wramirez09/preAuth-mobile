@@ -16,6 +16,7 @@ type PendingResume = {
   threadId: string
   abortedAt: number
   userMessageText?: string
+  assistantCountBefore?: number
 }
 
 async function writePendingResume(value: PendingResume) {
@@ -88,9 +89,9 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
   const resumePollRef = React.useRef<{
     cancelled: boolean
   } | null>(null)
-  const refetchThreadRef = React.useRef<(tid: string) => Promise<void>>(
-    async () => {}
-  )
+  const refetchThreadRef = React.useRef<
+    (tid: string, assistantCountBefore?: number) => Promise<void>
+  >(async () => {})
 
   const apiUrl = React.useMemo(() => createApiUrl('/api/chat/agents'), [])
 
@@ -169,7 +170,10 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         }
         setIsLoading(true)
         setIsResuming(true)
-        void refetchThreadRef.current?.(pending.threadId)
+        void refetchThreadRef.current?.(
+          pending.threadId,
+          pending.assistantCountBefore
+        )
       }
       setHasHydrated(true)
     })()
@@ -178,8 +182,12 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
     }
   }, [])
 
-  const refetchThread = React.useCallback(async (tid: string) => {
-    console.log('[chat-debug] refetchThread starting', { tid })
+  const refetchThread = React.useCallback(
+    async (tid: string, assistantCountBefore = 0) => {
+    console.log('[chat-debug] refetchThread starting', {
+      tid,
+      assistantCountBefore,
+    })
     if (resumePollRef.current) {
       resumePollRef.current.cancelled = true
     }
@@ -204,17 +212,19 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         }
 
         const fetched = await fetchThreadMessages(tid)
+        const assistantCount = fetched.reduce(
+          (n, m) => (m.user?._id === 2 ? n + 1 : n),
+          0
+        )
         console.log('[chat-debug] refetchThread poll', {
           tid,
           count: fetched.length,
+          assistantCount,
+          assistantCountBefore,
           elapsedMs: Date.now() - startedAt,
         })
 
-        const hasAssistant = fetched.some(
-          m => typeof m.user?._id !== 'undefined' && m.user._id === 2
-        )
-
-        if (hasAssistant) {
+        if (assistantCount > assistantCountBefore) {
           setMessages(fetched)
           await clearPendingResume()
           return
@@ -237,7 +247,9 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         setIsResuming(false)
       }
     }
-  }, [])
+    },
+    []
+  )
 
   React.useEffect(() => {
     refetchThreadRef.current = refetchThread
@@ -257,10 +269,12 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
           console.log('[chat-debug] AppState background: aborting in-flight', {
             threadId,
           })
+          const prior = pendingResumeRef.current
           const pending: PendingResume = {
             threadId,
             abortedAt: Date.now(),
             userMessageText: lastSentTextRef.current ?? undefined,
+            assistantCountBefore: prior?.assistantCountBefore,
           }
           pendingResumeRef.current = pending
           void writePendingResume(pending)
@@ -273,12 +287,13 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
           console.log('[chat-debug] AppState active: triggering refetch', {
             pendingThreadId: pending.threadId,
             currentThreadId: threadId,
+            assistantCountBefore: pending.assistantCountBefore,
           })
           pendingResumeRef.current = null
           // Keep typing indicator on while we refetch and surface a banner.
           setIsLoading(true)
           setIsResuming(true)
-          void refetchThread(pending.threadId)
+          void refetchThread(pending.threadId, pending.assistantCountBefore)
         }
       }
     }
@@ -310,19 +325,31 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         controller.abort()
       }, REQUEST_TIMEOUT_MS)
 
-      // Optimistically add user message
-      setMessages(prev => GiftedChat.append(prev, newMessages))
+      // Snapshot how many assistant turns exist before this request so the
+      // resume poll can wait for a NEW reply rather than matching prior ones.
+      let assistantCountBefore = 0
+      setMessages(prev => {
+        assistantCountBefore = prev.reduce(
+          (n, m) =>
+            m.user?._id === 2 && m._id !== 'welcome-message' ? n + 1 : n,
+          0
+        )
+        return GiftedChat.append(prev, newMessages)
+      })
       lastSentTextRef.current = userMessage.text
       setIsLoading(true)
 
       // Persist a resume marker eagerly. If iOS suspends/kills JS while
       // backgrounded, the AppState handler may not get a chance to flush
       // AsyncStorage. Writing now ensures recovery on next launch.
-      void writePendingResume({
+      const pending: PendingResume = {
         threadId,
         abortedAt: Date.now(),
         userMessageText: userMessage.text,
-      })
+        assistantCountBefore,
+      }
+      pendingResumeRef.current = pending
+      void writePendingResume(pending)
 
       try {
         if (!accessToken || typeof accessToken !== 'string') {
@@ -370,6 +397,7 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         const data = await res.json()
         const assistantMessages = normalizeAssistantMessages(data.messages)
         setMessages(prev => GiftedChat.append(prev, assistantMessages))
+        pendingResumeRef.current = null
         await clearPendingResume()
       } catch (e) {
         if (e instanceof Error) {
@@ -397,6 +425,10 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         } else {
           console.error('Unknown chat error:', e)
         }
+        // Non-abort failure: drop the eager pending marker so the next
+        // AppState transition doesn't trigger a phantom resume poll.
+        pendingResumeRef.current = null
+        void clearPendingResume()
       } finally {
         clearTimeout(timeoutId)
         console.log('[chat-debug] onSend finally', {
