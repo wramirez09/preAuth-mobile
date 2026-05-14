@@ -9,6 +9,7 @@ import {
   View,
 } from '@gluestack-ui/themed'
 
+import { Linking } from 'react-native'
 import LinearGradientCore from '@/components/LinearGradientCore'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -102,7 +103,10 @@ const GuideWelcome: React.FC = () => {
             {/* Footer */}
             <Text className="text-center text-gray-500 text-sm">
               Need assistance?{' '}
-              <Text className="text-blue-600 font-medium text-sm">
+              <Text
+                className="text-blue-600 font-medium text-sm"
+                onPress={() => Linking.openURL('mailto:sales@notedoctor.ai')}
+              >
                 Contact Support
               </Text>
             </Text>
