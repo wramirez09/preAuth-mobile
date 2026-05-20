@@ -8,7 +8,9 @@ import { AppState, AppStateStatus } from 'react-native'
 import { GiftedChat, IMessage } from 'react-native-gifted-chat'
 import { ApiContext } from './context'
 
-const REQUEST_TIMEOUT_MS = 90_000
+// Backend ceiling is 300s (Vercel Pro maxDuration). Keep client a little
+// under that so we surface a clean timeout before the server kills the run.
+const REQUEST_TIMEOUT_MS = 280_000
 const PENDING_RESUME_KEY = '@chat/pendingResume'
 const PENDING_RESUME_TTL_MS = 10 * 60 * 1000
 
@@ -321,14 +323,20 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
       const controller = new AbortController()
       abortControllerRef.current = controller
 
+      let timedOut = false
       const timeoutId = setTimeout(() => {
+        timedOut = true
         controller.abort()
       }, REQUEST_TIMEOUT_MS)
 
       // Snapshot how many assistant turns exist before this request so the
       // resume poll can wait for a NEW reply rather than matching prior ones.
+      // Also snapshot the prior history so we can send it to the backend —
+      // the agent has no server-side memory, history must come from the client.
       let assistantCountBefore = 0
+      let priorHistory: IMessage[] = []
       setMessages(prev => {
+        priorHistory = prev
         assistantCountBefore = prev.reduce(
           (n, m) =>
             m.user?._id === 2 && m._id !== 'welcome-message' ? n + 1 : n,
@@ -336,6 +344,19 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
         )
         return GiftedChat.append(prev, newMessages)
       })
+
+      // GiftedChat stores newest-first (isInverted). Reverse to chronological
+      // and drop the welcome stub so the backend sees a normal user/assistant
+      // turn sequence. Cap to recent turns to keep the payload bounded.
+      const HISTORY_TURN_CAP = 20
+      const historyForBackend = [...priorHistory]
+        .reverse()
+        .filter(m => m._id !== 'welcome-message' && m.text && m.text.trim())
+        .map(m => ({
+          role: m.user?._id === 2 ? ('assistant' as const) : ('user' as const),
+          content: m.text,
+        }))
+        .slice(-HISTORY_TURN_CAP)
       lastSentTextRef.current = userMessage.text
       setIsLoading(true)
 
@@ -376,7 +397,10 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
             'x-client': 'mobile',
           },
           body: JSON.stringify({
-            messages: [{ role: 'user', content: userMessage.text.trim() }],
+            messages: [
+              ...historyForBackend,
+              { role: 'user', content: userMessage.text.trim() },
+            ],
             threadId,
           }),
           signal: controller.signal,
@@ -404,10 +428,20 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
           if (e.name === 'AbortError') {
             console.log('[chat-debug] onSend AbortError', {
               threadId,
+              timedOut,
               pendingResume: pendingResumeRef.current,
             })
-            // Either AppState background, hard timeout, or unmount.
-            // AppState path will handle refetch via pendingResumeRef.
+            if (timedOut) {
+              // Hard client timeout while still foregrounded. The server run
+              // may still finish — kick off a refetch poll so the assistant
+              // reply lands without the user having to background/foreground
+              // the app to recover.
+              setIsResuming(true)
+              void refetchThread(threadId, assistantCountBefore)
+              return
+            }
+            // AppState background or unmount; the AppState handler owns
+            // refetch via pendingResumeRef.
             return
           }
 
