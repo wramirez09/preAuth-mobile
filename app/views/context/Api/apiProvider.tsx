@@ -1,5 +1,5 @@
-import { createApiUrl } from '@/app/utils'
 import supabase from '@/app/lib/supabase'
+import { createApiUrl } from '@/app/utils'
 import { fetchThreadMessages } from '@/services/chatMessages'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { randomUUID } from 'expo-crypto'
@@ -447,7 +447,7 @@ export const ApiProvider: React.FC<React.PropsWithChildren> = ({
 
           if (e.message.includes('Network request failed')) {
             console.error(
-              'Network error: Please check your internet connection'
+              `Network error: Please check your internet connection - ${e.message}`
             )
           } else if (e.message.includes('timeout')) {
             console.error(

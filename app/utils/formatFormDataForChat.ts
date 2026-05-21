@@ -1,6 +1,6 @@
 import { states } from '@/app/data/selectOptions'
 export const formatFormDataForChat = (formData: any) => {
-  const { guidelines, treatment, state, states, diagnosis, medicalHistory, codes } = formData
+  const { guidelines, treatment, state, diagnosis, medicalHistory, codes } = formData
 
   const getStateName = (stateId: number) => {
     return states?.find((s: any) => s.state_id === stateId)?.description || 'Not specified'
