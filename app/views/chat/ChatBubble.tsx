@@ -91,7 +91,7 @@ export function ChatBubble(props: Props) {
   const isUser = props.position === 'right'
 
   return (
-    <View style={{ marginVertical: 4, alignSelf: 'stretch', width: 400 }}>
+    <View style={{ marginVertical: 4, alignSelf: 'stretch' }}>
       <Bubble
         {...props}
         wrapperStyle={{
